@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 const eventoController = {
-    // Buscar todos os lances de uma partida específica (para carregar o mapa e a timeline)
     listarPorPartida: async (req, res) => {
         try {
             const { id } = req.params;
@@ -20,18 +19,15 @@ const eventoController = {
         }
     },
 
-    // Registrar um novo lance ou substituição
     criarEvento: async (req, res) => {
         try {
             const { partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id } = req.body;
-            
             const sql = `
                 INSERT INTO eventos_scout 
                 (partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `;
             const [resultados] = await db.query(sql, [partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id || null]);
-            
             res.status(201).json({ sucesso: true, id: resultados.insertId });
         } catch (erro) {
             console.error('Erro ao registrar evento:', erro);
@@ -39,13 +35,11 @@ const eventoController = {
         }
     },
 
-    // Editar uma ação errada do scout
     editarEvento: async (req, res) => {
         try {
             const { id } = req.params;
             const { tipo_acao, minuto_video } = req.body;
             const sql = 'UPDATE eventos_scout SET tipo_acao = ?, minuto_video = ? WHERE id = ?';
-            
             await db.query(sql, [tipo_acao, minuto_video, id]);
             res.json({ sucesso: true });
         } catch (erro) {
@@ -54,7 +48,6 @@ const eventoController = {
         }
     },
 
-    // Deletar um lance
     deletarEvento: async (req, res) => {
         try {
             const { id } = req.params;
@@ -66,7 +59,6 @@ const eventoController = {
         }
     },
 
-    // Estatísticas brutas do Atleta (Para o modal de Raio-X do elenco)
     estatisticasAtleta: async (req, res) => {
         try {
             const { id } = req.params;
@@ -82,22 +74,18 @@ const eventoController = {
                 GROUP BY a.id
             `;
             const [resultados] = await db.query(sql, [id]);
-            // O MySQL retorna um array, pegamos a posição 0 ou um objeto vazio
             res.json(resultados[0] || {});
         } catch (erro) {
-            console.error('Erro ao gerar estatísticas:', erro);
             res.status(500).json({ erro: 'Erro ao gerar raio-x do atleta' });
         }
     },
     
-    // Lista os lances crus de um atleta específico (usado para o gráfico de linha)
     listarPorAtleta: async (req, res) => {
         try {
             const { id } = req.params;
             const [resultados] = await db.query('SELECT * FROM eventos_scout WHERE atleta_id = ? ORDER BY id ASC', [id]);
             res.json(resultados);
         } catch (erro) {
-            console.error('Erro ao buscar eventos do atleta:', erro);
             res.status(500).json({ erro: 'Erro interno' });
         }
     }

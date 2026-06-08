@@ -1,7 +1,6 @@
 const db = require('../config/db');
 
 const partidaController = {
-    // Listar todas as partidas
     listarPartidas: async (req, res) => {
         try {
             const [resultados] = await db.query('SELECT * FROM partidas ORDER BY id DESC');
@@ -12,11 +11,21 @@ const partidaController = {
         }
     },
 
-    // Criar nova partida com a escalação inicial
+    // --- NOVA FUNÇÃO AQUI ---
+    buscarPartida: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const [resultados] = await db.query('SELECT * FROM partidas WHERE id = ?', [id]);
+            if (resultados.length === 0) return res.status(404).json({ erro: 'Partida não encontrada' });
+            res.json(resultados[0]);
+        } catch (erro) {
+            res.status(500).json({ erro: 'Erro ao buscar partida' });
+        }
+    },
+
     criarPartida: async (req, res) => {
         try {
             const { data_jogo, adversario, escalacao } = req.body;
-            // No MySQL, precisamos garantir que o JSON vire uma string antes de salvar
             const escalacaoStr = JSON.stringify(escalacao);
             
             const sql = 'INSERT INTO partidas (data_jogo, adversario, escalacao) VALUES (?, ?, ?)';
