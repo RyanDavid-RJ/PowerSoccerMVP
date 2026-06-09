@@ -1221,3 +1221,27 @@ body.login-page {
 .svg-icon-duo {
   vertical-align: middle;
 }
+
+.heatmap-container {
+  position: relative;
+  background-color: var(--duo-green-primary);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-duo);
+}
+
+.heatmap-ponto {
+  transition: transform 0.1s ease;
+}
+.heatmap-ponto:hover {
+  transform: translate(-50%, -50%) scale(1.4);
+  z-index: 10;
+}
+
+.btn-filtro-tipo {
+  transition: all 0.2s;
+}
+.btn-filtro-tipo.ativo {
+  background-color: var(--duo-green-primary) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}

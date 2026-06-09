@@ -21,13 +21,36 @@ const eventoController = {
 
     criarEvento: async (req, res) => {
         try {
-            const { partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id } = req.body;
+            const { 
+                partida_id, 
+                atleta_id, 
+                usuario_id, 
+                minuto_video, 
+                tipo_acao, 
+                coord_x, 
+                coord_y, 
+                jogador_entrou_id,
+                periodo               // <--- adicionado
+            } = req.body;
+
             const sql = `
                 INSERT INTO eventos_scout 
-                (partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id, periodo) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
-            const [resultados] = await db.query(sql, [partida_id, atleta_id, usuario_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id || null]);
+            
+            const [resultados] = await db.query(sql, [
+                partida_id, 
+                atleta_id, 
+                usuario_id, 
+                minuto_video, 
+                tipo_acao, 
+                coord_x, 
+                coord_y, 
+                jogador_entrou_id || null,
+                periodo || null
+            ]);
+            
             res.status(201).json({ sucesso: true, id: resultados.insertId });
         } catch (erro) {
             console.error('Erro ao registrar evento:', erro);
