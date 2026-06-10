@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Line } from "react-chartjs-2";
 import {
@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { apiGet } from "../services/api";
 
 ChartJS.register(
   CategoryScale,
@@ -47,29 +48,18 @@ export default function Elenco() {
   });
   const [loadingStats, setLoadingStats] = useState(false);
 
-  const carregarElenco = useCallback(async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/atletas");
-      const data = await response.json();
-      setAtletas(data);
-    } catch (error) {
-      console.error("Erro ao buscar atletas:", error);
-    }
-  }, []);
-
+  // Carrega elenco usando apiGet (com token)
   useEffect(() => {
-    let ativo = true;
     const carregarElenco = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/atletas');
-        const data = await response.json();
-        if (ativo) setAtletas(data);
+        const data = await apiGet("/atletas");
+        setAtletas(data);
       } catch (error) {
         console.error("Erro ao buscar atletas:", error);
+        alert("Erro ao carregar elenco.");
       }
     };
     carregarElenco();
-    return () => { ativo = false; };
   }, []);
 
   // Função para processar eventos e gerar evolução por partida
@@ -128,13 +118,8 @@ export default function Elenco() {
     setLoadingStats(true);
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/eventos/atleta/${atleta.id}`,
-      );
-      if (!response.ok) throw new Error("Erro ao carregar eventos");
-      const eventos = await response.json();
-      const { partidasOrdenadas, totais: totaisCalc } =
-        processarEventos(eventos);
+      const eventos = await apiGet(`/eventos/atleta/${atleta.id}`);
+      const { partidasOrdenadas, totais: totaisCalc } = processarEventos(eventos);
       setStatsPorPartida(partidasOrdenadas);
       setTotais(totaisCalc);
     } catch (error) {
@@ -153,7 +138,14 @@ export default function Elenco() {
     setTotais({ gols: 0, passesC: 0, passesE: 0, interceptacoes: 0 });
   };
 
-  // --- Funções de cadastro e edição (inalteradas) ---
+  // --- Funções de cadastro e edição (com FormData e token manual) ---
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -164,15 +156,18 @@ export default function Elenco() {
     try {
       const response = await fetch("http://localhost:3000/api/atletas", {
         method: "POST",
+        headers: getAuthHeaders(),
         body: formData,
       });
-      if (!response.ok) throw new Error("Erro no servidor");
+      if (!response.ok) throw new Error(await response.text());
       alert("Atleta cadastrado com sucesso!");
       setNome("");
       setNumero("");
       setFoto(null);
       document.getElementById("foto-atleta").value = "";
-      carregarElenco();
+      // Recarrega elenco com apiGet
+      const data = await apiGet("/atletas");
+      setAtletas(data);
     } catch (error) {
       console.error("Erro completo:", error);
       alert("Erro ao salvar: " + error.message);
@@ -193,12 +188,14 @@ export default function Elenco() {
         `http://localhost:3000/api/atletas/${atletaSelecionado.id}`,
         {
           method: "PUT",
+          headers: getAuthHeaders(),
           body: formData,
-        },
+        }
       );
-      if (!response.ok) throw new Error("Erro ao editar");
+      if (!response.ok) throw new Error(await response.text());
       alert("Atleta atualizado com sucesso!");
-      carregarElenco();
+      const data = await apiGet("/atletas");
+      setAtletas(data);
       fecharModal();
     } catch (error) {
       console.error("Erro completo:", error);
@@ -270,10 +267,9 @@ export default function Elenco() {
     },
   };
 
-  // Renderização (mantém o mesmo layout visual)
   return (
     <>
-      <Header userName="Treinador" showBackButton={true} />
+      <Header showBackButton={true} />
 
       <div className="elenco-layout">
         <div>

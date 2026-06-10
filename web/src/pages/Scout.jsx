@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { apiGet, apiPost, apiPut, apiDelete } from "../services/api";
 
 export default function Scout() {
   const { id } = useParams();
@@ -69,28 +70,22 @@ export default function Scout() {
   useEffect(() => {
     const carregarDados = async () => {
       try {
-        const [resPartida, resEventos, resAtletas] = await Promise.all([
-          fetch(`http://localhost:3000/api/partidas/${id}`),
-          fetch(`http://localhost:3000/api/eventos/partida/${id}`),
-          fetch(`http://localhost:3000/api/atletas`),
+        const [dataPartida, dataEventos, dataAtletas] = await Promise.all([
+          apiGet(`/partidas/${id}`),
+          apiGet(`/eventos/partida/${id}`),
+          apiGet("/atletas"),
         ]);
 
-        if (!resPartida.ok) throw new Error("Partida não encontrada");
-        const dataPartida = await resPartida.json();
         setPartida(dataPartida);
 
-        const dataEventos = await resEventos.json();
         const eventosOrdenados = ordenarEventosCronologicamente(dataEventos);
         setEventos(eventosOrdenados);
-
-        const dataAtletas = await resAtletas.json();
 
         const escalacao =
           typeof dataPartida.escalacao === "string"
             ? JSON.parse(dataPartida.escalacao)
             : dataPartida.escalacao;
 
-        // 🔥 Enriquecer usando os dados locais (dataAtletas) – NÃO o estado atletas!
         const enriquecer = (lista) => {
           if (!lista) return [];
           return lista.map((item) => {
@@ -225,7 +220,6 @@ export default function Scout() {
     const payload = {
       partida_id: parseInt(id),
       atleta_id: jogadorAtivo.id,
-      usuario_id: 4,
       minuto_video: segundosParaTempo(segundoAtual),
       tipo_acao: tipoAcao,
       coord_x: modalAcao.x.toFixed(2),
@@ -234,17 +228,12 @@ export default function Scout() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/eventos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Falha ao salvar lance");
+      await apiPost("/eventos", payload);
       await carregarDadosDaAPI();
       setModalAcao({ visivel: false, x: 0, y: 0 });
     } catch (e) {
       console.error(e);
-      alert("Erro ao salvar ação no banco de dados.");
+      alert(`Erro ao salvar ação: ${e.message}`);
     }
   };
 
@@ -331,7 +320,6 @@ export default function Scout() {
       partida_id: parseInt(id),
       atleta_id: modalSub.idSaindo,
       jogador_entrou_id: modalSub.idEntrando,
-      usuario_id: 4,
       minuto_video: segundosParaTempo(segundoAtual),
       tipo_acao: "Substituição",
       coord_x: null,
@@ -339,12 +327,7 @@ export default function Scout() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/eventos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Erro na sub");
+      await apiPost("/eventos", payload);
       await carregarDadosDaAPI();
       setModalSub({
         visivel: false,
@@ -355,7 +338,7 @@ export default function Scout() {
       setJogadorAtivo(null);
     } catch (e) {
       console.error(e);
-      alert("Erro ao registrar substituição.");
+      alert(`Erro ao registrar substituição: ${e.message}`);
     }
   };
 
@@ -392,9 +375,7 @@ export default function Scout() {
     }
     if (!window.confirm("Deseja apagar este lance permanentemente?")) return;
     try {
-      await fetch(`http://localhost:3000/api/eventos/${lanceClicado.id}`, {
-        method: "DELETE",
-      });
+      await apiDelete(`/eventos/${lanceClicado.id}`);
       if (modalEdicao.visivel && modalEdicao.evento?.id === lanceClicado.id)
         setModalEdicao({
           visivel: false,
@@ -405,24 +386,20 @@ export default function Scout() {
       await carregarDadosDaAPI();
     } catch (e) {
       console.error(e);
-      alert("Erro ao deletar.");
+      alert(`Erro ao deletar: ${e.message}`);
     }
   };
 
   const confirmarDelecaoEmCascata = async () => {
     try {
       await Promise.all(
-        modalDomino.idsParaDeletar.map((idEv) =>
-          fetch(`http://localhost:3000/api/eventos/${idEv}`, {
-            method: "DELETE",
-          }),
-        ),
+        modalDomino.idsParaDeletar.map((idEv) => apiDelete(`/eventos/${idEv}`)),
       );
       await carregarDadosDaAPI();
       setModalDomino({ visivel: false, idsParaDeletar: [], qtdExtras: 0 });
     } catch (e) {
       console.error(e);
-      alert("Erro crítico ao apagar lances em cascata.");
+      alert(`Erro crítico ao apagar lances em cascata: ${e.message}`);
     }
   };
 
@@ -453,18 +430,10 @@ export default function Scout() {
         "Já existe outro lance marcado neste exato segundo. Escolha outro tempo.",
       );
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/eventos/${modalEdicao.evento.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            tipo_acao: modalEdicao.tipoAcao,
-            minuto_video: modalEdicao.minutoVideo,
-          }),
-        },
-      );
-      if (!res.ok) throw new Error("Falha ao editar");
+      await apiPut(`/eventos/${modalEdicao.evento.id}`, {
+        tipo_acao: modalEdicao.tipoAcao,
+        minuto_video: modalEdicao.minutoVideo,
+      });
       await carregarDadosDaAPI();
       setModalEdicao({
         visivel: false,
@@ -475,7 +444,7 @@ export default function Scout() {
       setSegundoAtual(novoSegundo);
     } catch (e) {
       console.error(e);
-      alert("Erro ao editar lance no banco de dados.");
+      alert(`Erro ao editar lance: ${e.message}`);
     }
   };
 
@@ -508,20 +477,16 @@ export default function Scout() {
   // Função de recarga (exposta)
   const carregarDadosDaAPI = async () => {
     try {
-      const [resPartida, resEventos, resAtletas] = await Promise.all([
-        fetch(`http://localhost:3000/api/partidas/${id}`),
-        fetch(`http://localhost:3000/api/eventos/partida/${id}`),
-        fetch(`http://localhost:3000/api/atletas`),
+      const [dataPartida, dataEventos, dataAtletas] = await Promise.all([
+        apiGet(`/partidas/${id}`),
+        apiGet(`/eventos/partida/${id}`),
+        apiGet("/atletas"),
       ]);
-      if (!resPartida.ok) throw new Error("Partida não encontrada");
-      const dataPartida = await resPartida.json();
+
       setPartida(dataPartida);
 
-      const dataEventos = await resEventos.json();
       const eventosOrdenados = ordenarEventosCronologicamente(dataEventos);
       setEventos(eventosOrdenados);
-
-      const dataAtletas = await resAtletas.json();
 
       const escalacao =
         typeof dataPartida.escalacao === "string"
@@ -566,7 +531,7 @@ export default function Scout() {
   // ========== RENDER ==========
   return (
     <>
-      <Header userName="Treinador" showBackButton={false} />
+      <Header showBackButton={false} />
 
       <div
         style={{

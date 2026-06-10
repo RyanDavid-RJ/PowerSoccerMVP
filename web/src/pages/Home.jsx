@@ -3,8 +3,6 @@ import Header from '../components/Header';
 
 export default function Home() {
   const navigate = useNavigate();
-  // Simulação temporária de usuário logado
-  const userName = "Treinador"; 
 
   const handleSettings = () => {
     alert("Modal de configurações será aberto aqui!");
@@ -12,7 +10,7 @@ export default function Home() {
 
   return (
     <>
-      <Header userName={userName} onSettingsClick={handleSettings} showBackButton={false} />
+      <Header onSettingsClick={handleSettings} showBackButton={false} />
       
       <div className="home-grid">
         <div className="duo-container card-home" onClick={() => navigate('/nova-partida')}>

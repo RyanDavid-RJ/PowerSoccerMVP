@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import { apiGet } from '../services/api';
 
 export default function Partidas() {
   const [partidas, setPartidas] = useState([]);
@@ -8,21 +9,23 @@ export default function Partidas() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/partidas')
-      .then(res => res.json())
-      .then(data => {
+    const carregarPartidas = async () => {
+      try {
+        const data = await apiGet('/partidas');
         setPartidas(data);
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         console.error("Erro ao buscar partidas:", err);
+        alert("Erro ao carregar histórico de partidas.");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    carregarPartidas();
   }, []);
 
   return (
     <>
-      <Header userName="Treinador" showBackButton={true} />
+      <Header showBackButton={true} />
       
       <div className="duo-container config-container">
         <h2>Histórico de <span className="cor-duo">Partidas</span></h2>

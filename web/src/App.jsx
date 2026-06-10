@@ -4,21 +4,24 @@ import Elenco from './pages/Elenco';
 import Dashboard from './pages/Dashboard';
 import NovaPartida from './pages/NovaPartida';
 import Scout from './pages/Scout';
-import Partidas from './pages/Partidas'; // <-- Importe aqui
+import Partidas from './pages/Partidas';
+import Login from './pages/Login';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/elenco" element={<Elenco />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/nova-partida" element={<NovaPartida />} />
-        <Route path="/scout/:id" element={<Scout />} />
-        <Route path="/partidas" element={<Partidas />} /> {/* <-- Adicione esta linha */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/elenco" element={<PrivateRoute><Elenco /></PrivateRoute>} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/nova-partida" element={<PrivateRoute><NovaPartida /></PrivateRoute>} />
+        <Route path="/scout/:id" element={<PrivateRoute><Scout /></PrivateRoute>} />
+        <Route path="/partidas" element={<PrivateRoute><Partidas /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
 export default App;

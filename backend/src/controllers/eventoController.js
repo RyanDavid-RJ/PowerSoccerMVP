@@ -21,17 +21,8 @@ const eventoController = {
 
     criarEvento: async (req, res) => {
         try {
-            const { 
-                partida_id, 
-                atleta_id, 
-                usuario_id, 
-                minuto_video, 
-                tipo_acao, 
-                coord_x, 
-                coord_y, 
-                jogador_entrou_id,
-                periodo               // <--- adicionado
-            } = req.body;
+            const { partida_id, atleta_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id, periodo } = req.body;
+            const usuario_id = req.user.id; // do token JWT
 
             const sql = `
                 INSERT INTO eventos_scout 
@@ -62,6 +53,7 @@ const eventoController = {
         try {
             const { id } = req.params;
             const { tipo_acao, minuto_video } = req.body;
+            // não precisa de usuario_id para edição (apenas verificar permissão depois)
             const sql = 'UPDATE eventos_scout SET tipo_acao = ?, minuto_video = ? WHERE id = ?';
             await db.query(sql, [tipo_acao, minuto_video, id]);
             res.json({ sucesso: true });

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { apiGet } from '../services/api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -16,13 +17,17 @@ export default function Dashboard() {
 
   // Carrega a lista de partidas
   useEffect(() => {
-    fetch('http://localhost:3000/api/partidas')
-      .then(res => res.json())
-      .then(data => {
+    const carregarPartidas = async () => {
+      try {
+        const data = await apiGet('/partidas');
         setPartidas(data);
         if (data.length > 0) setPartidaSelecionada(data[0].id);
-      })
-      .catch(err => console.error("Erro ao carregar partidas:", err));
+      } catch (err) {
+        console.error("Erro ao carregar partidas:", err);
+        alert("Erro ao carregar lista de partidas.");
+      }
+    };
+    carregarPartidas();
   }, []);
 
   // Carrega eventos e calcula estatísticas + heatmap
@@ -32,8 +37,7 @@ export default function Dashboard() {
     const fetchEventos = async () => {
       setLoadingEventos(true);
       try {
-        const res = await fetch(`http://localhost:3000/api/eventos/partida/${partidaSelecionada}`);
-        const lances = await res.json();
+        const lances = await apiGet(`/eventos/partida/${partidaSelecionada}`);
         setEventos(lances);
 
         // Filtra pelo período escolhido
@@ -51,6 +55,7 @@ export default function Dashboard() {
         setStats(s);
       } catch (err) {
         console.error("Erro ao carregar eventos:", err);
+        alert("Erro ao carregar eventos da partida.");
       } finally {
         setLoadingEventos(false);
       }
@@ -173,10 +178,8 @@ export default function Dashboard() {
 
   // ========== EXPORTAÇÃO PDF ==========
   const handleExportPDF = () => {
-    // Adiciona uma classe temporária para melhorar a aparência na impressão
     document.body.classList.add('print-mode');
     window.print();
-    // Remove a classe após o print (delay para garantir que o estilo seja aplicado)
     setTimeout(() => {
       document.body.classList.remove('print-mode');
     }, 500);
@@ -184,7 +187,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Header userName="Treinador" showBackButton={true} />
+      <Header showBackButton={true} />
 
       <div className="dashboard-container">
         {/* Filtros principais + Botão Exportar */}

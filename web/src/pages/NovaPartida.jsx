@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import { apiGet, apiPost } from '../services/api';
 
 export default function NovaPartida() {
   const navigate = useNavigate();
@@ -27,11 +28,11 @@ export default function NovaPartida() {
   useEffect(() => {
     const carregarElenco = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/atletas');
-        const data = await response.json();
+        const data = await apiGet('/atletas');
         setElenco(data);
       } catch (error) {
         console.error("Erro ao buscar elenco:", error);
+        alert("Erro ao carregar elenco. Tente novamente.");
       }
     };
     carregarElenco();
@@ -87,31 +88,23 @@ export default function NovaPartida() {
     const dadosPartida = {
       data_jogo: dataJogo,
       adversario: adversario,
-      escalacao: { titulares, reservas } // Salvamos estruturado!
+      escalacao: { titulares, reservas }
     };
 
     try {
-      const response = await fetch('http://localhost:3000/api/partidas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dadosPartida)
-      });
-
-      if (!response.ok) throw new Error("Falha ao criar partida");
-
-      const result = await response.json();
-      navigate(`/scout/${result.id_partida}`); 
-      
+      const result = await apiPost('/partidas', dadosPartida);
+      navigate(`/scout/${result.id_partida}`);
     } catch (error) {
       console.error("Erro:", error);
-      alert("Erro ao iniciar a partida.");
+      alert(`Erro ao iniciar a partida: ${error.message || "Tente novamente."}`);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <>
-      <Header userName="Treinador" showBackButton={true} />
+      <Header showBackButton={true} />
       
       <div className="config-container" style={{ maxWidth: '600px', backgroundColor: 'var(--bg-secondary)', padding: '30px', borderRadius: '16px', marginTop: '30px', boxShadow: 'var(--shadow-duo)' }}>
         <h2 className="text-center" style={{ marginBottom: '20px' }}>Nova <span className="cor-duo">Partida</span></h2>

@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { uploadToCloudinary } = require('../config/cloudinary');
 
 const atletaController = {
     listarAtletas: async (req, res) => {
@@ -6,39 +7,59 @@ const atletaController = {
             const [resultados] = await db.query('SELECT * FROM atletas ORDER BY id ASC');
             res.json(resultados);
         } catch (erro) {
-            res.status(500).json({ erro: 'Erro ao buscar' });
+            console.error('Erro ao listar atletas:', erro);
+            res.status(500).json({ erro: 'Erro ao buscar atletas' });
         }
     },
 
     cadastrarAtleta: async (req, res) => {
         try {
             const { nome, numero_camisa } = req.body;
-            const fotoPath = req.file ? req.file.path : null; 
+            let fotoUrl = null;
+
+            // Se houver arquivo, faz upload para o Cloudinary
+            if (req.file) {
+                const uploadResult = await uploadToCloudinary(req.file.buffer, 'power_soccer_v2_elenco');
+                fotoUrl = uploadResult.secure_url;
+            }
+
             const sql = 'INSERT INTO atletas (nome, numero_camisa, equipe_id, foto) VALUES (?, ?, 1, ?)';
-            const [resultados] = await db.query(sql, [nome, numero_camisa, fotoPath]);
-            res.status(201).json({ mensagem: 'Sucesso!', id: resultados.insertId });
+            const [resultados] = await db.query(sql, [nome, numero_camisa, fotoUrl]);
+            
+            res.status(201).json({ 
+                mensagem: 'Atleta cadastrado com sucesso!', 
+                id: resultados.insertId,
+                foto: fotoUrl
+            });
         } catch (erro) {
-            console.error('ERRO NO BANCO:', erro);
+            console.error('ERRO NO CADASTRO:', erro);
             res.status(500).json({ erro: 'Erro no banco de dados', detalhes: erro.message });
         }
     },
 
-    // --- NOVA FUNÇÃO DE EDIÇÃO ---
     editarAtleta: async (req, res) => {
         try {
             const { id } = req.params;
             const { nome, numero_camisa } = req.body;
-            let sql = 'UPDATE atletas SET nome = ?, numero_camisa = ? WHERE id = ?';
-            let params = [nome, numero_camisa, id];
+            let fotoUrl = null;
 
-            // Se o usuário mandou uma foto nova, atualiza a foto também
+            // Se veio uma nova foto, faz upload
             if (req.file) {
+                const uploadResult = await uploadToCloudinary(req.file.buffer, 'power_soccer_v2_elenco');
+                fotoUrl = uploadResult.secure_url;
+            }
+
+            let sql, params;
+            if (fotoUrl) {
                 sql = 'UPDATE atletas SET nome = ?, numero_camisa = ?, foto = ? WHERE id = ?';
-                params = [nome, numero_camisa, req.file.path, id];
+                params = [nome, numero_camisa, fotoUrl, id];
+            } else {
+                sql = 'UPDATE atletas SET nome = ?, numero_camisa = ? WHERE id = ?';
+                params = [nome, numero_camisa, id];
             }
 
             await db.query(sql, params);
-            res.json({ sucesso: true, mensagem: 'Atleta atualizado!' });
+            res.json({ sucesso: true, mensagem: 'Atleta atualizado com sucesso!' });
         } catch (erro) {
             console.error('Erro ao editar atleta:', erro);
             res.status(500).json({ erro: 'Erro ao atualizar dados' });
@@ -46,21 +67,22 @@ const atletaController = {
     },
 
     deletarAtleta: async (req, res) => {
-        // Mantemos a rota no backend por segurança estrutural, mas o frontend não vai mais usá-la.
         try {
             const { id } = req.params;
             await db.query('DELETE FROM atletas WHERE id = ?', [id]);
-            res.json({ mensagem: 'Removido!' });
+            res.json({ mensagem: 'Atleta removido com sucesso!' });
         } catch (erro) {
-            res.status(500).json({ erro: 'Erro ao excluir' });
+            console.error('Erro ao deletar atleta:', erro);
+            res.status(500).json({ erro: 'Erro ao excluir atleta' });
         }
     },
 
     listarEstatisticas: async (req, res) => {
+        // Esta rota é mockada – você pode substituir por dados reais depois
         try {
-            res.json({ gols: 12, passes: 45, interceptacoes: 8 }); 
+            res.json({ gols: 12, passes: 45, interceptacoes: 8 });
         } catch (erro) {
-            res.status(500).json({ erro: 'Erro ao buscar stats' });
+            res.status(500).json({ erro: 'Erro ao buscar estatísticas' });
         }
     }
 };
