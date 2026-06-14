@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { apiGet } from '../services/api';
+import toast from 'react-hot-toast';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -24,7 +25,7 @@ export default function Dashboard() {
         if (data.length > 0) setPartidaSelecionada(data[0].id);
       } catch (err) {
         console.error("Erro ao carregar partidas:", err);
-        alert("Erro ao carregar lista de partidas.");
+        toast.error("Erro ao carregar lista de partidas.");
       }
     };
     carregarPartidas();
@@ -55,7 +56,7 @@ export default function Dashboard() {
         setStats(s);
       } catch (err) {
         console.error("Erro ao carregar eventos:", err);
-        alert("Erro ao carregar eventos da partida.");
+        toast.error("Erro ao carregar eventos da partida.");
       } finally {
         setLoadingEventos(false);
       }
@@ -87,16 +88,13 @@ export default function Dashboard() {
 
   // ========== PREPARAÇÃO DO GRÁFICO POR JOGADOR ==========
   const processarEstatisticasPorJogador = () => {
-    // Filtra eventos pelo período e exclui substituições
     const eventosFiltrados = eventos.filter(ev => {
       if (ev.tipo_acao === 'Substituição') return false;
       if (filtroPeriodo !== 'Todos' && ev.periodo !== filtroPeriodo) return false;
       return true;
     });
 
-    // Acumulador por jogador (nome)
-    const jogadorMap = new Map(); // key: nome_atleta, value: { gols, passesC, passesE, intercep }
-
+    const jogadorMap = new Map();
     eventosFiltrados.forEach(ev => {
       const nome = ev.nome_atleta || "Desconhecido";
       if (!jogadorMap.has(nome)) {
@@ -109,19 +107,16 @@ export default function Dashboard() {
       else if (ev.tipo_acao === 'Interceptação') dados.intercep++;
     });
 
-    // Ordena jogadores por número de gols (decrescente) para destacar artilheiros
     const jogadoresOrdenados = Array.from(jogadorMap.entries())
       .sort((a, b) => b[1].gols - a[1].gols)
       .map(([nome, dados]) => ({ nome, ...dados }));
-
     return jogadoresOrdenados;
   };
 
   const jogadoresStats = processarEstatisticasPorJogador();
 
-  // Configuração do gráfico de barras por jogador
   const chartDataPorJogador = {
-    labels: jogadoresStats.map(j => j.nome.split(' ')[0]), // Primeiro nome
+    labels: jogadoresStats.map(j => j.nome.split(' ')[0]),
     datasets: [
       {
         label: 'Gols',
@@ -176,6 +171,56 @@ export default function Dashboard() {
     'Interceptação': '#ff9600'
   };
 
+  // ========== EXPORTAÇÃO CSV ==========
+  const handleExportCSV = () => {
+    const eventosParaExportar = eventos.filter(ev => {
+      if (filtroPeriodo === 'Todos') return true;
+      return ev.periodo === filtroPeriodo;
+    });
+
+    if (eventosParaExportar.length === 0) {
+      toast.error('Não há lances para exportar com o filtro atual.');
+      return;
+    }
+
+    const cabecalhos = [
+      'ID do Lance',
+      'Minuto',
+      'Período',
+      'Jogador',
+      'Ação',
+      'Coordenada X (%)',
+      'Coordenada Y (%)'
+    ];
+
+    const linhas = eventosParaExportar.map(ev => [
+      ev.id,
+      ev.minuto_video,
+      ev.periodo || '',
+      ev.nome_atleta || '',
+      ev.tipo_acao || '',
+      ev.coord_x !== null && ev.coord_x !== undefined ? ev.coord_x : '',
+      ev.coord_y !== null && ev.coord_y !== undefined ? ev.coord_y : ''
+    ]);
+
+    const conteudoLinhas = linhas.map(row => row.join(';')).join('\n');
+    const csvContent = '\uFEFF' + cabecalhos.join(';') + '\n' + conteudoLinhas;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const partida = partidas.find(p => p.id == partidaSelecionada);
+    const nomeAdversario = partida ? partida.adversario : 'time';
+    const periodoLabel = filtroPeriodo === 'Todos' ? 'partida_completa' : filtroPeriodo.toLowerCase().replace('º', '');
+    link.setAttribute('download', `scout_vs_${nomeAdversario}_${periodoLabel}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`${eventosParaExportar.length} lances exportados com sucesso!`);
+  };
+
   // ========== EXPORTAÇÃO PDF ==========
   const handleExportPDF = () => {
     document.body.classList.add('print-mode');
@@ -190,7 +235,7 @@ export default function Dashboard() {
       <Header showBackButton={true} />
 
       <div className="dashboard-container">
-        {/* Filtros principais + Botão Exportar */}
+        {/* Filtros principais + Botões Exportar */}
         <div className="filtro-container">
           <h2>Análise <span className="cor-duo">Tática</span></h2>
           <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -212,6 +257,13 @@ export default function Dashboard() {
                 </button>
               ))}
             </div>
+
+            <button
+              onClick={handleExportCSV}
+              style={{ padding: '6px 14px', borderRadius: '20px', background: 'var(--duo-blue)', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              📥 Exportar Dados Brutos (CSV)
+            </button>
 
             <button
               onClick={handleExportPDF}

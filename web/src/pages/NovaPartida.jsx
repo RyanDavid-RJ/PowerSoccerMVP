@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { apiGet, apiPost } from '../services/api';
+import toast from 'react-hot-toast';
 
 export default function NovaPartida() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function NovaPartida() {
         setElenco(data);
       } catch (error) {
         console.error("Erro ao buscar elenco:", error);
-        alert("Erro ao carregar elenco. Tente novamente.");
+        toast.error("Erro ao carregar elenco. Tente novamente.");
       }
     };
     carregarElenco();
@@ -79,7 +80,7 @@ export default function NovaPartida() {
     e.preventDefault();
     
     if (titulares.some(t => t === null) || reservas.some(r => r === null)) {
-      alert("Preencha todos os 8 jogadores (Titulares e Reservas) para iniciar.");
+      toast.error("Preencha todos os 8 jogadores (Titulares e Reservas) para iniciar.");
       return;
     }
 
@@ -93,10 +94,11 @@ export default function NovaPartida() {
 
     try {
       const result = await apiPost('/partidas', dadosPartida);
+      toast.success("Partida criada com sucesso! Redirecionando...");
       navigate(`/scout/${result.id_partida}`);
     } catch (error) {
       console.error("Erro:", error);
-      alert(`Erro ao iniciar a partida: ${error.message || "Tente novamente."}`);
+      toast.error(`Erro ao iniciar a partida: ${error.message || "Tente novamente."}`);
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { apiPost } from '../services/api';
+import toast from 'react-hot-toast';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,13 +21,14 @@ export default function Login() {
       if (res.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('usuario', JSON.stringify(data.usuario));
+        toast.success('Login realizado com sucesso!');
         navigate('/');
       } else {
-        alert(data.erro || 'Erro no login');
+        toast.error(data.erro || 'Erro no login');
       }
     } catch (err) {
       console.error(err);
-      alert('Erro de conexão');
+      toast.error('Erro de conexão com o servidor');
     }
   };
 
@@ -35,16 +37,16 @@ export default function Login() {
       const data = await apiPost('/auth/google', { token: credentialResponse.credential });
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      toast.success('Login com Google realizado!');
       navigate('/');
     } catch (err) {
       console.error('Erro no login com Google:', err);
-      alert('Falha ao autenticar com Google. Tente novamente.');
+      toast.error('Falha ao autenticar com Google. Tente novamente.');
     }
   };
 
   const handleGoogleError = () => {
-    console.error('Falha no login com Google');
-    alert('Não foi possível fazer login com Google. Verifique suas permissões.');
+    toast.error('Não foi possível fazer login com Google. Verifique suas permissões.');
   };
 
   return (

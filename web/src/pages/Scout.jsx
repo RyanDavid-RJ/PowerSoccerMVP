@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { apiGet, apiPost, apiPut, apiDelete } from "../services/api";
+import toast from "react-hot-toast";
 
 export default function Scout() {
   const { id } = useParams();
@@ -101,7 +102,7 @@ export default function Scout() {
         setReservasIniciais(reservasCompletos);
       } catch (e) {
         console.error("Erro no carregamento:", e);
-        alert("Erro ao carregar a prancheta.");
+        toast.error("Erro ao carregar a prancheta.");
         navigate("/nova-partida");
       }
     };
@@ -194,13 +195,19 @@ export default function Scout() {
 
   // ========== AÇÕES NO CAMPO ==========
   const handleCampoClick = (e) => {
-    if (!jogadorAtivo)
-      return alert("Selecione um jogador na lateral esquerda antes!");
-    if (!estaEmQuadra(jogadorAtivo.id, segundoAtual))
-      return alert(`${jogadorAtivo.nome} está no banco neste minuto!`);
+    if (!jogadorAtivo) {
+      toast.error("Selecione um jogador na lateral esquerda antes!");
+      return;
+    }
+    if (!estaEmQuadra(jogadorAtivo.id, segundoAtual)) {
+      toast.error(`${jogadorAtivo.nome} está no banco neste minuto!`);
+      return;
+    }
     const minutoVideo = segundosParaTempo(segundoAtual);
-    if (eventos.some((ev) => ev.minuto_video === minutoVideo))
-      return alert("Segundo Ocupado! Avance ou recue o tempo em 1s.");
+    if (eventos.some((ev) => ev.minuto_video === minutoVideo)) {
+      toast.error("Segundo Ocupado! Avance ou recue o tempo em 1s.");
+      return;
+    }
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -209,9 +216,7 @@ export default function Scout() {
 
   const registrarAcao = async (tipoAcao) => {
     if (!estaEmQuadra(jogadorAtivo.id, segundoAtual)) {
-      alert(
-        `ERRO: ${jogadorAtivo.nome} não está em quadra neste minuto! Ação cancelada.`,
-      );
+      toast.error(`ERRO: ${jogadorAtivo.nome} não está em quadra neste minuto! Ação cancelada.`);
       return;
     }
 
@@ -231,18 +236,19 @@ export default function Scout() {
       await apiPost("/eventos", payload);
       await carregarDadosDaAPI();
       setModalAcao({ visivel: false, x: 0, y: 0 });
+      toast.success(`${tipoAcao} registrado com sucesso!`);
     } catch (e) {
       console.error(e);
-      alert(`Erro ao salvar ação: ${e.message}`);
+      toast.error(`Erro ao salvar ação: ${e.message}`);
     }
   };
 
   // ========== SUBSTITUIÇÕES ==========
   const handleReservaClick = (reserva) => {
-    if (!jogadorAtivo)
-      return alert(
-        "Selecione um jogador titular (na lateral esquerda) para fazer a troca.",
-      );
+    if (!jogadorAtivo) {
+      toast.error("Selecione um jogador titular (na lateral esquerda) para fazer a troca.");
+      return;
+    }
 
     const eventosFuturosDoJogador = eventos.filter(
       (ev) =>
@@ -250,17 +256,17 @@ export default function Scout() {
         tempoParaSegundos(ev.minuto_video) > segundoAtual,
     );
     if (eventosFuturosDoJogador.length > 0) {
-      alert(
+      toast.error(
         `Este jogador possui lances no futuro. Apague os lances dele que ocorrem após ${segundosParaTempo(segundoAtual)} antes de substituí-lo no passado.`,
       );
       return;
     }
 
     const minutoVideo = segundosParaTempo(segundoAtual);
-    if (eventos.some((ev) => ev.minuto_video === minutoVideo))
-      return alert(
-        "Segundo Ocupado! Avance ou recue o tempo em 1s antes de substituir.",
-      );
+    if (eventos.some((ev) => ev.minuto_video === minutoVideo)) {
+      toast.error("Segundo Ocupado! Avance ou recue o tempo em 1s antes de substituir.");
+      return;
+    }
 
     setModalSub({
       visivel: true,
@@ -272,9 +278,7 @@ export default function Scout() {
 
   const confirmarSubstituicao = async () => {
     if (!estaEmQuadra(modalSub.idSaindo, segundoAtual)) {
-      alert(
-        "ERRO: O jogador que você quer substituir não está em quadra neste momento.",
-      );
+      toast.error("ERRO: O jogador que você quer substituir não está em quadra neste momento.");
       setModalSub({
         visivel: false,
         idSaindo: null,
@@ -285,9 +289,7 @@ export default function Scout() {
     }
 
     if (estaEmQuadra(modalSub.idEntrando, segundoAtual)) {
-      alert(
-        "ERRO: O jogador que você quer colocar já está em quadra. Substituição inválida.",
-      );
+      toast.error("ERRO: O jogador que você quer colocar já está em quadra. Substituição inválida.");
       setModalSub({
         visivel: false,
         idSaindo: null,
@@ -303,7 +305,7 @@ export default function Scout() {
         tempoParaSegundos(ev.minuto_video) > segundoAtual,
     );
     if (eventosFuturosDoSaindo.length > 0) {
-      alert(
+      toast.error(
         `ERRO: O jogador ${jogadorAtivo?.nome.split(" ")[0]} possui ${eventosFuturosDoSaindo.length} lance(s) após ${segundosParaTempo(segundoAtual)}.\n` +
           `Apague esses lances antes de fazer a substituição retroativa.`,
       );
@@ -336,9 +338,10 @@ export default function Scout() {
         nomeEntrando: "",
       });
       setJogadorAtivo(null);
+      toast.success("Substituição registrada com sucesso!");
     } catch (e) {
       console.error(e);
-      alert(`Erro ao registrar substituição: ${e.message}`);
+      toast.error(`Erro ao registrar substituição: ${e.message}`);
     }
   };
 
@@ -384,9 +387,10 @@ export default function Scout() {
           minutoVideo: "",
         });
       await carregarDadosDaAPI();
+      toast.success("Lance deletado com sucesso!");
     } catch (e) {
       console.error(e);
-      alert(`Erro ao deletar: ${e.message}`);
+      toast.error(`Erro ao deletar: ${e.message}`);
     }
   };
 
@@ -397,9 +401,10 @@ export default function Scout() {
       );
       await carregarDadosDaAPI();
       setModalDomino({ visivel: false, idsParaDeletar: [], qtdExtras: 0 });
+      toast.success(`${modalDomino.idsParaDeletar.length} lances deletados em cascata.`);
     } catch (e) {
       console.error(e);
-      alert(`Erro crítico ao apagar lances em cascata: ${e.message}`);
+      toast.error(`Erro crítico ao apagar lances em cascata: ${e.message}`);
     }
   };
 
@@ -416,19 +421,24 @@ export default function Scout() {
 
   const salvarEdicaoLance = async () => {
     const formatoValido = /^[0-9]{2}:[0-5][0-9]$/.test(modalEdicao.minutoVideo);
-    if (!formatoValido)
-      return alert("O tempo deve estar no formato MM:SS (Ex: 14:30)");
+    if (!formatoValido) {
+      toast.error("O tempo deve estar no formato MM:SS (Ex: 14:30)");
+      return;
+    }
     const novoSegundo = tempoParaSegundos(modalEdicao.minutoVideo);
-    if (novoSegundo > 2400) return alert("O tempo máximo permitido é 40:00.");
+    if (novoSegundo > 2400) {
+      toast.error("O tempo máximo permitido é 40:00.");
+      return;
+    }
     const ocupado = eventos.some(
       (ev) =>
         tempoParaSegundos(ev.minuto_video) === novoSegundo &&
         ev.id !== modalEdicao.evento.id,
     );
-    if (ocupado)
-      return alert(
-        "Já existe outro lance marcado neste exato segundo. Escolha outro tempo.",
-      );
+    if (ocupado) {
+      toast.error("Já existe outro lance marcado neste exato segundo. Escolha outro tempo.");
+      return;
+    }
     try {
       await apiPut(`/eventos/${modalEdicao.evento.id}`, {
         tipo_acao: modalEdicao.tipoAcao,
@@ -442,9 +452,10 @@ export default function Scout() {
         minutoVideo: "",
       });
       setSegundoAtual(novoSegundo);
+      toast.success("Lance editado com sucesso!");
     } catch (e) {
       console.error(e);
-      alert(`Erro ao editar lance: ${e.message}`);
+      toast.error(`Erro ao editar lance: ${e.message}`);
     }
   };
 
@@ -467,7 +478,7 @@ export default function Scout() {
   const handleRangeChange = (e) => {
     const novoSegundo = parseInt(e.target.value);
     if (jogadorAtivo && !estaEmQuadra(jogadorAtivo.id, novoSegundo)) {
-      alert("Este jogador estava no banco neste momento.");
+      toast.error("Este jogador estava no banco neste momento.");
       const jogadoresNaQuadra = obterJogadoresEmQuadraNoSegundo(novoSegundo);
       if (jogadoresNaQuadra.length > 0) setJogadorAtivo(jogadoresNaQuadra[0]);
     }
@@ -505,7 +516,7 @@ export default function Scout() {
       setReservasIniciais(enriquecer(escalacao.reservas));
     } catch (e) {
       console.error("Erro no carregamento:", e);
-      alert("Erro ao carregar a prancheta.");
+      toast.error("Erro ao carregar a prancheta.");
       navigate("/nova-partida");
     }
   };

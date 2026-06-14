@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { apiGet } from '../services/api';
+import toast from 'react-hot-toast';
 
 export default function Partidas() {
   const [partidas, setPartidas] = useState([]);
@@ -15,7 +16,7 @@ export default function Partidas() {
         setPartidas(data);
       } catch (err) {
         console.error("Erro ao buscar partidas:", err);
-        alert("Erro ao carregar histórico de partidas.");
+        toast.error("Erro ao carregar histórico de partidas.");
       } finally {
         setLoading(false);
       }

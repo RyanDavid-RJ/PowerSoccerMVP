@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { apiGet } from "../services/api";
+import toast from "react-hot-toast";
 
 ChartJS.register(
   CategoryScale,
@@ -56,7 +57,7 @@ export default function Elenco() {
         setAtletas(data);
       } catch (error) {
         console.error("Erro ao buscar atletas:", error);
-        alert("Erro ao carregar elenco.");
+        toast.error("Erro ao carregar elenco.");
       }
     };
     carregarElenco();
@@ -124,6 +125,7 @@ export default function Elenco() {
       setTotais(totaisCalc);
     } catch (error) {
       console.error("Erro ao carregar eventos do atleta:", error);
+      toast.error("Erro ao carregar estatísticas do atleta.");
       setStatsPorPartida([]);
       setTotais({ gols: 0, passesC: 0, passesE: 0, interceptacoes: 0 });
     } finally {
@@ -160,7 +162,7 @@ export default function Elenco() {
         body: formData,
       });
       if (!response.ok) throw new Error(await response.text());
-      alert("Atleta cadastrado com sucesso!");
+      toast.success("Atleta cadastrado com sucesso!");
       setNome("");
       setNumero("");
       setFoto(null);
@@ -170,7 +172,7 @@ export default function Elenco() {
       setAtletas(data);
     } catch (error) {
       console.error("Erro completo:", error);
-      alert("Erro ao salvar: " + error.message);
+      toast.error(`Erro ao salvar: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -193,13 +195,13 @@ export default function Elenco() {
         }
       );
       if (!response.ok) throw new Error(await response.text());
-      alert("Atleta atualizado com sucesso!");
+      toast.success("Atleta atualizado com sucesso!");
       const data = await apiGet("/atletas");
       setAtletas(data);
       fecharModal();
     } catch (error) {
       console.error("Erro completo:", error);
-      alert("Erro ao editar: " + error.message);
+      toast.error(`Erro ao editar: ${error.message}`);
     } finally {
       setLoadingEdit(false);
     }
