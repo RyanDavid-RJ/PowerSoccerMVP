@@ -427,7 +427,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* MAPA DE CALOR (HEATMAP) */}
+        {/* MAPA DE CALOR (HEATMAP) – com tooltip customizado */}
         <div className="duo-container" style={{ marginTop: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
             <h3 style={{ margin: 0 }}>🔥 Mapa de Calor (Ocorrências)</h3>
@@ -479,12 +479,35 @@ export default function Dashboard() {
                     border: '1px solid rgba(0,0,0,0.5)',
                     transform: 'translate(-50%, -50%)',
                     boxShadow: '0 0 4px rgba(0,0,0,0.3)',
-                    pointerEvents: 'none',
                     zIndex: 5,
                     opacity: 0.85
                   }}
-                  title={`${ev.tipo_acao} - ${ev.minuto_video}`}
-                />
+                >
+                  {/* Tooltip customizado */}
+                  <div className="tooltip-ponto">
+                    {ev.foto_atleta ? (
+                      <img
+                        src={ev.foto_atleta}
+                        alt={ev.nome_atleta}
+                        className="tooltip-foto"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className="tooltip-foto"
+                      style={{ display: ev.foto_atleta ? 'none' : 'flex' }}
+                    >
+                      {ev.nome_atleta?.charAt(0) || '?'}
+                    </div>
+                    <div className="tooltip-info">
+                      <strong>{ev.nome_atleta?.split(' ')[0] || '?'}</strong>
+                      <span>{ev.tipo_acao} - {ev.minuto_video}</span>
+                    </div>
+                  </div>
+                </div>
               ))}
               {eventosParaHeatmap.length === 0 && !loadingEventos && (
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', background: 'rgba(0,0,0,0.6)', padding: '8px 16px', borderRadius: '20px', fontSize: '14px' }}>

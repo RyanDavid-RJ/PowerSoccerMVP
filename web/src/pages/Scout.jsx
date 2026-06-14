@@ -715,6 +715,7 @@ export default function Scout() {
               <circle cx="50%" cy="50%" r="1%" fill="white" />
             </svg>
 
+            {/* ========== PONTOS COM TOOLTIP CUSTOMIZADO ========== */}
             {eventosFiltrados.map((ev) => {
               if (ev.tipo_acao === "Substituição") return null;
               const destaque =
@@ -726,16 +727,42 @@ export default function Scout() {
                     ev.tipo_acao === "Gol"
                       ? "gol"
                       : ev.tipo_acao === "Passe Certo"
-                        ? "passe-certo"
-                        : ev.tipo_acao === "Passe Errado"
-                          ? "passe-errado"
-                          : ev.tipo_acao === "Finalização"
-                            ? "finalizacao"
-                            : "interceptacao"
+                      ? "passe-certo"
+                      : ev.tipo_acao === "Passe Errado"
+                      ? "passe-errado"
+                      : ev.tipo_acao === "Finalização"
+                      ? "finalizacao"
+                      : "interceptacao"
                   } ${destaque ? "ponto-destaque" : ""}`}
                   style={{ left: `${ev.coord_x}%`, top: `${ev.coord_y}%` }}
-                  title={`${ev.nome_atleta} - ${ev.tipo_acao}`}
-                />
+                >
+                  {/* Tooltip customizado */}
+                  <div className="tooltip-ponto">
+                    {ev.foto_atleta ? (
+                      <img
+                        src={ev.foto_atleta}
+                        alt={ev.nome_atleta}
+                        className="tooltip-foto"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className="tooltip-foto"
+                      style={{ display: ev.foto_atleta ? "none" : "flex" }}
+                    >
+                      {ev.nome_atleta?.charAt(0) || "?"}
+                    </div>
+                    <div className="tooltip-info">
+                      <strong>{ev.nome_atleta?.split(" ")[0] || "?"}</strong>
+                      <span>
+                        {ev.tipo_acao} - {ev.minuto_video}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               );
             })}
 

@@ -5,7 +5,7 @@ const eventoController = {
         try {
             const { id } = req.params;
             const sql = `
-                SELECT e.*, a.nome as nome_atleta 
+                SELECT e.*, a.nome as nome_atleta, a.foto as foto_atleta
                 FROM eventos_scout e 
                 LEFT JOIN atletas a ON e.atleta_id = a.id 
                 WHERE e.partida_id = ? 

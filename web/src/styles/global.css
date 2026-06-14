@@ -1245,3 +1245,111 @@ body.login-page {
   background-color: var(--duo-green-primary) !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
+
+/* ==================================================================
+   TOOLTIP CUSTOMIZADO PARA PONTOS DO CAMPO E HEATMAP
+   ================================================================== */
+.tooltip-ponto {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 8px 12px;
+    min-width: 160px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-ui);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 9999;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.tooltip-ponto::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--bg-secondary) transparent transparent transparent;
+}
+
+/* Imagem / ícone do tooltip */
+.tooltip-foto {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--duo-green-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.tooltip-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+}
+
+.tooltip-info strong {
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.tooltip-info span {
+    font-size: 11px;
+    color: #aaa;
+}
+
+/* Exibe o tooltip ao passar o mouse sobre o ponto */
+.ponto:hover .tooltip-ponto,
+.heatmap-ponto:hover .tooltip-ponto {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+/* Ajuste para evitar que o tooltip ultrapasse a borda esquerda/direita */
+.ponto .tooltip-ponto,
+.heatmap-ponto .tooltip-ponto {
+    left: 50%;
+    right: auto;
+}
+
+/* Para pontos muito próximos à borda esquerda */
+.ponto[style*="left: 0%"] .tooltip-ponto,
+.heatmap-ponto[style*="left: 0%"] .tooltip-ponto {
+    left: 0;
+    transform: translateX(0) translateY(-8px);
+}
+.ponto[style*="left: 0%"] .tooltip-ponto::after,
+.heatmap-ponto[style*="left: 0%"] .tooltip-ponto::after {
+    left: 12px;
+    transform: none;
+}
+
+/* Para pontos muito próximos à borda direita */
+.ponto[style*="left: 100%"] .tooltip-ponto,
+.heatmap-ponto[style*="left: 100%"] .tooltip-ponto {
+    left: auto;
+    right: 0;
+    transform: translateX(0) translateY(-8px);
+}
+.ponto[style*="left: 100%"] .tooltip-ponto::after,
+.heatmap-ponto[style*="left: 100%"] .tooltip-ponto::after {
+    left: auto;
+    right: 12px;
+    transform: none;
+}
