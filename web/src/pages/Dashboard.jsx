@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [filtroPeriodo, setFiltroPeriodo] = useState('Todos');
   const [eventos, setEventos] = useState([]);
   const [heatmapFiltroTipo, setHeatmapFiltroTipo] = useState('');
+  const [heatmapFiltroJogador, setHeatmapFiltroJogador] = useState(''); // NOVO ESTADO
   const [loadingEventos, setLoadingEventos] = useState(false);
 
   // ========== NOVOS ESTADOS PARA CONFRONTO DIRETO ==========
@@ -215,11 +216,12 @@ export default function Dashboard() {
     },
   };
 
-  // ========== PREPARAÇÃO DO HEATMAP ==========
+  // ========== PREPARAÇÃO DO HEATMAP (COM FILTRO DE JOGADOR) ==========
   const eventosParaHeatmap = eventos.filter(ev => {
     if (ev.tipo_acao === 'Substituição') return false;
     if (filtroPeriodo !== 'Todos' && ev.periodo !== filtroPeriodo) return false;
     if (heatmapFiltroTipo !== '' && ev.tipo_acao !== heatmapFiltroTipo) return false;
+    if (heatmapFiltroJogador !== '' && ev.nome_atleta !== heatmapFiltroJogador) return false;
     return ev.coord_x != null && ev.coord_y != null;
   });
 
@@ -427,11 +429,24 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* MAPA DE CALOR (HEATMAP) – com tooltip customizado */}
+        {/* MAPA DE CALOR (HEATMAP) – com tooltip customizado e filtro de jogador */}
         <div className="duo-container" style={{ marginTop: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
             <h3 style={{ margin: 0 }}>🔥 Mapa de Calor (Ocorrências)</h3>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+              {/* Select de filtro por jogador */}
+              <select
+                className="form-input"
+                value={heatmapFiltroJogador}
+                onChange={(e) => setHeatmapFiltroJogador(e.target.value)}
+                style={{ width: '150px', padding: '4px 8px', fontSize: '12px', marginRight: '8px' }}
+              >
+                <option value="">Todos os Jogadores</option>
+                {jogadoresStats.map(j => (
+                  <option key={j.nome} value={j.nome}>{j.nome}</option>
+                ))}
+              </select>
+              {/* Botões de filtro por tipo */}
               <button
                 className={`btn-filtro-tipo ${heatmapFiltroTipo === '' ? 'ativo' : ''}`}
                 onClick={() => setHeatmapFiltroTipo('')}
