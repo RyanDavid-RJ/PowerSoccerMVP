@@ -1,36 +1,10 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { apiPost } from '../services/api';
 import toast from 'react-hot-toast';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
   const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, senha })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-        toast.success('Login realizado com sucesso!');
-        navigate('/');
-      } else {
-        toast.error(data.erro || 'Erro no login');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Erro de conexão com o servidor');
-    }
-  };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
@@ -50,31 +24,21 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', textAlign: 'center' }}>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          style={{ display: 'block', width: '100%', marginBottom: '10px', padding: '8px' }}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={e => setSenha(e.target.value)}
-          required
-          style={{ display: 'block', width: '100%', marginBottom: '20px', padding: '8px' }}
-        />
-        <button type="submit" style={{ width: '100%', padding: '10px', marginBottom: '20px' }}>
-          Entrar
-        </button>
-      </form>
-
-      <hr style={{ margin: '20px 0' }} />
-
+    <div style={{ 
+      maxWidth: '400px', 
+      margin: '50px auto', 
+      textAlign: 'center',
+      padding: '40px',
+      backgroundColor: 'var(--bg-secondary)',
+      borderRadius: '16px',
+      boxShadow: 'var(--shadow-duo)'
+    }}>
+      <h2 style={{ marginBottom: '30px', color: 'var(--text-main)' }}>
+        PowerSoccer <span className="cor-duo">Scout</span>
+      </h2>
+      <p style={{ marginBottom: '30px', color: '#aaa' }}>
+        Acesse sua conta usando o Google
+      </p>
       <GoogleLogin
         onSuccess={handleGoogleSuccess}
         onError={handleGoogleError}

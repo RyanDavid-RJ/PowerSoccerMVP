@@ -7,14 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'power_soccer_secret_key_2025';
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const authController = {
-    async registrar(req, res) {
-        // ... (código existente, inalterado)
-    },
-
-    async login(req, res) {
-        // ... (código existente, inalterado)
-    },
-
     async loginGoogle(req, res) {
         try {
             const { token } = req.body;
