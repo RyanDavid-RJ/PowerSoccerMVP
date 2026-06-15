@@ -1456,3 +1456,179 @@ body.login-page {
   height: 80px;
   border-radius: 12px;
 }
+
+/* ==================================================================
+   RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS (max-width: 768px)
+   ================================================================== */
+
+@media (max-width: 768px) {
+  /* -------------------- HEADER (Header.jsx) -------------------- */
+  .duo-header {
+    padding: 8px 15px; /* reduz espaçamento lateral */
+  }
+
+  .logo img {
+    max-height: 32px !important; /* reduz tamanho dos logos */
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .header-user-name {
+    font-size: 14px;
+  }
+
+  .btn-header-sair,
+  .btn-header-icon {
+    font-size: 14px;
+  }
+
+  /* -------------------- ELENCO (Elenco.jsx) -------------------- */
+  .elenco-layout {
+    grid-template-columns: 1fr; /* empilha listagem e formulário */
+    gap: 15px;
+    margin: 15px auto;
+    padding: 0 15px;
+  }
+
+  .grid-jogadores {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* cards mais compactos */
+    gap: 12px;
+  }
+
+  .card-atleta .foto-grande {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .card-atleta h4 {
+    font-size: 14px;
+  }
+
+  /* -------------------- DASHBOARD (Dashboard.jsx) -------------------- */
+  .filtro-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .filtro-container > div {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  select, .btn-group {
+    width: 100%;
+  }
+
+  .btn-group {
+    justify-content: center;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards por linha */
+    gap: 12px;
+  }
+
+  .kpi-card {
+    padding: 12px;
+  }
+
+  .kpi-card .valor {
+    font-size: 28px;
+  }
+
+  /* Confronto Direto – selects empilhados */
+  .duo-container > div[style*="display: flex"][style*="gap: 20px"] {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .duo-container .form-input[style*="marginTop"] {
+    width: 100%;
+  }
+
+  /* Heatmap – controles de filtro */
+  .duo-container > div:first-child > div:last-child {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .heatmap-container {
+    margin-top: 15px;
+  }
+
+  /* -------------------- SCOUT (Scout.jsx) -------------------- */
+  .layout-principal {
+    flex-direction: column; /* empilha titulares, campo e histórico */
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .titulares,
+  .historico {
+    width: 100%; /* ocupa largura total */
+  }
+
+  .area-campo {
+    order: 2; /* campo fica no meio, mas a ordem já é natural */
+  }
+
+  .campo-container {
+    max-width: 100%;
+    aspect-ratio: 8 / 5; /* mantém proporção do campo */
+  }
+
+  .linha-tempo-container,
+  .reservas {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .lista-reservas {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .lista-reservas .jogador {
+    flex: 0 0 auto;
+    min-width: 90px;
+  }
+
+  /* Ajustes nos botões de toggle de período/visão */
+  .area-campo > div:first-child {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .area-campo > div:first-child > div {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    justify-content: center;
+  }
+
+  /* Histórico de lances */
+  .duo-list {
+    max-height: 300px; /* limita altura para não poluir */
+  }
+
+  .item-historico {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Modal de ação no campo (menu flutuante) */
+  .campo-container > div[style*="position: absolute"][style*="zIndex: 20"] {
+    flex-wrap: wrap;
+    width: 200px;
+    transform: translate(-50%, -100%) !important;
+  }
+  .campo-container > div[style*="position: absolute"][style*="zIndex: 20"] button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
