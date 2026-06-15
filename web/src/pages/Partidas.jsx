@@ -32,7 +32,11 @@ export default function Partidas() {
         <h2>Histórico de <span className="cor-duo">Partidas</span></h2>
         
         {loading ? (
-          <p style={{ textAlign: 'center', marginTop: '20px' }}>Carregando histórico...</p>
+          <div className="spacing-top">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="skeleton-card"></div>
+            ))}
+          </div>
         ) : (
           <div className="spacing-top">
             {partidas.length === 0 ? (

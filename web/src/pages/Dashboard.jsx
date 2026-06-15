@@ -14,14 +14,12 @@ export default function Dashboard() {
   const [filtroPeriodo, setFiltroPeriodo] = useState('Todos');
   const [eventos, setEventos] = useState([]);
   const [heatmapFiltroTipo, setHeatmapFiltroTipo] = useState('');
-  const [heatmapFiltroJogador, setHeatmapFiltroJogador] = useState(''); // NOVO ESTADO
+  const [heatmapFiltroJogador, setHeatmapFiltroJogador] = useState('');
   const [loadingEventos, setLoadingEventos] = useState(false);
 
-  // ========== NOVOS ESTADOS PARA CONFRONTO DIRETO ==========
   const [atletaA, setAtletaA] = useState('');
   const [atletaB, setAtletaB] = useState('');
 
-  // Carrega a lista de partidas
   useEffect(() => {
     const carregarPartidas = async () => {
       try {
@@ -36,7 +34,6 @@ export default function Dashboard() {
     carregarPartidas();
   }, []);
 
-  // Carrega eventos e calcula estatísticas + heatmap
   useEffect(() => {
     if (!partidaSelecionada) return;
 
@@ -46,7 +43,6 @@ export default function Dashboard() {
         const lances = await apiGet(`/eventos/partida/${partidaSelecionada}`);
         setEventos(lances);
 
-        // Filtra pelo período escolhido
         const lancesFiltrados = filtroPeriodo === 'Todos'
           ? lances
           : lances.filter(l => l.periodo === filtroPeriodo);
@@ -71,7 +67,6 @@ export default function Dashboard() {
     fetchEventos();
   }, [partidaSelecionada, filtroPeriodo]);
 
-  // ========== PREPARAÇÃO DO GRÁFICO POR JOGADOR ==========
   const processarEstatisticasPorJogador = () => {
     const eventosFiltrados = eventos.filter(ev => {
       if (ev.tipo_acao === 'Substituição') return false;
@@ -101,7 +96,6 @@ export default function Dashboard() {
 
   const jogadoresStats = processarEstatisticasPorJogador();
 
-  // ========== INICIALIZAÇÃO DOS ATLETAS PARA CONFRONTO ==========
   useEffect(() => {
     if (jogadoresStats.length >= 2 && !atletaA && !atletaB) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -112,45 +106,14 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jogadoresStats]);
 
-  // ========== GRÁFICO COMPARATIVO POR JOGADOR (com todas as métricas) ==========
   const chartDataPorJogador = {
     labels: jogadoresStats.map(j => j.nome.split(' ')[0]),
     datasets: [
-      {
-        label: 'Gols',
-        data: jogadoresStats.map(j => j.gols),
-        backgroundColor: '#ffc800',
-        borderRadius: 6,
-        barPercentage: 0.7,
-      },
-      {
-        label: 'Passes Certos',
-        data: jogadoresStats.map(j => j.passesC),
-        backgroundColor: '#1cb0f6',
-        borderRadius: 6,
-        barPercentage: 0.7,
-      },
-      {
-        label: 'Passes Errados',
-        data: jogadoresStats.map(j => j.passesE),
-        backgroundColor: '#ff4b4b',
-        borderRadius: 6,
-        barPercentage: 0.7,
-      },
-      {
-        label: 'Interceptações',
-        data: jogadoresStats.map(j => j.intercep),
-        backgroundColor: '#ff9600',
-        borderRadius: 6,
-        barPercentage: 0.7,
-      },
-      {
-        label: 'Finalizações',
-        data: jogadoresStats.map(j => j.finalizacoes),
-        backgroundColor: '#9c27b0',
-        borderRadius: 6,
-        barPercentage: 0.7,
-      },
+      { label: 'Gols', data: jogadoresStats.map(j => j.gols), backgroundColor: '#ffc800', borderRadius: 6, barPercentage: 0.7 },
+      { label: 'Passes Certos', data: jogadoresStats.map(j => j.passesC), backgroundColor: '#1cb0f6', borderRadius: 6, barPercentage: 0.7 },
+      { label: 'Passes Errados', data: jogadoresStats.map(j => j.passesE), backgroundColor: '#ff4b4b', borderRadius: 6, barPercentage: 0.7 },
+      { label: 'Interceptações', data: jogadoresStats.map(j => j.intercep), backgroundColor: '#ff9600', borderRadius: 6, barPercentage: 0.7 },
+      { label: 'Finalizações', data: jogadoresStats.map(j => j.finalizacoes), backgroundColor: '#9c27b0', borderRadius: 6, barPercentage: 0.7 },
     ],
   };
 
@@ -167,7 +130,6 @@ export default function Dashboard() {
     }
   };
 
-  // ========== DADOS PARA O GRÁFICO DE CONFRONTO DIRETO ==========
   const obterEstatisticasAtleta = (nomeAtleta) => {
     const atleta = jogadoresStats.find(j => j.nome === nomeAtleta);
     if (!atleta) return { gols: 0, passesC: 0, passesE: 0, intercep: 0, finalizacoes: 0 };
@@ -189,14 +151,14 @@ export default function Dashboard() {
       {
         label: atletaA ? atletaA.split(' ')[0] : 'Atleta A',
         data: [statsA.gols, statsA.passesC, statsA.passesE, statsA.intercep, statsA.finalizacoes],
-        backgroundColor: '#58CC02', // verde
+        backgroundColor: '#58CC02',
         borderRadius: 6,
         barPercentage: 0.7,
       },
       {
         label: atletaB ? atletaB.split(' ')[0] : 'Atleta B',
         data: [statsB.gols, statsB.passesC, statsB.passesE, statsB.intercep, statsB.finalizacoes],
-        backgroundColor: '#ec2592', // rosa
+        backgroundColor: '#ec2592',
         borderRadius: 6,
         barPercentage: 0.7,
       },
@@ -216,7 +178,6 @@ export default function Dashboard() {
     },
   };
 
-  // ========== PREPARAÇÃO DO HEATMAP (COM FILTRO DE JOGADOR) ==========
   const eventosParaHeatmap = eventos.filter(ev => {
     if (ev.tipo_acao === 'Substituição') return false;
     if (filtroPeriodo !== 'Todos' && ev.periodo !== filtroPeriodo) return false;
@@ -233,7 +194,6 @@ export default function Dashboard() {
     'Interceptação': '#ff9600'
   };
 
-  // ========== SÍNTESE DE IA (adaptada para incluir finalizações) ==========
   const gerarAnaliseIA = () => {
     const totalPasses = stats.passesC + stats.passesE;
     const percPassesCertos = totalPasses > 0 ? (stats.passesC / totalPasses) * 100 : 0;
@@ -257,7 +217,6 @@ export default function Dashboard() {
     return analise || "Desempenho equilibrado. Continue ajustando a estratégia.";
   };
 
-  // ========== EXPORTAÇÃO CSV ==========
   const handleExportCSV = () => {
     const eventosParaExportar = eventos.filter(ev => {
       if (filtroPeriodo === 'Todos') return true;
@@ -269,16 +228,7 @@ export default function Dashboard() {
       return;
     }
 
-    const cabecalhos = [
-      'ID do Lance',
-      'Minuto',
-      'Período',
-      'Jogador',
-      'Ação',
-      'Coordenada X (%)',
-      'Coordenada Y (%)'
-    ];
-
+    const cabecalhos = ['ID do Lance', 'Minuto', 'Período', 'Jogador', 'Ação', 'Coordenada X (%)', 'Coordenada Y (%)'];
     const linhas = eventosParaExportar.map(ev => [
       ev.id,
       ev.minuto_video,
@@ -307,7 +257,6 @@ export default function Dashboard() {
     toast.success(`${eventosParaExportar.length} lances exportados com sucesso!`);
   };
 
-  // ========== EXPORTAÇÃO PDF ==========
   const handleExportPDF = () => {
     document.body.classList.add('print-mode');
     window.print();
@@ -321,7 +270,6 @@ export default function Dashboard() {
       <Header showBackButton={true} />
 
       <div className="dashboard-container">
-        {/* Filtros principais + Botões Exportar */}
         <div className="filtro-container">
           <h2>Análise <span className="cor-duo">Tática</span></h2>
           <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -344,23 +292,16 @@ export default function Dashboard() {
               ))}
             </div>
 
-            <button
-              onClick={handleExportCSV}
-              style={{ padding: '6px 14px', borderRadius: '20px', background: 'var(--duo-blue)', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
+            <button onClick={handleExportCSV} style={{ padding: '6px 14px', borderRadius: '20px', background: 'var(--duo-blue)', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
               📥 Exportar Dados Brutos (CSV)
             </button>
 
-            <button
-              onClick={handleExportPDF}
-              style={{ padding: '6px 14px', borderRadius: '20px', background: 'var(--duo-purple)', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
+            <button onClick={handleExportPDF} style={{ padding: '6px 14px', borderRadius: '20px', background: 'var(--duo-purple)', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
               📄 Exportar Relatório PDF
             </button>
           </div>
         </div>
 
-        {/* KPIs */}
         <div className="kpi-grid">
           <div className="kpi-card kpi-gols"><h3>Gols</h3><div className="valor">{stats.gols}</div></div>
           <div className="kpi-card kpi-passes-c"><h3>Passes Certos</h3><div className="valor">{stats.passesC}</div></div>
@@ -369,17 +310,13 @@ export default function Dashboard() {
           <div className="kpi-card" style={{ borderBottomColor: '#9c27b0' }}><h3>Finalizações</h3><div className="valor" style={{ color: '#9c27b0' }}>{stats.finalizacoes}</div></div>
         </div>
 
-        {/* SÍNTESE DE IA */}
         <div className="duo-container" style={{ marginBottom: '20px', borderLeft: `5px solid var(--duo-purple)` }}>
           <h3 style={{ margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span>🧠 Síntese Tática (IA)</span>
           </h3>
-          <p style={{ fontSize: '1rem', lineHeight: '1.5', color: 'var(--text-main)' }}>
-            {gerarAnaliseIA()}
-          </p>
+          <p style={{ fontSize: '1rem', lineHeight: '1.5', color: 'var(--text-main)' }}>{gerarAnaliseIA()}</p>
         </div>
 
-        {/* GRÁFICO DE RENDIMENTO INDIVIDUAL (completo) */}
         <div className="duo-container" style={{ marginTop: '20px' }}>
           <h3 style={{ marginBottom: '15px' }}>📊 Comparativo por Jogador</h3>
           {jogadoresStats.length === 0 ? (
@@ -389,52 +326,33 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* NOVO: CONFRONTO DIRETO (ATLETA VS ATLETA) */}
         <div className="duo-container" style={{ marginTop: '20px' }}>
           <h3 style={{ marginBottom: '15px' }}>⚔️ Confronto Direto (Atleta vs Atleta)</h3>
           <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
             <div style={{ flex: 1 }}>
               <label className="form-label">Atleta A</label>
-              <select
-                className="form-input"
-                value={atletaA}
-                onChange={(e) => setAtletaA(e.target.value)}
-                style={{ marginTop: '5px' }}
-              >
-                {jogadoresStats.map(j => (
-                  <option key={j.nome} value={j.nome}>{j.nome}</option>
-                ))}
+              <select className="form-input" value={atletaA} onChange={(e) => setAtletaA(e.target.value)} style={{ marginTop: '5px' }}>
+                {jogadoresStats.map(j => <option key={j.nome} value={j.nome}>{j.nome}</option>)}
               </select>
             </div>
             <div style={{ flex: 1 }}>
               <label className="form-label">Atleta B</label>
-              <select
-                className="form-input"
-                value={atletaB}
-                onChange={(e) => setAtletaB(e.target.value)}
-                style={{ marginTop: '5px' }}
-              >
-                {jogadoresStats.map(j => (
-                  <option key={j.nome} value={j.nome}>{j.nome}</option>
-                ))}
+              <select className="form-input" value={atletaB} onChange={(e) => setAtletaB(e.target.value)} style={{ marginTop: '5px' }}>
+                {jogadoresStats.map(j => <option key={j.nome} value={j.nome}>{j.nome}</option>)}
               </select>
             </div>
           </div>
           {atletaA && atletaB ? (
             <Bar data={chartDataComparativo} options={chartOptionsComparativo} />
           ) : (
-            <p style={{ textAlign: 'center', color: '#aaa' }}>
-              Selecione dois jogadores para comparar.
-            </p>
+            <p style={{ textAlign: 'center', color: '#aaa' }}>Selecione dois jogadores para comparar.</p>
           )}
         </div>
 
-        {/* MAPA DE CALOR (HEATMAP) – com tooltip customizado e filtro de jogador */}
         <div className="duo-container" style={{ marginTop: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
             <h3 style={{ margin: 0 }}>🔥 Mapa de Calor (Ocorrências)</h3>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-              {/* Select de filtro por jogador */}
               <select
                 className="form-input"
                 value={heatmapFiltroJogador}
@@ -442,11 +360,9 @@ export default function Dashboard() {
                 style={{ width: '150px', padding: '4px 8px', fontSize: '12px', marginRight: '8px' }}
               >
                 <option value="">Todos os Jogadores</option>
-                {jogadoresStats.map(j => (
-                  <option key={j.nome} value={j.nome}>{j.nome}</option>
-                ))}
+                {jogadoresStats.map(j => <option key={j.nome} value={j.nome}>{j.nome}</option>)}
               </select>
-              {/* Botões de filtro por tipo */}
+
               <button
                 className={`btn-filtro-tipo ${heatmapFiltroTipo === '' ? 'ativo' : ''}`}
                 onClick={() => setHeatmapFiltroTipo('')}
@@ -468,7 +384,7 @@ export default function Dashboard() {
           </div>
 
           {loadingEventos ? (
-            <div style={{ textAlign: 'center', padding: '40px' }}>Carregando mapa...</div>
+            <div className="heatmap-container skeleton" style={{ width: '100%', aspectRatio: '8/5', marginTop: '10px' }}></div>
           ) : (
             <div className="heatmap-container" style={{ position: 'relative', width: '100%', aspectRatio: '8/5', backgroundColor: 'var(--duo-green-primary)', borderRadius: '16px', overflow: 'hidden', marginTop: '10px' }}>
               <svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
@@ -498,7 +414,6 @@ export default function Dashboard() {
                     opacity: 0.85
                   }}
                 >
-                  {/* Tooltip customizado */}
                   <div className="tooltip-ponto">
                     {ev.foto_atleta ? (
                       <img
@@ -511,10 +426,7 @@ export default function Dashboard() {
                         }}
                       />
                     ) : null}
-                    <div
-                      className="tooltip-foto"
-                      style={{ display: ev.foto_atleta ? 'none' : 'flex' }}
-                    >
+                    <div className="tooltip-foto" style={{ display: ev.foto_atleta ? 'none' : 'flex' }}>
                       {ev.nome_atleta?.charAt(0) || '?'}
                     </div>
                     <div className="tooltip-info">
@@ -537,44 +449,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Estilos para impressão (PDF) */}
       <style>{`
         @media print {
-          body * {
-            visibility: hidden;
-          }
-          .dashboard-container, .dashboard-container * {
-            visibility: visible;
-          }
-          .dashboard-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            margin: 0;
-            padding: 20px;
-            background: white;
-            color: black;
-          }
-          .duo-container, .kpi-card, .heatmap-container {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-          .btn-filtro-periodo, .btn-filtro-tipo, button, .btn-group, .btn-group * {
-            display: none !important;
-          }
-          select, .filtro-container select {
-            display: none !important;
-          }
-          .btn-acao, .btn-config, [onClick] {
-            display: none !important;
-          }
-          .kpi-card .valor {
-            color: #000 !important;
-          }
-          .heatmap-container svg rect, .heatmap-container svg line, .heatmap-container svg circle {
-            stroke: #333 !important;
-          }
+          body * { visibility: hidden; }
+          .dashboard-container, .dashboard-container * { visibility: visible; }
+          .dashboard-container { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 20px; background: white; color: black; }
+          .duo-container, .kpi-card, .heatmap-container { break-inside: avoid; page-break-inside: avoid; }
+          .btn-filtro-periodo, .btn-filtro-tipo, button, .btn-group, .btn-group * { display: none !important; }
+          select, .filtro-container select { display: none !important; }
+          .btn-acao, .btn-config, [onClick] { display: none !important; }
+          .kpi-card .valor { color: #000 !important; }
+          .heatmap-container svg rect, .heatmap-container svg line, .heatmap-container svg circle { stroke: #333 !important; }
         }
       `}</style>
     </>

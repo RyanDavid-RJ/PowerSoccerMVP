@@ -415,9 +415,15 @@ export default function Elenco() {
                   📊 Raio-X (Carreira)
                 </h4>
                 {loadingStats ? (
-                  <div style={{ textAlign: "center", padding: "20px" }}>
-                    Carregando estatísticas...
-                  </div>
+                  <>
+                    <div className="skeleton-kpi-grid">
+                      <div className="skeleton-kpi"></div>
+                      <div className="skeleton-kpi"></div>
+                      <div className="skeleton-kpi"></div>
+                      <div className="skeleton-kpi"></div>
+                    </div>
+                    <div className="skeleton-chart"></div>
+                  </>
                 ) : (
                   <>
                     <div
