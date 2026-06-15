@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -17,9 +17,16 @@ export default function Dashboard() {
   const [heatmapFiltroJogador, setHeatmapFiltroJogador] = useState('');
   const [loadingEventos, setLoadingEventos] = useState(false);
 
+  // Estados do replay
+  const [isReplaying, setIsReplaying] = useState(false);
+  const [replayIndex, setReplayIndex] = useState(0);
+  const timeoutRef = useRef(null);
+  const isReplayingRef = useRef(false);
+
   const [atletaA, setAtletaA] = useState('');
   const [atletaB, setAtletaB] = useState('');
 
+  // Carrega a lista de partidas
   useEffect(() => {
     const carregarPartidas = async () => {
       try {
@@ -34,6 +41,7 @@ export default function Dashboard() {
     carregarPartidas();
   }, []);
 
+  // Carrega eventos e calcula estatísticas + heatmap
   useEffect(() => {
     if (!partidaSelecionada) return;
 
@@ -67,6 +75,67 @@ export default function Dashboard() {
     fetchEventos();
   }, [partidaSelecionada, filtroPeriodo]);
 
+  // ========== PREPARAÇÃO DO HEATMAP ==========
+  const eventosParaHeatmap = eventos.filter(ev => {
+    if (ev.tipo_acao === 'Substituição') return false;
+    if (filtroPeriodo !== 'Todos' && ev.periodo !== filtroPeriodo) return false;
+    if (heatmapFiltroTipo !== '' && ev.tipo_acao !== heatmapFiltroTipo) return false;
+    if (heatmapFiltroJogador !== '' && ev.nome_atleta !== heatmapFiltroJogador) return false;
+    return ev.coord_x != null && ev.coord_y != null;
+  });
+
+  // ========== LÓGICA DO REPLAY ==========
+  const stopReplay = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    isReplayingRef.current = false;
+    setIsReplaying(false);
+    setReplayIndex(0);
+  };
+
+  const startReplay = () => {
+    stopReplay();
+    isReplayingRef.current = true;
+    setIsReplaying(true);
+    setReplayIndex(0);
+  };
+
+  // Efeito para controlar o avanço do replay
+  useEffect(() => {
+    if (!isReplaying) return;
+
+    const advance = () => {
+      if (!isReplayingRef.current) return;
+      setReplayIndex(prev => {
+        const next = prev + 1;
+        if (next >= eventosParaHeatmap.length) {
+          stopReplay();
+          return 0;
+        }
+        return next;
+      });
+    };
+
+    if (replayIndex < eventosParaHeatmap.length - 1) {
+      timeoutRef.current = setTimeout(advance, 1200);
+    } else if (replayIndex >= eventosParaHeatmap.length - 1 && eventosParaHeatmap.length > 0) {
+      timeoutRef.current = setTimeout(() => stopReplay(), 1200);
+    }
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isReplaying, replayIndex, eventosParaHeatmap.length]);
+
+  // Reseta o replay quando os filtros mudam
+  useEffect(() => {
+    if (isReplaying) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      stopReplay();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heatmapFiltroTipo, heatmapFiltroJogador, filtroPeriodo]);
+
+  // ========== GRÁFICOS E ESTATÍSTICAS ==========
   const processarEstatisticasPorJogador = () => {
     const eventosFiltrados = eventos.filter(ev => {
       if (ev.tipo_acao === 'Substituição') return false;
@@ -178,14 +247,6 @@ export default function Dashboard() {
     },
   };
 
-  const eventosParaHeatmap = eventos.filter(ev => {
-    if (ev.tipo_acao === 'Substituição') return false;
-    if (filtroPeriodo !== 'Todos' && ev.periodo !== filtroPeriodo) return false;
-    if (heatmapFiltroTipo !== '' && ev.tipo_acao !== heatmapFiltroTipo) return false;
-    if (heatmapFiltroJogador !== '' && ev.nome_atleta !== heatmapFiltroJogador) return false;
-    return ev.coord_x != null && ev.coord_y != null;
-  });
-
   const corPorTipo = {
     'Gol': '#ffc800',
     'Passe Certo': '#1cb0f6',
@@ -263,6 +324,14 @@ export default function Dashboard() {
     setTimeout(() => {
       document.body.classList.remove('print-mode');
     }, 500);
+  };
+
+  const handleReplay = () => {
+    if (isReplaying) {
+      stopReplay();
+    } else {
+      startReplay();
+    }
   };
 
   return (
@@ -380,7 +449,28 @@ export default function Dashboard() {
                   {tipo}
                 </button>
               ))}
+
+              <button
+                onClick={handleReplay}
+                style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  background: isReplaying ? 'var(--duo-red)' : 'var(--duo-blue)',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  marginLeft: '8px',
+                  fontSize: '12px'
+                }}
+              >
+                {isReplaying ? '⏹️ Parar Replay' : '▶️ Replay'}
+              </button>
             </div>
+            {isReplaying && eventosParaHeatmap.length > 0 && (
+              <p style={{ fontSize: '12px', color: '#aaa', marginTop: '8px', textAlign: 'center' }}>
+                ⏱️ Exibindo lance {replayIndex + 1} de {eventosParaHeatmap.length}
+              </p>
+            )}
           </div>
 
           {loadingEventos ? (
@@ -395,47 +485,55 @@ export default function Dashboard() {
                 <circle cx="50%" cy="50%" r="1%" fill="white" />
               </svg>
 
-              {eventosParaHeatmap.map((ev, idx) => (
-                <div
-                  key={idx}
-                  className="heatmap-ponto"
-                  style={{
-                    position: 'absolute',
-                    left: `${ev.coord_x}%`,
-                    top: `${ev.coord_y}%`,
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    backgroundColor: corPorTipo[ev.tipo_acao] || '#ffffff',
-                    border: '1px solid rgba(0,0,0,0.5)',
-                    transform: 'translate(-50%, -50%)',
-                    boxShadow: '0 0 4px rgba(0,0,0,0.3)',
-                    zIndex: 5,
-                    opacity: 0.85
-                  }}
-                >
-                  <div className="tooltip-ponto">
-                    {ev.foto_atleta ? (
-                      <img
-                        src={ev.foto_atleta}
-                        alt={ev.nome_atleta}
-                        className="tooltip-foto"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div className="tooltip-foto" style={{ display: ev.foto_atleta ? 'none' : 'flex' }}>
-                      {ev.nome_atleta?.charAt(0) || '?'}
-                    </div>
-                    <div className="tooltip-info">
-                      <strong>{ev.nome_atleta?.split(' ')[0] || '?'}</strong>
-                      <span>{ev.tipo_acao} - {ev.minuto_video}</span>
+              {eventosParaHeatmap.map((ev, idx) => {
+                if (isReplaying && idx !== replayIndex) return null;
+                const isCurrentReplay = isReplaying && idx === replayIndex;
+                return (
+                  <div
+                    key={idx}
+                    className="heatmap-ponto"
+                    style={{
+                      position: 'absolute',
+                      left: `${ev.coord_x}%`,
+                      top: `${ev.coord_y}%`,
+                      width: isCurrentReplay ? '18px' : '12px',
+                      height: isCurrentReplay ? '18px' : '12px',
+                      borderRadius: '50%',
+                      backgroundColor: corPorTipo[ev.tipo_acao] || '#ffffff',
+                      border: '1px solid rgba(0,0,0,0.5)',
+                      transform: `translate(-50%, -50%) ${isCurrentReplay ? 'scale(1.5)' : 'scale(1)'}`,
+                      boxShadow: isCurrentReplay ? '0 0 0 3px rgba(255,255,255,0.8)' : '0 0 4px rgba(0,0,0,0.3)',
+                      zIndex: isCurrentReplay ? 10 : 5,
+                      transition: 'all 0.2s ease',
+                      opacity: 0.9
+                    }}
+                  >
+                    <div
+                      className="tooltip-ponto"
+                      style={isCurrentReplay ? { opacity: 1, transform: 'translateX(-50%) translateY(-12px)' } : undefined}
+                    >
+                      {ev.foto_atleta ? (
+                        <img
+                          src={ev.foto_atleta}
+                          alt={ev.nome_atleta}
+                          className="tooltip-foto"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div className="tooltip-foto" style={{ display: ev.foto_atleta ? 'none' : 'flex' }}>
+                        {ev.nome_atleta?.charAt(0) || '?'}
+                      </div>
+                      <div className="tooltip-info">
+                        <strong>{ev.nome_atleta?.split(' ')[0] || '?'}</strong>
+                        <span>{ev.tipo_acao} - {ev.minuto_video}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {eventosParaHeatmap.length === 0 && !loadingEventos && (
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white', background: 'rgba(0,0,0,0.6)', padding: '8px 16px', borderRadius: '20px', fontSize: '14px' }}>
                   Nenhum evento com coordenadas para este filtro.
