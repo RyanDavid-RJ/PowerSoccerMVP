@@ -8,9 +8,11 @@ export default function Header({ showBackButton }) {
   const [modalTemaAberto, setModalTemaAberto] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    navigate('/login');
+    if (window.confirm('Tem certeza que deseja sair do sistema?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      navigate('/login');
+    }
   };
 
   const aplicarTema = (tema) => {
@@ -64,20 +66,21 @@ export default function Header({ showBackButton }) {
           
           <span className="header-user-name">Olá, {userName}</span>
           
-          <button onClick={handleLogout} className="btn-header-sair">
+          {/* Botão de logout aparece em todos os modos, inclusive mobile */}
+          <button onClick={handleLogout} className="btn-header-sair" title="Sair">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle', marginRight: '5px' }}>
               <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M16 17L21 12L16 7" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M21 12H9" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Sair
+            <span className="logout-text">Sair</span>
           </button>
           
           <button onClick={() => setModalTemaAberto(true)} className="btn-header-icon">⚙️</button>
         </div>
       </header>
 
-      {/* Modal de configurações de tema e layout */}
+      {/* Modal de configurações */}
       {modalTemaAberto && (
         <>
           <div className="gaveta-overlay" style={{ display: 'block' }} onClick={fecharModal}></div>
