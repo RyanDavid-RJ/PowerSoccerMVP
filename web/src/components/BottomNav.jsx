@@ -18,16 +18,16 @@ export default function BottomNav() {
     }
   };
 
-  // Se estiver na tela de login, esconde a barra inferior
-  if (location.pathname === '/login') {
-    return null;
-  }
-
   // Verifica se a rota atual corresponde à aba
   const isAtiva = (rota) => {
     if (rota === 'ajustes') return false; // nunca ativa
     return location.pathname === rota;
   };
+
+  // Se estiver na tela de login, esconde a barra inferior
+  if (location.pathname === '/login') {
+    return null;
+  }
 
   return (
     <div className="bottom-nav">
