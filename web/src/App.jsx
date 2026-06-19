@@ -9,9 +9,10 @@ import Scout from './pages/Scout';
 import Partidas from './pages/Partidas';
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';
+import BottomNav from './components/BottomNav';
 
 function App() {
-  // Carregar tema salvo do localStorage
+  // Carregar tema salvo do localStorage (já existente)
   useEffect(() => {
     const savedTheme = localStorage.getItem('ps_theme');
     if (savedTheme === 'light-mode') {
@@ -19,8 +20,26 @@ function App() {
     } else if (savedTheme === 'daltonico-mode') {
       document.body.classList.add('daltonico-mode');
     } else {
-      // 'dark' é o padrão – remove classes extras
       document.body.classList.remove('light-mode', 'daltonico-mode');
+    }
+
+    // Carregar modo de layout
+    const layoutSalvo = localStorage.getItem('ps_layout_mode');
+    if (layoutSalvo) {
+      if (layoutSalvo === 'mobile') {
+        document.body.classList.add('modo-mobile');
+      } else {
+        document.body.classList.remove('modo-mobile');
+      }
+    } else {
+      // Fallback para largura da tela
+      if (window.innerWidth <= 768) {
+        document.body.classList.add('modo-mobile');
+        localStorage.setItem('ps_layout_mode', 'mobile');
+      } else {
+        document.body.classList.remove('modo-mobile');
+        localStorage.setItem('ps_layout_mode', 'classic');
+      }
     }
   }, []);
 
@@ -44,6 +63,7 @@ function App() {
         <Route path="/scout/:id" element={<PrivateRoute><Scout /></PrivateRoute>} />
         <Route path="/partidas" element={<PrivateRoute><Partidas /></PrivateRoute>} />
       </Routes>
+      <BottomNav />
     </BrowserRouter>
   );
 }

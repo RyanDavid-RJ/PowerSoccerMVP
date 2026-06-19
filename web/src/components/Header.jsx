@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ showBackButton }) {
@@ -14,7 +14,6 @@ export default function Header({ showBackButton }) {
   };
 
   const aplicarTema = (tema) => {
-    // Remove todas as classes de tema
     document.body.classList.remove('light-mode', 'daltonico-mode');
     if (tema === 'light-mode') {
       document.body.classList.add('light-mode');
@@ -23,11 +22,30 @@ export default function Header({ showBackButton }) {
       document.body.classList.add('daltonico-mode');
       localStorage.setItem('ps_theme', 'daltonico-mode');
     } else {
-      // Tema escuro padrão
       localStorage.setItem('ps_theme', 'dark');
     }
     setModalTemaAberto(false);
   };
+
+  const aplicarModo = (modo) => {
+    if (modo === 'mobile') {
+      document.body.classList.add('modo-mobile');
+      localStorage.setItem('ps_layout_mode', 'mobile');
+    } else {
+      document.body.classList.remove('modo-mobile');
+      localStorage.setItem('ps_layout_mode', 'classic');
+    }
+    setModalTemaAberto(false);
+  };
+
+  // Escuta evento customizado para abrir o modal a partir do BottomNav
+  useEffect(() => {
+    const handleOpenSettings = () => setModalTemaAberto(true);
+    window.addEventListener('open-settings', handleOpenSettings);
+    return () => window.removeEventListener('open-settings', handleOpenSettings);
+  }, []);
+
+  const fecharModal = () => setModalTemaAberto(false);
 
   return (
     <>
@@ -59,12 +77,14 @@ export default function Header({ showBackButton }) {
         </div>
       </header>
 
-      {/* Modal de configurações de tema */}
+      {/* Modal de configurações de tema e layout */}
       {modalTemaAberto && (
         <>
-          <div className="gaveta-overlay" style={{ display: 'block' }} onClick={() => setModalTemaAberto(false)}></div>
+          <div className="gaveta-overlay" style={{ display: 'block' }} onClick={fecharModal}></div>
           <div className="duo-modal modal-centralizado" style={{ zIndex: 1002, padding: '30px', backgroundColor: 'var(--bg-secondary)' }}>
-            <h4 style={{ color: 'var(--text-main)', textAlign: 'center', marginBottom: '15px' }}>⚙️ Configurações de Tema</h4>
+            <h4 style={{ color: 'var(--text-main)', textAlign: 'center', marginBottom: '15px' }}>⚙️ Configurações</h4>
+            
+            <h5 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>🎨 Temas</h5>
             <div className="modal-botoes-coluna">
               <button className="btn-acao" onClick={() => aplicarTema('dark')} style={{ backgroundColor: '#2d2d2d', color: 'white' }}>
                 🌙 Modo Escuro (Padrão)
@@ -75,8 +95,21 @@ export default function Header({ showBackButton }) {
               <button className="btn-acao btn-duo-primary" onClick={() => aplicarTema('daltonico-mode')}>
                 👁️ Modo Daltônico
               </button>
-              <button className="btn-cancelar" onClick={() => setModalTemaAberto(false)}>Fechar</button>
             </div>
+
+            <hr style={{ borderColor: 'var(--border-ui)', margin: '15px 0' }} />
+
+            <h5 style={{ color: 'var(--text-main)', marginBottom: '10px' }}>📱 Layout</h5>
+            <div className="modal-botoes-coluna">
+              <button className="btn-acao" onClick={() => aplicarModo('mobile')} style={{ backgroundColor: 'var(--duo-blue)', color: 'white' }}>
+                📱 Modo Mobile
+              </button>
+              <button className="btn-acao" onClick={() => aplicarModo('classic')} style={{ backgroundColor: '#666', color: 'white' }}>
+                💻 Modo Clássico
+              </button>
+            </div>
+
+            <button className="btn-cancelar" onClick={fecharModal}>Fechar</button>
           </div>
         </>
       )}

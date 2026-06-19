@@ -240,25 +240,9 @@ input[type="range"] {
   transform: scale(1.1);
 }
 
-/* Modais e Botões */
-.duo-modal {
-  position: absolute;
-  border: 3px solid var(--duo-green-primary);
-  padding: 20px;
-  border-radius: var(--radius-duo);
-  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.6);
-  z-index: 100;
-  width: 200px;
-}
-.escondido {
-  display: none;
-}
-.botoes-acao {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
-}
+/* ==================================================================
+   BOTÕES ESTILO DUOLINGO (3D)
+   ================================================================== */
 .btn-acao {
   padding: 12px;
   cursor: pointer;
@@ -267,18 +251,21 @@ input[type="range"] {
   border-radius: 12px;
   font-weight: bold;
   font-size: 15px;
-  box-shadow: var(--shadow-duo);
-  transition:
-    filter 0.2s,
-    transform 0.1s;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2); /* sombra inferior espessa */
+  transition: all 0.05s ease-in;
+  transform: translateY(0);
 }
+
 .btn-acao:active {
-  transform: translateY(3px);
-  box-shadow: none;
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 rgba(0, 0, 0, 0.2); /* remove a sombra no clique */
 }
+
 .btn-acao:hover {
   filter: brightness(1.1);
 }
+
+/* Cores específicas mantêm o mesmo efeito */
 .btn-duo-primary {
   background-color: var(--duo-green-primary);
 }
@@ -575,7 +562,7 @@ input[type="range"]:active::-webkit-slider-thumb {
 .card-home:hover {
   transform: translateY(-8px) scale(1.02);
   border-color: var(--duo-green-primary);
-  box-shadow: 
+  box-shadow:
     0 8px 30px rgba(88, 204, 2, 0.3),
     0 0 20px rgba(88, 204, 2, 0.2),
     0 0 40px rgba(88, 204, 2, 0.1);
@@ -1197,25 +1184,25 @@ body.login-page {
   border-color: var(--duo-green-primary);
 }
 .titulo-secao-titulares-svg {
-  margin-top: 30px; 
-  color: var(--duo-blue); 
-  display: flex; 
-  align-items: center; 
+  margin-top: 30px;
+  color: var(--duo-blue);
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 .titulo-secao-reservas-svg {
-  margin-top: 20px; 
-  color: #aaa; 
-  display: flex; 
-  align-items: center; 
+  margin-top: 20px;
+  color: #aaa;
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 .btn-flex-center {
-  width: 100%; 
-  font-size: 18px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  width: 100%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 .svg-icon-duo {
@@ -1250,109 +1237,105 @@ body.login-page {
    TOOLTIP CUSTOMIZADO PARA PONTOS DO CAMPO E HEATMAP
    ================================================================== */
 .tooltip-ponto {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-8px);
-    background-color: var(--bg-secondary);
-    border-radius: 12px;
-    padding: 8px 12px;
-    min-width: 160px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-ui);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 9999;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 8px 12px;
+  min-width: 160px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-ui);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
 }
 
 .tooltip-ponto::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: var(--bg-secondary) transparent transparent transparent;
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--bg-secondary) transparent transparent transparent;
 }
 
-/* Imagem / ícone do tooltip */
 .tooltip-foto {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: var(--duo-green-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
-    flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--duo-green-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
 }
 
 .tooltip-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
 }
 
 .tooltip-info strong {
-    font-size: 14px;
-    color: var(--text-main);
+  font-size: 14px;
+  color: var(--text-main);
 }
 
 .tooltip-info span {
-    font-size: 11px;
-    color: #aaa;
+  font-size: 11px;
+  color: #aaa;
 }
 
-/* Exibe o tooltip ao passar o mouse sobre o ponto */
 .ponto:hover .tooltip-ponto,
 .heatmap-ponto:hover .tooltip-ponto {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-12px);
+  opacity: 1;
+  transform: translateX(-50%) translateY(-12px);
 }
 
-/* Ajuste para evitar que o tooltip ultrapasse a borda esquerda/direita */
 .ponto .tooltip-ponto,
 .heatmap-ponto .tooltip-ponto {
-    left: 50%;
-    right: auto;
+  left: 50%;
+  right: auto;
 }
 
-/* Para pontos muito próximos à borda esquerda */
 .ponto[style*="left: 0%"] .tooltip-ponto,
 .heatmap-ponto[style*="left: 0%"] .tooltip-ponto {
-    left: 0;
-    transform: translateX(0) translateY(-8px);
+  left: 0;
+  transform: translateX(0) translateY(-8px);
 }
 .ponto[style*="left: 0%"] .tooltip-ponto::after,
 .heatmap-ponto[style*="left: 0%"] .tooltip-ponto::after {
-    left: 12px;
-    transform: none;
+  left: 12px;
+  transform: none;
 }
 
-/* Para pontos muito próximos à borda direita */
 .ponto[style*="left: 100%"] .tooltip-ponto,
 .heatmap-ponto[style*="left: 100%"] .tooltip-ponto {
-    left: auto;
-    right: 0;
-    transform: translateX(0) translateY(-8px);
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(-8px);
 }
 .ponto[style*="left: 100%"] .tooltip-ponto::after,
 .heatmap-ponto[style*="left: 100%"] .tooltip-ponto::after {
-    left: auto;
-    right: 12px;
-    transform: none;
+  left: auto;
+  right: 12px;
+  transform: none;
 }
+
 /* ==================================================================
    LOADING SKELETONS (SHIMMER EFFECT)
    ================================================================== */
@@ -1366,24 +1349,14 @@ body.login-page {
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
 }
 
 .skeleton-card {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   height: 80px;
@@ -1392,12 +1365,7 @@ body.login-page {
 }
 
 .skeleton-chart {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   height: 250px;
@@ -1407,12 +1375,7 @@ body.login-page {
 }
 
 .skeleton-text {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   height: 16px;
@@ -1422,12 +1385,7 @@ body.login-page {
 }
 
 .skeleton-text-sm {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   height: 16px;
@@ -1436,7 +1394,6 @@ body.login-page {
   border-radius: 4px;
 }
 
-/* Para simular os 4 KPIs no modal do Elenco */
 .skeleton-kpi-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1445,12 +1402,7 @@ body.login-page {
 }
 
 .skeleton-kpi {
-  background: linear-gradient(
-    90deg,
-    var(--input-bg) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
-    var(--input-bg) 75%
-  );
+  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   height: 80px;
@@ -1458,99 +1410,250 @@ body.login-page {
 }
 
 /* ==================================================================
-   UX MOBILE: TRAVA DE TELA (PORTRAIT LOCK) & MODO LANDSCAPE
+   MODO MOBILE (ativado pela classe .modo-mobile no body)
    ================================================================== */
-
-/* 1. TRAVA DE TELA (PORTRAIT LOCK) */
-/* Se a tela for de celular (menor que 950px) e estiver "em pé" (portrait) */
-@media screen and (max-width: 950px) and (orientation: portrait) {
-  body::before {
-    content: "📱 Por favor, vire o seu celular ou tablet deitado (Landscape) para usar o PowerSoccer.";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--bg-primary);
-    color: var(--duo-green-primary);
-    z-index: 999999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    padding: 40px;
-    box-sizing: border-box;
-  }
-  
-  /* Esconde o sistema inteiro enquanto o celular estiver em pé */
-  #root {
-    display: none !important;
-  }
+.modo-mobile {
+  padding-bottom: 80px; /* espaço para a bottom nav */
 }
 
-/* 2. AJUSTES FINOS PARA O CELULAR DEITADO (LANDSCAPE) */
-/* Celulares deitados geralmente têm altura pequena (max-height: 500px) */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-  
-  /* Reduz muito o cabeçalho para não roubar espaço do campo */
-  .duo-header {
-    padding: 2px 10px;
-    min-height: 40px;
-  }
-  .logo img {
-    max-height: 20px !important;
-  }
-  .header-user-name {
-    display: none; /* Esconde o "Olá, Ryan" para economizar espaço horizontal */
-  }
+.modo-mobile .layout-principal {
+  flex-direction: column;
+  padding: 5px;
+  gap: 10px;
+  overflow: visible;
+}
 
-  /* Faz a prancheta do Scout caber na altura da tela */
-  .layout-principal {
-    height: calc(100vh - 60px); 
-    padding: 5px;
-    gap: 10px;
-  }
+/* Titulares: roleta horizontal */
+.modo-mobile .titulares {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 10px;
+  padding: 10px 5px;
+  margin-bottom: 0;
+  background: transparent;
+  box-shadow: none;
+}
 
-  /* Laterais (Titulares e Histórico) ficam estreitas e com barra de rolagem */
-  .titulares, .historico {
-    width: 180px; 
-    overflow-y: auto;
-    padding: 10px;
-  }
+.modo-mobile .titulares .jogador {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 10px;
+  margin-bottom: 0;
+  min-width: 80px;
+  border-radius: 12px;
+  background-color: var(--input-bg);
+}
 
-  .titulares h3, .historico h3 {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
+.modo-mobile .titulares .jogador .foto {
+  width: 36px;
+  height: 36px;
+  margin-right: 0;
+  margin-bottom: 4px;
+}
 
-  .jogador .foto {
-    width: 30px;
-    height: 30px;
-  }
+.modo-mobile .titulares .jogador > div:last-child {
+  text-align: center;
+  font-size: 12px;
+}
 
-  /* O Campo vira o rei da tela */
-  .area-campo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+.modo-mobile .titulares .jogador > div:last-child div:first-child {
+  font-size: 12px;
+}
 
-  .campo-container {
-    max-height: 65vh; /* O campo não pode estourar a tela inteira para sobrar espaço para a linha do tempo */
-    margin: 0 auto;
-  }
+.modo-mobile .area-campo {
+  width: 100%;
+  gap: 10px;
+  order: 2;
+}
 
-  /* Ajusta a linha do tempo (timeline) para ficar menor */
-  .linha-tempo-container {
-    padding: 5px 10px;
-    margin-top: 5px !important;
-  }
+.modo-mobile .campo-container {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 8/5;
+  max-height: none;
+  margin: 0 auto;
+}
 
-  /* Esconde o banco de reservas se não couber na tela inicial, forçando o scroll */
-  .reservas {
-    display: none; 
-  }
+.modo-mobile .linha-tempo-container {
+  width: 100%;
+  padding: 10px;
+}
+
+.modo-mobile .reservas {
+  width: 100%;
+  padding: 10px;
+}
+
+.modo-mobile .reservas .lista-reservas {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.modo-mobile .reservas .lista-reservas .jogador {
+  flex: 0 0 auto;
+  min-width: 80px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.modo-mobile .historico {
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  order: 3;
+}
+
+.modo-mobile .historico .duo-list {
+  max-height: 300px;
+}
+
+.modo-mobile .historico .item-historico {
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
+/* Dashboard */
+.modo-mobile .kpi-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.modo-mobile .kpi-card {
+  padding: 12px;
+}
+
+.modo-mobile .kpi-card .valor {
+  font-size: 28px;
+}
+
+.modo-mobile .filtro-container {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.modo-mobile .filtro-container > div {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.modo-mobile .filtro-container select,
+.modo-mobile .filtro-container .btn-group {
+  width: 100%;
+}
+
+/* Confronto Direto no Dashboard */
+.modo-mobile .duo-container > div[style*="display: flex"][style*="gap: 20px"] {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modo-mobile .duo-container .form-input[style*="marginTop"] {
+  width: 100%;
+}
+
+/* Elenco */
+.modo-mobile .elenco-layout {
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin: 15px auto;
+  padding: 0 15px;
+}
+
+.modo-mobile .grid-jogadores {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.modo-mobile .card-atleta .foto-grande {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+}
+
+.modo-mobile .card-atleta h4 {
+  font-size: 14px;
+}
+
+/* Header no modo mobile – esconde botões de navegação */
+.modo-mobile .duo-header {
+  padding: 8px 15px;
+}
+
+.modo-mobile .duo-header .logo img {
+  max-height: 32px !important;
+}
+
+.modo-mobile .duo-header .header-actions {
+  gap: 8px;
+}
+
+.modo-mobile .duo-header .header-user-name {
+  font-size: 14px;
+}
+
+.modo-mobile .duo-header .header-link,
+.modo-mobile .duo-header .btn-header-sair,
+.modo-mobile .duo-header .btn-header-icon {
+  display: none; /* esconde os botões que vão para a bottom nav */
+}
+
+/* ==================================================================
+   BOTTOM NAV (barra de navegação inferior)
+   ================================================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-top: 2px solid var(--border-ui);
+  display: none;
+  justify-content: space-around;
+  padding: 10px 5px 25px 5px;
+  z-index: 9000;
+}
+
+.modo-mobile .bottom-nav {
+  display: flex;
+}
+
+.bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.2s;
+  gap: 2px;
+  min-width: 60px;
+}
+
+.bottom-nav .nav-item span {
+  font-size: 10px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.bottom-nav .nav-item.ativo {
+  color: var(--duo-green-primary);
+}
+
+.bottom-nav .nav-item:active {
+  transform: scale(0.95);
+}
+
+.bottom-nav .nav-item svg {
+  width: 28px;
+  height: 28px;
 }
