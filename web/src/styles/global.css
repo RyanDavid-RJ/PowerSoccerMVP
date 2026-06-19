@@ -1657,3 +1657,45 @@ body.login-page {
   width: 28px;
   height: 28px;
 }
+
+/* ==================================================================
+   BOTTOM SHEET MODAL (mobile)
+   ================================================================== */
+
+@keyframes slideUpSheet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modo-mobile .modal-centralizado {
+  top: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+  margin: 0 !important;
+  border-radius: 24px 24px 0 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-top: 4px solid var(--duo-green-primary) !important;
+  padding: 20px 20px 40px 20px !important;
+  animation: slideUpSheet 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards !important;
+}
+
+.modo-mobile .modal-centralizado::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 6px;
+  background-color: var(--border-ui);
+  border-radius: 10px;
+  margin: 0 auto 20px auto;
+}
