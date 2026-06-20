@@ -191,8 +191,20 @@
 }
 
 .historicoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border-radius: 12px;
   background-color: var(--input-bg);
+  color: var(--text-main);
   cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.historicoItem:hover {
+  filter: brightness(1.2);
 }
 
 .historicoItemSub {
@@ -202,6 +214,7 @@
 .historicoItemAcao {
   font-size: 12px;
   color: #ccc;
+  margin-top: 4px;
 }
 
 .historicoItemTempo {
@@ -327,8 +340,8 @@
 :global(.modo-mobile) .scoutLayout {
   flex-direction: column;
   overflow: visible;
-  padding: 5px;
-  gap: 10px;
+  padding: 15px;
+  gap: 15px;
 }
 
 /* Sidebar (titulares e histórico) no mobile */
@@ -336,7 +349,7 @@
   flex: none;
   width: 100%;
   max-height: none;
-  padding: 10px;
+  padding: 15px;
   border-radius: var(--radius-duo);
   background: var(--bg-secondary);
   box-shadow: var(--shadow-duo);

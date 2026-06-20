@@ -1,6 +1,7 @@
 /* Header.module.css */
 
 .duoHeader {
+  width: 100%;
   padding: 10px 30px;
   display: flex;
   justify-content: space-between;
@@ -9,6 +10,8 @@
   background-color: var(--bg-secondary);
   color: var(--text-main);
   transition: 0.3s;
+  position: relative;
+  z-index: 50;
 }
 
 .logo {
@@ -68,7 +71,7 @@
 
 /* Mobile: header enxuto e adaptações */
 :global(.modo-mobile) .duoHeader {
-  padding: 8px 15px;
+  padding: 12px 15px;
 }
 
 :global(.modo-mobile) .duoHeader .logo img {

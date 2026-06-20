@@ -56,6 +56,16 @@ body.daltonico-mode {
 /* ==================================================================
    3. RESET E TAGS BASE
    ================================================================== */
+/* A REGRA DE OURO PARA NÃO VAZAR A TELA */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden; /* Impede que a tela arraste para os lados */
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-main);
@@ -246,24 +256,24 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.5); box-sh
 .skeleton-kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
 
 /* ==================================================================
-   8. GAVETAS E MODAIS GLOBAIS (A CORREÇÃO DO BUG DA TELA CINZA AQUI)
+   8. GAVETAS E MODAIS GLOBAIS
    ================================================================== */
 .gaveta-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  z-index: 9998 !important; /* OVERLAY FICA ATRÁS */
+  z-index: 9998 !important;
 }
 
 .gaveta {
   position: fixed;
   bottom: 0; left: 0; width: 100%;
-  max-height: 80vh; /* Permite ver mais itens */
+  max-height: 80vh;
   background: var(--bg-secondary);
   border-radius: 24px 24px 0 0;
   padding: 20px;
   box-sizing: border-box;
-  z-index: 10000 !important; /* GAVETA FICA NA FRENTE DO OVERLAY */
+  z-index: 10000 !important;
   overflow-y: auto;
   animation: slideUpSheet 0.3s ease-out;
 }
@@ -280,7 +290,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.5); box-sh
   background: var(--bg-secondary);
   border-radius: var(--radius-duo);
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  z-index: 10000 !important; /* MODAL FICA NA FRENTE DO OVERLAY */
+  z-index: 10000 !important;
   width: 90%;
   max-width: 400px;
   box-sizing: border-box;
@@ -306,7 +316,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.5); box-sh
 }
 
 .modo-mobile .gaveta {
-  padding-bottom: 100px; /* Compensa a Bottom Nav */
+  padding-bottom: 100px; 
 }
 
 .modo-mobile .modal-centralizado {
