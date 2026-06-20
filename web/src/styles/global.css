@@ -36,7 +36,25 @@ body.daltonico-mode {
 }
 
 /* ==================================================================
-   2. RESET E TAGS BASE
+   2. SCROLLBARS CUSTOMIZADAS (Estilo App)
+   ================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-ui);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--duo-green-primary);
+}
+
+/* ==================================================================
+   3. RESET E TAGS BASE
    ================================================================== */
 body {
   background-color: var(--bg-primary);
@@ -44,6 +62,7 @@ body {
   transition: 0.3s;
   margin: 0;
   font-family: var(--font-primary);
+  -webkit-tap-highlight-color: transparent; /* Remove brilho de clique no mobile */
 }
 
 h1, h2, h3, h4, h5, span {
@@ -55,7 +74,7 @@ h1, h2, h3, h4, h5, span {
 }
 
 /* ==================================================================
-   3. COMPONENTES GLOBAIS DE LAYOUT
+   4. COMPONENTES GLOBAIS DE LAYOUT E UTILS
    ================================================================== */
 .duo-header,
 .duo-container,
@@ -82,7 +101,7 @@ h1, h2, h3, h4, h5, span {
 }
 
 /* ==================================================================
-   4. PRANCHETA (SCOUT)
+   5. PRANCHETA (SCOUT) E ELEMENTOS BASE
    ================================================================== */
 .titulares,
 .historico {
@@ -100,6 +119,7 @@ h1, h2, h3, h4, h5, span {
   font-weight: bold;
   background-color: var(--input-bg);
   color: var(--text-main);
+  user-select: none; /* Impede seleção de texto acidental */
 }
 
 .jogador:hover {
@@ -141,6 +161,7 @@ h1, h2, h3, h4, h5, span {
   position: relative;
   cursor: crosshair;
   overflow: hidden;
+  user-select: none;
 }
 
 .linha-tempo-container {
@@ -197,7 +218,7 @@ h1, h2, h3, h4, h5, span {
 }
 
 /* ==================================================================
-   5. BOTÕES ESTILO DUOLINGO (3D)
+   6. BOTÕES ESTILO DUOLINGO (3D) E UTILS
    ================================================================== */
 .btn-acao {
   padding: 12px;
@@ -210,6 +231,7 @@ h1, h2, h3, h4, h5, span {
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
   transition: all 0.05s ease-in;
   transform: translateY(0);
+  user-select: none;
 }
 
 .btn-acao:active {
@@ -242,8 +264,14 @@ h1, h2, h3, h4, h5, span {
 }
 .btn-cancelar:hover { color: var(--duo-red); }
 
+/* Globais de Formulário mantidos por compatibilidade */
+.form-grupo { margin-bottom: 15px; text-align: left; }
+.form-label { display: block; margin-bottom: 5px; font-size: 14px; color: #aaa; }
+.form-input { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent; background: var(--input-bg); color: var(--text-main); font-family: var(--font-primary); font-size: 16px; box-sizing: border-box; }
+.form-input:focus { border-color: var(--duo-green-primary); outline: none; }
+
 /* ==================================================================
-   6. PONTOS E TOOLTIP (MAPA DE CALOR)
+   7. PONTOS E TOOLTIP (MAPA DE CALOR E SCOUT)
    ================================================================== */
 .ponto {
   position: absolute;
@@ -270,16 +298,6 @@ h1, h2, h3, h4, h5, span {
   z-index: 100 !important;
   transition: all 0.3s ease;
 }
-
-.bloqueio-tela {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 90;
-  display: none;
-}
-.bloqueio-tela.ativo { display: block; }
 
 .tooltip-ponto {
   position: absolute;
@@ -333,14 +351,13 @@ h1, h2, h3, h4, h5, span {
 .tooltip-info strong { font-size: 14px; color: var(--text-main); }
 .tooltip-info span { font-size: 11px; color: #aaa; }
 
-.ponto:hover .tooltip-ponto,
-.heatmap-ponto:hover .tooltip-ponto {
+.ponto:hover .tooltip-ponto {
   opacity: 1;
   transform: translateX(-50%) translateY(-12px);
 }
 
 /* ==================================================================
-   7. INPUT RANGE CUSTOMIZADO
+   8. INPUT RANGE CUSTOMIZADO
    ================================================================== */
 input[type="range"] {
   -webkit-appearance: none;
@@ -368,47 +385,25 @@ input[type="range"]:active::-webkit-slider-thumb {
 }
 
 /* ==================================================================
-   8. LOADING SKELETONS
+   9. LOADING SKELETONS
    ================================================================== */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-.skeleton {
+.skeleton, .skeleton-card, .skeleton-chart, .skeleton-text, .skeleton-text-sm, .skeleton-kpi {
   background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-  border-radius: 8px;
 }
 
-.skeleton-card {
-  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  height: 80px; margin-bottom: 12px; border-radius: 12px;
-}
-
-.skeleton-chart {
-  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  height: 250px; width: 100%; border-radius: 16px; margin-top: 15px;
-}
-
-.skeleton-text {
-  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  height: 16px; width: 100%; margin-bottom: 8px; border-radius: 4px;
-}
-
-.skeleton-text-sm {
-  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  height: 16px; width: 60%; margin-bottom: 8px; border-radius: 4px;
-}
+.skeleton { border-radius: 8px; }
+.skeleton-card { height: 80px; margin-bottom: 12px; border-radius: 12px; }
+.skeleton-chart { height: 250px; width: 100%; border-radius: 16px; margin-top: 15px; }
+.skeleton-text { height: 16px; width: 100%; margin-bottom: 8px; border-radius: 4px; }
+.skeleton-text-sm { height: 16px; width: 60%; margin-bottom: 8px; border-radius: 4px; }
+.skeleton-kpi { height: 80px; border-radius: 12px; }
 
 .skeleton-kpi-grid {
   display: grid;
@@ -417,15 +412,8 @@ input[type="range"]:active::-webkit-slider-thumb {
   margin-bottom: 20px;
 }
 
-.skeleton-kpi {
-  background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  height: 80px; border-radius: 12px;
-}
-
 /* ==================================================================
-   9. GAVETAS E MODAIS
+   10. GAVETAS E MODAIS GLOBAIS
    ================================================================== */
 .gaveta-overlay {
   position: fixed;
@@ -473,62 +461,12 @@ input[type="range"]:active::-webkit-slider-thumb {
 }
 
 /* ==================================================================
-   10. BOTTOM NAV (MOBILE)
-   ================================================================== */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 0; width: 100%;
-  background: var(--bg-secondary);
-  border-top: 2px solid var(--border-ui);
-  display: none;
-  justify-content: space-around;
-  padding: 10px 5px 25px 5px;
-  z-index: 9000;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px 12px;
-  transition: color 0.2s;
-  gap: 2px;
-  min-width: 60px;
-}
-
-.nav-item span {
-  font-size: 10px;
-  font-weight: 600;
-  color: inherit;
-}
-
-.nav-item.ativo {
-  color: var(--duo-green-primary);
-}
-
-.nav-item:active {
-  transform: scale(0.95);
-}
-
-.nav-item svg {
-  width: 28px;
-  height: 28px;
-}
-
-/* ==================================================================
-   11. MODO MOBILE (ativado pela classe .modo-mobile no body)
+   11. MODO MOBILE GERAL (Somente overrides de componentes estritos base)
    ================================================================== */
 .modo-mobile {
   padding-bottom: 80px;
 }
 
-/* Layout principal e prancheta */
 .modo-mobile .layout-principal {
   flex-direction: column;
   padding: 5px;
@@ -618,7 +556,6 @@ input[type="range"]:active::-webkit-slider-thumb {
   padding: 8px 10px;
 }
 
-/* Gavetas e modais no mobile */
 .modo-mobile .gaveta {
   padding-bottom: 100px;
   max-height: 75vh;
@@ -650,9 +587,4 @@ input[type="range"]:active::-webkit-slider-thumb {
   background-color: var(--border-ui);
   border-radius: 10px;
   margin: 0 auto 20px auto;
-}
-
-/* Bottom nav visível apenas no mobile */
-.modo-mobile .bottom-nav {
-  display: flex;
 }
