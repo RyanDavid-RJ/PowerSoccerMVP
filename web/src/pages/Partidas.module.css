@@ -1,4 +1,9 @@
 /* Partidas.module.css */
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
 
 .spacingTop {
   margin-top: 20px;
@@ -48,10 +53,6 @@
 }
 
 /* Mobile */
-:global(.modo-mobile) .partidaCard {
-  padding: 12px 15px;
-}
-
-:global(.modo-mobile) .partidaCardTitle {
-  font-size: 16px;
-}
+:global(.modo-mobile) .container { margin: 15px 10px; }
+:global(.modo-mobile) .partidaCard { padding: 12px 15px; }
+:global(.modo-mobile) .partidaCardTitle { font-size: 16px; }

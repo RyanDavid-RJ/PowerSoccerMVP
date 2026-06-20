@@ -20,6 +20,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  gap: 20px; /* Resolve os botões colados! */
 }
 
 .viewToggleGroup,
@@ -46,6 +47,8 @@
   background-color: var(--duo-green-primary) !important;
   border: 4px solid white;
   position: relative;
+  max-height: 55vh; /* Otimiza a visão no Desktop para não precisar dar scroll */
+  margin: 0 auto;
 }
 
 /* Modal de ações no campo (popup) – desktop */

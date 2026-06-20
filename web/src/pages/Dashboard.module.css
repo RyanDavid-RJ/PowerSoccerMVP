@@ -1,243 +1,46 @@
 /* Dashboard.module.css */
+.dashboardContainer { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+.sectionTitle { margin-bottom: 15px; }
+.chartContainer { margin-top: 20px; }
+.btnFiltroPeriodo { padding: 6px 12px; border-radius: 20px; background: var(--input-bg); color: white; cursor: pointer; border: none; font-weight: 600; transition: background 0.2s; }
+.btnFiltroPeriodoAtivo { background: var(--duo-green-primary); }
+.btnFiltroTipo { padding: 4px 12px; border-radius: 20px; background: var(--input-bg); border: none; color: white; cursor: pointer; font-size: 12px; transition: background 0.2s; }
+.btnFiltroTipoAtivo { background: var(--duo-green-primary); }
+.btnExport { padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: white; }
+.btnExportCsv { background: var(--duo-blue); }
+.btnExportPdf { background: var(--duo-purple); }
+.btnReplay { padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; margin-left: 8px; font-size: 12px; color: white; transition: background 0.2s; }
+.btnReplayPlay { background: var(--duo-blue); }
+.btnReplayStop { background: var(--duo-red); }
+.formLabel { display: block; margin-bottom: 5px; color: var(--text-main); font-weight: 600; font-size: 14px; }
+.formInput { width: 100%; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border-ui); background: var(--input-bg); color: var(--text-main); font-size: 14px; margin-top: 5px; box-sizing: border-box; }
+.comparacaoSelectGroup { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+.comparacaoSelectItem { flex: 1; min-width: 150px; }
+.sinteseContainer { margin-bottom: 20px; border-left: 5px solid var(--duo-purple); }
+.sinteseText { font-size: 1rem; line-height: 1.5; color: var(--text-main); }
+.heatmapWrapper { margin-top: 20px; }
+.heatmapToolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+.heatmapFilters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.heatmapSelectJogador { width: 150px; padding: 4px 8px; font-size: 12px; margin-right: 8px; }
+.heatmapReplayInfo { font-size: 12px; color: #aaa; margin-top: 8px; text-align: center; }
+.heatmapLegenda { font-size: 12px; color: #aaa; margin-top: 10px; text-align: center; }
 
-/* Títulos de seção */
-.sectionTitle {
-  margin-bottom: 15px;
-}
+/* KPIs Dashboard */
+.kpiGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.kpiCard { padding: 20px; border-radius: var(--radius-duo); text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); border-bottom: 4px solid var(--border-ui); background: var(--bg-secondary); }
+.kpiCard h3 { color: #aaa; font-size: 16px; margin-bottom: 10px; font-family: var(--font-primary); }
+.valor { font-size: 36px; font-weight: bold; font-family: var(--font-titles); }
+.kpiGols { border-bottom-color: var(--duo-yellow); }
+.kpiGols .valor { color: var(--duo-yellow); }
+.kpiPassesC { border-bottom-color: var(--duo-blue); }
+.kpiPassesC .valor { color: var(--duo-blue); }
+.kpiPassesE { border-bottom-color: var(--duo-red); }
+.kpiPassesE .valor { color: var(--duo-red); }
+.kpiIntercep { border-bottom-color: var(--duo-orange); }
+.kpiIntercep .valor { color: var(--duo-orange); }
 
-.chartContainer {
-  margin-top: 20px;
-}
-
-/* Botões de período (1º/2º tempo) */
-.btnFiltroPeriodo {
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: var(--input-bg);
-  color: white;
-  cursor: pointer;
-  border: none;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.btnFiltroPeriodoAtivo {
-  background: var(--duo-green-primary);
-}
-
-/* Botões de tipo do heatmap */
-.btnFiltroTipo {
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: var(--input-bg);
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  transition: background 0.2s;
-}
-
-.btnFiltroTipoAtivo {
-  background: var(--duo-green-primary);
-}
-
-/* Botões de exportação */
-.btnExport {
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  color: white;
-}
-
-.btnExportCsv {
-  background: var(--duo-blue);
-}
-
-.btnExportPdf {
-  background: var(--duo-purple);
-}
-
-/* Botão replay */
-.btnReplay {
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  margin-left: 8px;
-  font-size: 12px;
-  color: white;
-  transition: background 0.2s;
-}
-
-.btnReplayPlay {
-  background: var(--duo-blue);
-}
-
-.btnReplayStop {
-  background: var(--duo-red);
-}
-
-/* Formulários */
-.formLabel {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.formInput {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border-ui);
-  background: var(--input-bg);
-  color: var(--text-main);
-  font-size: 14px;
-  margin-top: 5px;
-  box-sizing: border-box;
-}
-
-/* Confronto direto */
-.comparacaoSelectGroup {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.comparacaoSelectItem {
-  flex: 1;
-  min-width: 150px;
-}
-
-/* Síntese IA */
-.sinteseContainer {
-  margin-bottom: 20px;
-  border-left: 5px solid var(--duo-purple);
-}
-
-.sinteseText {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--text-main);
-}
-
-/* Heatmap */
-.heatmapWrapper {
-  margin-top: 20px;
-}
-
-.heatmapToolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.heatmapFilters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.heatmapSelectJogador {
-  width: 150px;
-  padding: 4px 8px;
-  font-size: 12px;
-  margin-right: 8px;
-}
-
-.heatmapReplayInfo {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 8px;
-  text-align: center;
-}
-
-.heatmapLegenda {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 10px;
-  text-align: center;
-}
-
-/* Responsivo */
-:global(.modo-mobile) .comparacaoSelectGroup {
-  flex-direction: column;
-  gap: 12px;
-}
-
-:global(.modo-mobile) .formInput {
-  width: 100%;
-}
-
-/* ================= KPIs Dashboard ================= */
-.kpiGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-.kpiCard {
-  padding: 20px;
-  border-radius: var(--radius-duo);
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  border-bottom: 4px solid var(--border-ui);
-}
-.kpiCard h3 {
-  color: #aaa;
-  font-size: 16px;
-  margin-bottom: 10px;
-  font-family: var(--font-primary);
-}
-.valor {
-  font-size: 36px;
-  font-weight: bold;
-  font-family: var(--font-titles);
-}
-.kpiGols {
-  border-bottom-color: var(--duo-yellow);
-}
-.kpiGols .valor {
-  color: var(--duo-yellow);
-}
-.kpiPassesC {
-  border-bottom-color: var(--duo-blue);
-}
-.kpiPassesC .valor {
-  color: var(--duo-blue);
-}
-.kpiPassesE {
-  border-bottom-color: var(--duo-red);
-}
-.kpiPassesE .valor {
-  color: var(--duo-red);
-}
-.kpiIntercep {
-  border-bottom-color: var(--duo-orange);
-}
-.kpiIntercep .valor {
-  color: var(--duo-orange);
-}
-
-:global(.modo-mobile) .kpiGrid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-:global(.modo-mobile) .kpiCard {
-  padding: 12px;
-}
-:global(.modo-mobile) .kpiCard .valor {
-  font-size: 28px;
-}
+:global(.modo-mobile) .comparacaoSelectGroup { flex-direction: column; gap: 12px; }
+:global(.modo-mobile) .formInput { width: 100%; }
+:global(.modo-mobile) .kpiGrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+:global(.modo-mobile) .kpiCard { padding: 12px; }
+:global(.modo-mobile) .kpiCard .valor { font-size: 28px; }

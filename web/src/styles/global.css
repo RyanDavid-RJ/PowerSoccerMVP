@@ -36,11 +36,11 @@ body.daltonico-mode {
 }
 
 /* ==================================================================
-   2. SCROLLBARS CUSTOMIZADAS (Estilo App)
+   2. SCROLLBARS CUSTOMIZADAS (Estilo App Nativo)
    ================================================================== */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-primary);
@@ -62,7 +62,7 @@ body {
   transition: 0.3s;
   margin: 0;
   font-family: var(--font-primary);
-  -webkit-tap-highlight-color: transparent; /* Remove brilho de clique no mobile */
+  -webkit-tap-highlight-color: transparent; /* Remove o flash azul feio no celular */
 }
 
 h1, h2, h3, h4, h5, span {
@@ -74,22 +74,16 @@ h1, h2, h3, h4, h5, span {
 }
 
 /* ==================================================================
-   4. COMPONENTES GLOBAIS DE LAYOUT E UTILS
+   4. COMPONENTES GLOBAIS DE LAYOUT
    ================================================================== */
-.duo-header,
-.duo-container,
-.duo-card,
-.duo-modal {
-  background-color: var(--bg-secondary);
-  color: var(--text-main);
-  transition: 0.3s;
-}
-
 .duo-container,
 .duo-card {
   padding: 20px;
   border-radius: var(--radius-duo);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-secondary);
+  color: var(--text-main);
+  transition: 0.3s;
 }
 
 .layout-principal {
@@ -100,125 +94,19 @@ h1, h2, h3, h4, h5, span {
   gap: 20px;
 }
 
-/* ==================================================================
-   5. PRANCHETA (SCOUT) E ELEMENTOS BASE
-   ================================================================== */
-.titulares,
-.historico {
-  width: 300px;
-}
-
-.jogador {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s, filter 0.3s;
-  font-weight: bold;
-  background-color: var(--input-bg);
-  color: var(--text-main);
-  user-select: none; /* Impede seleção de texto acidental */
-}
-
-.jogador:hover {
-  filter: brightness(1.2);
-  transform: scale(1.02);
-}
-
-.jogador.ativo {
-  border: 3px solid var(--duo-green-primary);
-  background-color: rgba(88, 204, 2, 0.1);
-}
-
-.foto {
-  width: 40px;
-  height: 40px;
-  background-color: var(--duo-green-primary);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 15px;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-}
-
-.area-campo {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
-.campo-container {
-  width: 100%;
-  max-width: 800px;
-  aspect-ratio: 8 / 5;
-  position: relative;
-  cursor: crosshair;
-  overflow: hidden;
-  user-select: none;
-}
-
-.linha-tempo-container {
-  width: 800px;
-  padding: 15px 20px;
-}
-
-.reservas {
-  width: 800px;
-  padding: 15px;
-}
-
-.lista-reservas {
-  display: flex;
-  gap: 10px;
-}
-
-.lista-reservas .jogador {
-  padding: 8px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-}
-
 .duo-list {
   margin-top: 15px;
   overflow-y: auto;
-  max-height: calc(100vh - 120px);
 }
 
-.item-historico {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  font-size: 14px;
-  background-color: var(--input-bg);
-  color: var(--text-main);
-}
-
-.btn-excluir {
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.btn-excluir:hover {
-  opacity: 1;
-  transform: scale(1.1);
+/* Evita 2 scrolls na gaveta */
+.gaveta .duo-list {
+  max-height: none !important;
+  overflow-y: visible !important;
 }
 
 /* ==================================================================
-   6. BOTÕES ESTILO DUOLINGO (3D) E UTILS
+   5. BOTÕES ESTILO DUOLINGO E UTILS
    ================================================================== */
 .btn-acao {
   padding: 12px;
@@ -264,26 +152,50 @@ h1, h2, h3, h4, h5, span {
 }
 .btn-cancelar:hover { color: var(--duo-red); }
 
-/* Globais de Formulário mantidos por compatibilidade */
-.form-grupo { margin-bottom: 15px; text-align: left; }
-.form-label { display: block; margin-bottom: 5px; font-size: 14px; color: #aaa; }
-.form-input { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent; background: var(--input-bg); color: var(--text-main); font-family: var(--font-primary); font-size: 16px; box-sizing: border-box; }
-.form-input:focus { border-color: var(--duo-green-primary); outline: none; }
+.btn-excluir {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.btn-excluir:hover { opacity: 1; transform: scale(1.1); }
 
 /* ==================================================================
-   7. PONTOS E TOOLTIP (MAPA DE CALOR E SCOUT)
+   6. JOGADORES, MAPA DE CALOR E INPUT RANGE
    ================================================================== */
+.jogador {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.3s;
+  font-weight: bold;
+  background-color: var(--input-bg);
+  color: var(--text-main);
+  user-select: none;
+}
+
+.jogador:hover { filter: brightness(1.2); transform: scale(1.02); }
+.jogador.ativo { border: 3px solid var(--duo-green-primary); background-color: rgba(88, 204, 2, 0.1); }
+
+.foto {
+  width: 40px; height: 40px;
+  background-color: var(--duo-green-primary);
+  border-radius: 50%;
+  display: flex; justify-content: center; align-items: center;
+  margin-right: 15px; font-weight: bold; font-size: 18px; color: white;
+}
+
 .ponto {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  border: 3px solid #fff;
-  cursor: pointer;
-  box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s;
-  z-index: 5;
+  width: 16px; height: 16px; border-radius: 50%;
+  transform: translate(-50%, -50%); border: 3px solid #fff;
+  cursor: pointer; box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s; z-index: 5;
 }
 
 .passe-certo { background-color: var(--duo-blue); }
@@ -292,145 +204,66 @@ h1, h2, h3, h4, h5, span {
 .finalizacao { background-color: var(--duo-purple); }
 .gol { background-color: var(--duo-yellow); border-color: #333; width: 22px; height: 22px; }
 
-.ponto-destaque {
-  transform: translate(-50%, -50%) scale(2.5) !important;
-  box-shadow: 0 0 20px white !important;
-  z-index: 100 !important;
-  transition: all 0.3s ease;
-}
+.ponto-destaque { transform: translate(-50%, -50%) scale(2.5) !important; box-shadow: 0 0 20px white !important; z-index: 100 !important; }
 
+/* Tooltip Customizado */
 .tooltip-ponto {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  background-color: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 8px 12px;
-  min-width: 160px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-ui);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 9999;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px);
+  background-color: var(--bg-secondary); border-radius: 12px; padding: 8px 12px; min-width: 160px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 1px solid var(--border-ui); opacity: 0;
+  pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; z-index: 9999;
+  font-size: 12px; display: flex; align-items: center; gap: 10px; white-space: nowrap;
 }
-
 .tooltip-ponto::after {
-  content: '';
-  position: absolute;
-  top: 100%; left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: var(--bg-secondary) transparent transparent transparent;
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border-width: 6px; border-style: solid; border-color: var(--bg-secondary) transparent transparent transparent;
 }
-
-.tooltip-foto {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: var(--duo-green-primary);
-  display: flex;
-  align-items: center; justify-content: center;
-  font-weight: bold; font-size: 14px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.tooltip-info {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.4;
-}
+.tooltip-foto { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background-color: var(--duo-green-primary); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: white; flex-shrink: 0; }
+.tooltip-info { display: flex; flex-direction: column; line-height: 1.4; }
 .tooltip-info strong { font-size: 14px; color: var(--text-main); }
 .tooltip-info span { font-size: 11px; color: #aaa; }
+.ponto:hover .tooltip-ponto { opacity: 1; transform: translateX(-50%) translateY(-12px); }
 
-.ponto:hover .tooltip-ponto {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-12px);
-}
-
-/* ==================================================================
-   8. INPUT RANGE CUSTOMIZADO
-   ================================================================== */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 8px;
-  border-radius: 5px;
-  outline: none;
-  margin-top: 15px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--duo-green-primary);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-input[type="range"]:active::-webkit-slider-thumb {
-  transform: scale(1.5);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-}
+/* Range */
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 5px; outline: none; margin-top: 15px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--duo-green-primary); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.5); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); }
 
 /* ==================================================================
-   9. LOADING SKELETONS
+   7. LOADING SKELETONS
    ================================================================== */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 .skeleton, .skeleton-card, .skeleton-chart, .skeleton-text, .skeleton-text-sm, .skeleton-kpi {
   background: linear-gradient(90deg, var(--input-bg) 25%, rgba(255,255,255,0.15) 50%, var(--input-bg) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  background-size: 200% 100%; animation: shimmer 1.5s infinite;
 }
-
 .skeleton { border-radius: 8px; }
 .skeleton-card { height: 80px; margin-bottom: 12px; border-radius: 12px; }
 .skeleton-chart { height: 250px; width: 100%; border-radius: 16px; margin-top: 15px; }
 .skeleton-text { height: 16px; width: 100%; margin-bottom: 8px; border-radius: 4px; }
 .skeleton-text-sm { height: 16px; width: 60%; margin-bottom: 8px; border-radius: 4px; }
 .skeleton-kpi { height: 80px; border-radius: 12px; }
-
-.skeleton-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
+.skeleton-kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
 
 /* ==================================================================
-   10. GAVETAS E MODAIS GLOBAIS
+   8. GAVETAS E MODAIS GLOBAIS (A CORREÇÃO DO BUG DA TELA CINZA AQUI)
    ================================================================== */
 .gaveta-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  z-index: 9998 !important;
+  background: rgba(0,0,0,0.6);
+  z-index: 9998 !important; /* OVERLAY FICA ATRÁS */
 }
 
 .gaveta {
   position: fixed;
   bottom: 0; left: 0; width: 100%;
-  max-height: 60vh;
+  max-height: 80vh; /* Permite ver mais itens */
   background: var(--bg-secondary);
   border-radius: 24px 24px 0 0;
   padding: 20px;
   box-sizing: border-box;
-  z-index: 9999 !important;
+  z-index: 10000 !important; /* GAVETA FICA NA FRENTE DO OVERLAY */
   overflow-y: auto;
   animation: slideUpSheet 0.3s ease-out;
 }
@@ -440,17 +273,18 @@ input[type="range"]:active::-webkit-slider-thumb {
   to { transform: translateY(0); }
 }
 
-.modal-centralizado {
+.duo-modal {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   background: var(--bg-secondary);
   border-radius: var(--radius-duo);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  z-index: 10000 !important; /* MODAL FICA NA FRENTE DO OVERLAY */
   width: 90%;
   max-width: 400px;
   box-sizing: border-box;
+  color: var(--text-main);
 }
 
 .modal-botoes-coluna {
@@ -461,130 +295,30 @@ input[type="range"]:active::-webkit-slider-thumb {
 }
 
 /* ==================================================================
-   11. MODO MOBILE GERAL (Somente overrides de componentes estritos base)
+   9. MODO MOBILE GERAL
    ================================================================== */
 .modo-mobile {
   padding-bottom: 80px;
 }
 
 .modo-mobile .layout-principal {
-  flex-direction: column;
-  padding: 5px;
-  gap: 10px;
-  overflow: visible;
-}
-
-.modo-mobile .titulares {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  white-space: nowrap;
-  gap: 10px;
-  padding: 10px 5px;
-  margin-bottom: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.modo-mobile .titulares .jogador {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 10px;
-  margin-bottom: 0;
-  min-width: 80px;
-  border-radius: 12px;
-  background-color: var(--input-bg);
-}
-
-.modo-mobile .titulares .jogador .foto {
-  width: 36px; height: 36px;
-  margin-right: 0; margin-bottom: 4px;
-}
-
-.modo-mobile .area-campo {
-  width: 100%;
-  gap: 10px;
-  order: 2;
-}
-
-.modo-mobile .campo-container {
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 8/5;
-  max-height: none;
-  margin: 0 auto;
-}
-
-.modo-mobile .linha-tempo-container {
-  width: 100%;
-  padding: 10px;
-}
-
-.modo-mobile .reservas {
-  width: 100%;
-  padding: 10px;
-}
-
-.modo-mobile .reservas .lista-reservas {
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-
-.modo-mobile .reservas .lista-reservas .jogador {
-  flex: 0 0 auto;
-  min-width: 80px;
-  padding: 6px 10px;
-  font-size: 12px;
-}
-
-.modo-mobile .historico {
-  width: 100%;
-  max-height: 400px;
-  overflow-y: auto;
-  order: 3;
-}
-
-.modo-mobile .historico .duo-list {
-  max-height: 300px;
-}
-
-.modo-mobile .historico .item-historico {
-  font-size: 12px;
-  padding: 8px 10px;
+  flex-direction: column; padding: 5px; gap: 10px; overflow: visible;
 }
 
 .modo-mobile .gaveta {
-  padding-bottom: 100px;
-  max-height: 75vh;
+  padding-bottom: 100px; /* Compensa a Bottom Nav */
 }
 
 .modo-mobile .modal-centralizado {
-  top: auto !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  transform: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  max-height: 85vh !important;
-  overflow-y: auto !important;
-  margin: 0 !important;
-  border-radius: 24px 24px 0 0 !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-bottom: none !important;
-  border-top: 4px solid var(--duo-green-primary) !important;
+  top: auto !important; bottom: 0 !important; left: 0 !important; transform: none !important;
+  width: 100% !important; max-width: 100% !important; max-height: 85vh !important;
+  overflow-y: auto !important; margin: 0 !important;
+  border-radius: 24px 24px 0 0 !important; border-top: 4px solid var(--duo-green-primary) !important;
   padding: 20px 20px 40px 20px !important;
   animation: slideUpSheet 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards !important;
 }
 
 .modo-mobile .modal-centralizado::before {
-  content: '';
-  display: block;
-  width: 40px; height: 6px;
-  background-color: var(--border-ui);
-  border-radius: 10px;
-  margin: 0 auto 20px auto;
+  content: ''; display: block; width: 40px; height: 6px;
+  background-color: var(--border-ui); border-radius: 10px; margin: 0 auto 20px auto;
 }

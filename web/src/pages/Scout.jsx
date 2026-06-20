@@ -210,8 +210,15 @@ export default function Scout() {
       return;
     }
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    let x = ((e.clientX - rect.left) / rect.width) * 100;
+    let y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    // Trava de segurança para o modal de ação não ser cortado no PC!
+    if (window.innerWidth > 768) {
+        x = Math.max(15, Math.min(x, 85));
+        y = Math.max(25, Math.min(y, 90));
+    }
+
     setModalAcao({ visivel: true, x, y });
   };
 
