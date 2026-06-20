@@ -1,0 +1,87 @@
+/* Elenco.module.css */
+.elencoLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.gridJogadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.cardAtleta {
+  border-radius: var(--radius-duo);
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cardAtleta:hover {
+  border-color: var(--duo-green-primary);
+  transform: translateY(-5px);
+}
+
+.fotoGrande {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 10px auto;
+  background-color: var(--duo-green-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  border: 4px solid var(--bg-primary);
+}
+
+.formGrupo { margin-bottom: 15px; text-align: left; }
+.formLabel { display: block; margin-bottom: 5px; font-size: 14px; color: #aaa; }
+.formInput { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent; background: var(--input-bg); color: var(--text-main); font-family: var(--font-primary); font-size: 16px; box-sizing: border-box; }
+.formInput:focus { border-color: var(--duo-green-primary); outline: none; }
+.spacingTop { margin-top: 20px; }
+.btnDuoGreen { background-color: var(--duo-green-primary); color: white; }
+
+.modalElenco {
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+}
+
+.perfilHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-ui);
+  padding-bottom: 20px;
+}
+
+.perfilKpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.kpiMini { background: var(--input-bg); padding: 15px; border-radius: 12px; text-align: center; }
+.kpiMini h5 { color: #aaa; margin-bottom: 5px; font-size: 12px; }
+.val { font-size: 24px; font-weight: bold; }
+.modalBotoesColuna { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+/* Mobile */
+:global(.modo-mobile) .elencoLayout { grid-template-columns: 1fr; gap: 15px; margin: 15px auto; padding: 0 15px; }
+:global(.modo-mobile) .gridJogadores { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+:global(.modo-mobile) .cardAtleta .fotoGrande { width: 60px; height: 60px; font-size: 24px; }
+:global(.modo-mobile) .cardAtleta h4 { font-size: 14px; }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './Header.module.css';
 
 export default function Header({ showBackButton }) {
   const navigate = useNavigate();
@@ -40,7 +41,6 @@ export default function Header({ showBackButton }) {
     setModalTemaAberto(false);
   };
 
-  // Escuta evento customizado para abrir o modal a partir do BottomNav
   useEffect(() => {
     const handleOpenSettings = () => setModalTemaAberto(true);
     window.addEventListener('open-settings', handleOpenSettings);
@@ -51,36 +51,34 @@ export default function Header({ showBackButton }) {
 
   return (
     <>
-      <header className="duo-header">
-        <div className="logo">
+      <header className={styles.duoHeader}>
+        <div className={styles.logo}>
           <img src="/assets/img/logo.png" style={{ maxHeight: '45px', width: 'auto' }} alt="Logo Cadeira" />
           <img src="/assets/img/texto-ps.png" style={{ maxHeight: '25px', width: 'auto' }} alt="Power Soccer" />
         </div>
         
-        <div className="header-actions">
+        <div className={styles.headerActions}>
           {showBackButton && (
-            <button onClick={() => navigate('/')} className="header-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            <button onClick={() => navigate('/')} className={styles.headerLink}>
               ⬅ Menu Principal
             </button>
           )}
           
-          <span className="header-user-name">Olá, {userName}</span>
+          <span className={styles.headerUserName}>Olá, {userName}</span>
           
-          {/* Botão de logout aparece em todos os modos, inclusive mobile */}
-          <button onClick={handleLogout} className="btn-header-sair" title="Sair">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle', marginRight: '5px' }}>
+          <button onClick={handleLogout} className={styles.btnHeaderSair} title="Sair">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
               <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M16 17L21 12L16 7" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M21 12H9" stroke="var(--duo-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span className="logout-text">Sair</span>
+            <span className={styles.logoutText}>Sair</span>
           </button>
           
-          <button onClick={() => setModalTemaAberto(true)} className="btn-header-icon">⚙️</button>
+          <button onClick={() => setModalTemaAberto(true)} className={styles.btnHeaderIcon}>⚙️</button>
         </div>
       </header>
 
-      {/* Modal de configurações */}
       {modalTemaAberto && (
         <>
           <div className="gaveta-overlay" style={{ display: 'block' }} onClick={fecharModal}></div>

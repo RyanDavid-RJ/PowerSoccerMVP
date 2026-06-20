@@ -1,0 +1,43 @@
+/* Login.module.css */
+
+.loginWrapper {
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  padding: 40px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-duo);
+  box-shadow: var(--shadow-duo);
+}
+
+.title {
+  margin-bottom: 30px;
+  color: var(--text-main);
+  font-family: var(--font-titles);
+}
+
+.highlight {
+  color: var(--duo-green-primary);
+}
+
+.subtitle {
+  margin-bottom: 30px;
+  color: #aaa;
+}
+
+/* Mobile: centraliza e reduz padding para telas pequenas */
+:global(.modo-mobile) .loginWrapper {
+  margin: 20px auto;
+  padding: 25px 20px;
+  max-width: 90vw;
+}
+
+:global(.modo-mobile) .title {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+}
+
+:global(.modo-mobile) .subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}

@@ -1,0 +1,98 @@
+/* Header.module.css */
+
+.duoHeader {
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-ui);
+  background-color: var(--bg-secondary);
+  color: var(--text-main);
+  transition: 0.3s;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: var(--font-titles);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.headerLink {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.headerUserName {
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btnHeaderSair {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  color: var(--duo-red);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.logoutText {
+  font-weight: 600;
+}
+
+.btnHeaderIcon {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-main);
+  padding: 4px;
+}
+
+/* Mobile: header enxuto e adaptações */
+:global(.modo-mobile) .duoHeader {
+  padding: 8px 15px;
+}
+
+:global(.modo-mobile) .duoHeader .logo img {
+  max-height: 32px !important;
+}
+
+:global(.modo-mobile) .duoHeader .headerActions {
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+:global(.modo-mobile) .duoHeader .headerUserName {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+:global(.modo-mobile) .duoHeader .logoutText {
+  display: none; /* esconde o texto "Sair" no mobile, mantendo apenas o ícone */
+}
+
+:global(.modo-mobile) .duoHeader .btnHeaderSair {
+  padding: 4px;
+}
+
+:global(.modo-mobile) .duoHeader .btnHeaderIcon {
+  display: none !important; /* esconde a engrenagem no mobile */
+}

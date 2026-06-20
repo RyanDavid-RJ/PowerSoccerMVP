@@ -1,0 +1,268 @@
+/* NovaPartida.module.css */
+
+.container {
+  max-width: 600px;
+  background-color: var(--bg-secondary);
+  padding: 30px;
+  border-radius: var(--radius-duo);
+  margin: 30px auto 0;
+  box-shadow: var(--shadow-duo);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.formGrupo {
+  margin-bottom: 20px;
+}
+
+.formGrupoAdversario {
+  margin-bottom: 30px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.formInput {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-ui);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.sectionTitle {
+  margin-bottom: 15px;
+}
+
+.sectionTitleTitulares {
+  color: var(--duo-blue);
+}
+
+.sectionTitleReservas {
+  color: #aaa;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  width: 100%;
+  justify-items: center;
+}
+
+.slot {
+  width: 100%;
+  max-width: 90px;
+  height: 110px;
+  border: 2px dashed var(--border-ui);
+  border-radius: var(--radius-duo);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--bg-primary);
+}
+
+.slot:hover {
+  border-color: var(--duo-green-primary);
+  background-color: rgba(88, 204, 2, 0.1);
+}
+
+.slotPreenchido {
+  border-style: solid;
+  border-color: var(--duo-green-primary);
+  background-color: var(--input-bg);
+}
+
+.slotFoto {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--duo-green-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  margin-bottom: 6px;
+  background-size: cover;
+  background-position: center;
+}
+
+.slotFotoVazio {
+  background-color: transparent;
+  border: 2px dashed #666;
+  color: #aaa;
+}
+
+.slotNome {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--text-main);
+}
+
+.submitButton {
+  width: 100%;
+  font-size: 18px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+/* Gaveta */
+.gavetaOverlay {
+  display: block;
+}
+
+.gavetaTitle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.jogadorItem {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.2s;
+  font-weight: bold;
+  background-color: var(--input-bg);
+  color: var(--text-main);
+}
+
+.jogadorItem:hover {
+  filter: brightness(1.2);
+  transform: scale(1.02);
+}
+
+.jogadorItemFoto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--duo-green-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  background-size: cover;
+  background-position: center;
+}
+
+.jogadorItemInfo {
+  flex: 1;
+}
+
+.jogadorItemNome {
+  font-weight: bold;
+}
+
+.jogadorItemCamisa {
+  color: var(--duo-green-primary);
+  font-weight: 600;
+}
+
+/* Modal de camisa */
+.modalCamisa {
+  z-index: 1002;
+  padding: 30px;
+  background-color: var(--bg-secondary);
+}
+
+.modalCamisaTitle {
+  text-align: center;
+  color: var(--text-main);
+  margin-bottom: 15px;
+}
+
+.modalCamisaTexto {
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.modalCamisaInput {
+  width: 100%;
+  font-size: 24px;
+  margin: 15px 0;
+  text-align: center;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-ui);
+  background: var(--input-bg);
+  color: var(--text-main);
+  box-sizing: border-box;
+}
+
+/* Utilitários */
+.textCenter {
+  text-align: center;
+}
+
+.spacingTop {
+  margin-top: 20px;
+}
+
+/* ========== MOBILE ========== */
+:global(.modo-mobile) .container {
+  max-width: 100%;
+  margin: 15px 10px;
+  padding: 20px 15px;
+  border-radius: 16px;
+}
+
+:global(.modo-mobile) .slotsGrid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+:global(.modo-mobile) .slot {
+  max-width: 65px;
+  height: 80px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+:global(.modo-mobile) .slotFoto {
+  width: 34px;
+  height: 34px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+:global(.modo-mobile) .slotNome {
+  font-size: 9px;
+}
+
+:global(.modo-mobile) .formInput {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+:global(.modo-mobile) .formGrupo {
+  width: 100%;
+  box-sizing: border-box;
+}

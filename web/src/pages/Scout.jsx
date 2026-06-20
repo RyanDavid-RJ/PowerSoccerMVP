@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { apiGet, apiPost, apiPut, apiDelete } from "../services/api";
 import toast from "react-hot-toast";
+import styles from "./Scout.module.css";
 
 export default function Scout() {
   const { id } = useParams();
@@ -216,7 +217,9 @@ export default function Scout() {
 
   const registrarAcao = async (tipoAcao) => {
     if (!estaEmQuadra(jogadorAtivo.id, segundoAtual)) {
-      toast.error(`ERRO: ${jogadorAtivo.nome} não está em quadra neste minuto! Ação cancelada.`);
+      toast.error(
+        `ERRO: ${jogadorAtivo.nome} não está em quadra neste minuto! Ação cancelada.`,
+      );
       return;
     }
 
@@ -246,7 +249,9 @@ export default function Scout() {
   // ========== SUBSTITUIÇÕES ==========
   const handleReservaClick = (reserva) => {
     if (!jogadorAtivo) {
-      toast.error("Selecione um jogador titular (na lateral esquerda) para fazer a troca.");
+      toast.error(
+        "Selecione um jogador titular (na lateral esquerda) para fazer a troca.",
+      );
       return;
     }
 
@@ -264,7 +269,9 @@ export default function Scout() {
 
     const minutoVideo = segundosParaTempo(segundoAtual);
     if (eventos.some((ev) => ev.minuto_video === minutoVideo)) {
-      toast.error("Segundo Ocupado! Avance ou recue o tempo em 1s antes de substituir.");
+      toast.error(
+        "Segundo Ocupado! Avance ou recue o tempo em 1s antes de substituir.",
+      );
       return;
     }
 
@@ -278,7 +285,9 @@ export default function Scout() {
 
   const confirmarSubstituicao = async () => {
     if (!estaEmQuadra(modalSub.idSaindo, segundoAtual)) {
-      toast.error("ERRO: O jogador que você quer substituir não está em quadra neste momento.");
+      toast.error(
+        "ERRO: O jogador que você quer substituir não está em quadra neste momento.",
+      );
       setModalSub({
         visivel: false,
         idSaindo: null,
@@ -289,7 +298,9 @@ export default function Scout() {
     }
 
     if (estaEmQuadra(modalSub.idEntrando, segundoAtual)) {
-      toast.error("ERRO: O jogador que você quer colocar já está em quadra. Substituição inválida.");
+      toast.error(
+        "ERRO: O jogador que você quer colocar já está em quadra. Substituição inválida.",
+      );
       setModalSub({
         visivel: false,
         idSaindo: null,
@@ -401,7 +412,9 @@ export default function Scout() {
       );
       await carregarDadosDaAPI();
       setModalDomino({ visivel: false, idsParaDeletar: [], qtdExtras: 0 });
-      toast.success(`${modalDomino.idsParaDeletar.length} lances deletados em cascata.`);
+      toast.success(
+        `${modalDomino.idsParaDeletar.length} lances deletados em cascata.`,
+      );
     } catch (e) {
       console.error(e);
       toast.error(`Erro crítico ao apagar lances em cascata: ${e.message}`);
@@ -436,7 +449,9 @@ export default function Scout() {
         ev.id !== modalEdicao.evento.id,
     );
     if (ocupado) {
-      toast.error("Já existe outro lance marcado neste exato segundo. Escolha outro tempo.");
+      toast.error(
+        "Já existe outro lance marcado neste exato segundo. Escolha outro tempo.",
+      );
       return;
     }
     try {
@@ -539,26 +554,17 @@ export default function Scout() {
           )
         : [];
 
-  // ========== RENDER ==========
   return (
     <>
       <Header showBackButton={false} />
 
-      <div
-        style={{
-          padding: "10px 20px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h3 style={{ margin: 0 }}>
+      <div className={styles.scoutTopBar}>
+        <h3 className={styles.scoutTitle}>
           PowerSoccer <span className="cor-duo">vs {partida.adversario}</span>
         </h3>
         <button
-          className="btn-acao btn-duo-vermelho"
+          className={`btn-acao btn-duo-vermelho ${styles.scoutSairBtn}`}
           onClick={() => navigate("/nova-partida")}
-          style={{ padding: "8px 15px" }}
         >
           Sair da Partida
         </button>
@@ -604,54 +610,31 @@ export default function Scout() {
         {/* PRANCHETA + LINHA DO TEMPO + RESERVAS */}
         <div className="area-campo">
           {/* TOGGLE DE VISUALIZAÇÃO + INDICADORES DE PERÍODO */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <div style={{ display: "flex", gap: "10px", marginRight: "100px" }}>
+          <div className={styles.controlsRow}>
+            <div className={styles.viewToggleGroup}>
               <button
-                className={`btn-acao ${modoVisualizacao === "time" ? "btn-duo-primary" : "btn-config"}`}
+                className={`btn-acao ${modoVisualizacao === "time" ? "btn-duo-primary" : "btn-config"} ${styles.viewToggle}`}
                 onClick={() => setModoVisualizacao("time")}
-                style={{ padding: "5px 15px", fontSize: "14px" }}
               >
                 🏟️ Visão Time
               </button>
               <button
-                className={`btn-acao ${modoVisualizacao === "jogador" ? "btn-duo-primary" : "btn-config"}`}
+                className={`btn-acao ${modoVisualizacao === "jogador" ? "btn-duo-primary" : "btn-config"} ${styles.viewToggle}`}
                 onClick={() => setModoVisualizacao("jogador")}
-                style={{ padding: "5px 15px", fontSize: "14px" }}
                 disabled={!jogadorAtivo}
               >
                 👤 Visão Jogador
               </button>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", marginLeft: "100px" }}>
+            <div className={styles.periodGroup}>
               <div
-                className={`btn-acao ${segundoAtual <= 1200 ? "btn-duo-primary" : "btn-config"}`}
-                style={{
-                  padding: "5px 15px",
-                  fontSize: "14px",
-                  cursor: "default",
-                  pointerEvents: "none",
-                  opacity: 0.9,
-                }}
+                className={`btn-acao ${segundoAtual <= 1200 ? "btn-duo-primary" : "btn-config"} ${styles.periodBadge} ${segundoAtual <= 1200 ? styles.periodBadgeActive : ""}`}
               >
                 1º Tempo
               </div>
               <div
-                className={`btn-acao ${segundoAtual > 1200 ? "btn-duo-primary" : "btn-config"}`}
-                style={{
-                  padding: "5px 15px",
-                  fontSize: "14px",
-                  cursor: "default",
-                  pointerEvents: "none",
-                  opacity: 0.9,
-                }}
+                className={`btn-acao ${segundoAtual > 1200 ? "btn-duo-primary" : "btn-config"} ${styles.periodBadge} ${segundoAtual > 1200 ? styles.periodBadgeActive : ""}`}
               >
                 2º Tempo
               </div>
@@ -660,12 +643,7 @@ export default function Scout() {
 
           {/* CAMPO SVG */}
           <div
-            className="campo-container duo-container"
-            style={{
-              backgroundColor: "var(--duo-green-primary)",
-              border: "4px solid white",
-              position: "relative",
-            }}
+            className={`campo-container duo-container ${styles.campoField}`}
             onClick={handleCampoClick}
           >
             <svg
@@ -715,7 +693,7 @@ export default function Scout() {
               <circle cx="50%" cy="50%" r="1%" fill="white" />
             </svg>
 
-            {/* ========== PONTOS COM TOOLTIP CUSTOMIZADO ========== */}
+            {/* PONTOS COM TOOLTIP CUSTOMIZADO */}
             {eventosFiltrados.map((ev) => {
               if (ev.tipo_acao === "Substituição") return null;
               const destaque =
@@ -727,16 +705,15 @@ export default function Scout() {
                     ev.tipo_acao === "Gol"
                       ? "gol"
                       : ev.tipo_acao === "Passe Certo"
-                      ? "passe-certo"
-                      : ev.tipo_acao === "Passe Errado"
-                      ? "passe-errado"
-                      : ev.tipo_acao === "Finalização"
-                      ? "finalizacao"
-                      : "interceptacao"
+                        ? "passe-certo"
+                        : ev.tipo_acao === "Passe Errado"
+                          ? "passe-errado"
+                          : ev.tipo_acao === "Finalização"
+                            ? "finalizacao"
+                            : "interceptacao"
                   } ${destaque ? "ponto-destaque" : ""}`}
                   style={{ left: `${ev.coord_x}%`, top: `${ev.coord_y}%` }}
                 >
-                  {/* Tooltip customizado */}
                   <div className="tooltip-ponto">
                     {ev.foto_atleta ? (
                       <img
@@ -768,64 +745,44 @@ export default function Scout() {
 
             {modalAcao.visivel && (
               <div
-                style={{
-                  position: "absolute",
-                  left: `${modalAcao.x}%`,
-                  top: `${modalAcao.y}%`,
-                  backgroundColor: "var(--bg-secondary)",
-                  padding: "10px",
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
-                  transform: "translate(-50%, -110%)",
-                  zIndex: 20,
-                  display: "flex",
-                  gap: "5px",
-                }}
+                className={styles.actionModal}
+                style={{ "--x": `${modalAcao.x}%`, "--y": `${modalAcao.y}%` }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  className="btn-acao btn-duo-blue"
-                  style={{ padding: "8px", fontSize: "12px" }}
+                  className={`btn-acao btn-duo-azul ${styles.actionBtn}`}
                   onClick={() => registrarAcao("Passe Certo")}
                 >
                   Passe ✓
                 </button>
                 <button
-                  className="btn-acao btn-duo-vermelho"
-                  style={{ padding: "8px", fontSize: "12px" }}
+                  className={`btn-acao btn-duo-vermelho ${styles.actionBtn}`}
                   onClick={() => registrarAcao("Passe Errado")}
                 >
                   Passe ✗
                 </button>
                 <button
-                  className="btn-acao btn-duo-amarelo"
-                  style={{ padding: "8px", fontSize: "12px", color: "black" }}
+                  className={`btn-acao btn-duo-amarelo ${styles.actionBtn}`}
+                  style={{ color: "black" }}
                   onClick={() => registrarAcao("Gol")}
                 >
                   GOL ⚽
                 </button>
                 <button
-                  className="btn-acao btn-duo-roxo"
-                  style={{ padding: "8px", fontSize: "12px", color: "white" }}
+                  className={`btn-acao btn-duo-roxo ${styles.actionBtn}`}
                   onClick={() => registrarAcao("Finalização")}
                 >
                   Chute
                 </button>
                 <button
-                  className="btn-acao btn-duo-laranja"
-                  style={{ padding: "8px", fontSize: "12px" }}
+                  className={`btn-acao btn-duo-laranja ${styles.actionBtn}`}
                   onClick={() => registrarAcao("Interceptação")}
                 >
                   Roubo
                 </button>
                 <button
-                  className="btn-acao"
-                  style={{
-                    padding: "8px",
-                    fontSize: "12px",
-                    background: "#333",
-                    color: "white",
-                  }}
+                  className={`btn-acao ${styles.actionBtn}`}
+                  style={{ background: "#333", color: "white" }}
                   onClick={() => setModalAcao({ visivel: false, x: 0, y: 0 })}
                 >
                   X
@@ -836,38 +793,17 @@ export default function Scout() {
 
           {/* LINHA DO TEMPO */}
           <div
-            className="linha-tempo-container duo-card"
-            style={{ width: "100%", marginTop: "15px" }}
+            className={`linha-tempo-container duo-card ${styles.timelineContainer}`}
           >
-            <label
-              style={{ display: "flex", alignItems: "center", gap: "10px" }}
-            >
+            <label className={styles.timelineLabel}>
               ⏱️ Tempo de Jogo:
-              <span
-                style={{
-                  color: "var(--text-main)",
-                  fontWeight: 900,
-                  fontSize: "1.2em",
-                  background: "var(--bg-primary)",
-                  padding: "4px 12px",
-                  borderRadius: "8px",
-                  border: "2px solid var(--border-ui)",
-                }}
-              >
+              <span className={styles.timelineTimeDisplay}>
                 {segundosParaTempo(segundoAtual)}
               </span>
             </label>
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
-                marginTop: "15px",
-              }}
-            >
+            <div className={styles.timelineControls}>
               <button
-                className="btn-acao btn-config"
-                style={{ width: "auto", padding: "5px 15px", margin: 0 }}
+                className={`btn-acao btn-config ${styles.timelineBtn}`}
                 onClick={() => ajustarTempo(-1)}
               >
                 -1s
@@ -878,15 +814,11 @@ export default function Scout() {
                 max="2400"
                 value={segundoAtual}
                 onChange={handleRangeChange}
-                style={{
-                  flex: 1,
-                  margin: 0,
-                  background: gerarGradienteBarra(),
-                }}
+                className={styles.timelineRange}
+                style={{ background: gerarGradienteBarra() }}
               />
               <button
-                className="btn-acao btn-config"
-                style={{ width: "auto", padding: "5px 15px", margin: 0 }}
+                className={`btn-acao btn-config ${styles.timelineBtn}`}
                 onClick={() => ajustarTempo(1)}
               >
                 +1s
@@ -895,8 +827,8 @@ export default function Scout() {
           </div>
 
           {/* RESERVAS */}
-          <div className="reservas duo-container" style={{ width: "100%" }}>
-            <h4 style={{ color: "#aaa", margin: "0 0 10px 0" }}>
+          <div className={`reservas duo-container ${styles.reservasContainer}`}>
+            <h4 className={styles.reservasTitle}>
               🔄 Reservas (Clique para Substituir)
             </h4>
             <div className="lista-reservas">
@@ -921,11 +853,7 @@ export default function Scout() {
 
         {/* HISTÓRICO DE LANCES */}
         <div className="historico duo-container">
-          <h3
-            style={{ color: "var(--duo-green-primary)", marginBottom: "15px" }}
-          >
-            📝 Últimos Lances
-          </h3>
+          <h3 className={styles.historicoTitle}>📝 Últimos Lances</h3>
           <div className="duo-list" style={{ paddingRight: "5px" }}>
             {eventosFiltrados.length === 0 ? (
               <p
@@ -950,15 +878,7 @@ export default function Scout() {
                 return (
                   <div
                     key={ev.id}
-                    className="item-historico"
-                    style={{
-                      backgroundColor: "var(--input-bg)",
-                      cursor: "pointer",
-                      borderLeft:
-                        ev.tipo_acao === "Substituição"
-                          ? "4px solid white"
-                          : "none",
-                    }}
+                    className={`item-historico ${styles.historicoItem} ${ev.tipo_acao === "Substituição" ? styles.historicoItemSub : ""}`}
                     onClick={() => handleCliqueHistorico(ev)}
                   >
                     <div>
@@ -982,7 +902,7 @@ export default function Scout() {
                           ? "🔄 SUBSTITUIÇÃO"
                           : ev.nome_atleta?.split(" ")[0]}
                       </strong>
-                      <div style={{ fontSize: "12px", color: "#ccc" }}>
+                      <div className={styles.historicoItemAcao}>
                         {ev.tipo_acao === "Substituição"
                           ? descricaoSub
                           : ev.tipo_acao}
@@ -995,7 +915,7 @@ export default function Scout() {
                         alignItems: "flex-end",
                       }}
                     >
-                      <span style={{ fontSize: "12px", color: "#888" }}>
+                      <span className={styles.historicoItemTempo}>
                         ⏱ {ev.minuto_video}
                       </span>
                       {ev.tipo_acao === "Substituição" ? (
@@ -1024,30 +944,14 @@ export default function Scout() {
         </div>
       </div>
 
-      {/* Modais - mantidos inalterados (já estão no final) */}
+      {/* Modais */}
       {modalSub.visivel && (
-        <div
-          className="gaveta-overlay"
-          style={{ display: "block", zIndex: 1001 }}
-        >
+        <div className={`gaveta-overlay ${styles.modalOverlay}`}>
           <div
-            className="duo-modal modal-centralizado"
-            style={{
-              zIndex: 1002,
-              padding: "30px",
-              backgroundColor: "var(--bg-secondary)",
-            }}
+            className={`duo-modal modal-centralizado ${styles.modalContent}`}
           >
-            <h4
-              style={{
-                color: "var(--text-main)",
-                textAlign: "center",
-                marginBottom: "15px",
-              }}
-            >
-              🔄 Substituição
-            </h4>
-            <p style={{ textAlign: "center", margin: "15px 0", color: "#ccc" }}>
+            <h4 className={styles.modalTitle}>🔄 Substituição</h4>
+            <p className={styles.modalText}>
               Substituir aos <strong>{segundosParaTempo(segundoAtual)}</strong>?
               <br />
               <br />
@@ -1059,7 +963,7 @@ export default function Scout() {
                 Entra: {modalSub.nomeEntrando.split(" ")[0]}
               </span>
             </p>
-            <div className="modal-botoes-coluna">
+            <div className={styles.modalBotoesColuna}>
               <button
                 className="btn-acao btn-duo-primary"
                 onClick={confirmarSubstituicao}
@@ -1085,37 +989,12 @@ export default function Scout() {
       )}
 
       {modalDomino.visivel && (
-        <div
-          className="gaveta-overlay"
-          style={{ display: "block", zIndex: 1001 }}
-        >
+        <div className={`gaveta-overlay ${styles.modalOverlay}`}>
           <div
-            className="duo-modal modal-centralizado"
-            style={{
-              zIndex: 1002,
-              padding: "30px",
-              backgroundColor: "#333",
-              border: "3px solid var(--duo-red)",
-            }}
+            className={`duo-modal modal-centralizado ${styles.modalContent} ${styles.modalDominó}`}
           >
-            <h4
-              style={{
-                color: "var(--duo-orange)",
-                textAlign: "center",
-                marginBottom: "15px",
-              }}
-            >
-              ⚠️ Atenção Crítica
-            </h4>
-            <p
-              style={{
-                textAlign: "center",
-                margin: "15px 0",
-                color: "#fff",
-                fontSize: "14px",
-                lineHeight: "1.6",
-              }}
-            >
+            <h4 className={styles.modalDominóTitle}>⚠️ Atenção Crítica</h4>
+            <p className={styles.modalDominóText}>
               Cancelar esta substituição causará um{" "}
               <strong>Efeito Dominó!</strong>
               <br />
@@ -1130,7 +1009,7 @@ export default function Scout() {
               Se você apagar esta troca, todas essas ações sumirão da linha do
               tempo. Prosseguir?
             </p>
-            <div className="modal-botoes-coluna">
+            <div className={styles.modalBotoesColuna}>
               <button
                 className="btn-acao btn-duo-vermelho"
                 onClick={confirmarDelecaoEmCascata}
@@ -1156,31 +1035,15 @@ export default function Scout() {
       )}
 
       {modalEdicao.visivel && (
-        <div
-          className="gaveta-overlay"
-          style={{ display: "block", zIndex: 1001 }}
-        >
+        <div className={`gaveta-overlay ${styles.modalOverlay}`}>
           <div
-            className="duo-modal modal-centralizado"
-            style={{
-              zIndex: 1002,
-              padding: "30px",
-              backgroundColor: "var(--bg-secondary)",
-            }}
+            className={`duo-modal modal-centralizado ${styles.modalContent}`}
           >
-            <h4
-              style={{
-                color: "var(--text-main)",
-                textAlign: "center",
-                marginBottom: "15px",
-              }}
-            >
-              ⚙️ Opções do Lance
-            </h4>
-            <div className="form-grupo">
-              <label className="label-modal">Alterar Ação:</label>
+            <h4 className={styles.modalTitle}>⚙️ Opções do Lance</h4>
+            <div className={styles.edicaoFormGroup}>
+              <label className={styles.edicaoLabel}>Alterar Ação:</label>
               <select
-                className="select-modal"
+                className={styles.edicaoSelect}
                 value={modalEdicao.tipoAcao}
                 onChange={(e) =>
                   setModalEdicao({ ...modalEdicao, tipoAcao: e.target.value })
@@ -1192,12 +1055,15 @@ export default function Scout() {
                 <option value="Finalização">Finalização</option>
                 <option value="Gol">Gol</option>
               </select>
-              <label className="label-modal" style={{ marginTop: "15px" }}>
+              <label
+                className={styles.edicaoLabel}
+                style={{ marginTop: "15px" }}
+              >
                 Alterar Minuto (MM:SS):
               </label>
               <input
                 type="text"
-                className="input-modal-padrao"
+                className={styles.edicaoInput}
                 value={modalEdicao.minutoVideo}
                 onChange={(e) =>
                   setModalEdicao({
@@ -1207,7 +1073,7 @@ export default function Scout() {
                 }
               />
             </div>
-            <div className="modal-botoes-coluna" style={{ marginTop: "20px" }}>
+            <div className={styles.modalBotoesColuna}>
               <button
                 className="btn-acao btn-duo-primary"
                 onClick={salvarEdicaoLance}

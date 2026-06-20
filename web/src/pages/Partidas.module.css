@@ -1,0 +1,57 @@
+/* Partidas.module.css */
+
+.spacingTop {
+  margin-top: 20px;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.partidaCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  border-radius: var(--radius-duo);
+  background-color: var(--input-bg);
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.2s;
+}
+
+.partidaCard:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.partidaCardContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.partidaCardTitle {
+  font-size: 18px;
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+.partidaCardDate {
+  color: #aaa;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.partidaCardArrow {
+  font-size: 24px;
+  color: var(--text-main);
+}
+
+/* Mobile */
+:global(.modo-mobile) .partidaCard {
+  padding: 12px 15px;
+}
+
+:global(.modo-mobile) .partidaCardTitle {
+  font-size: 16px;
+}

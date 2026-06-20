@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { apiGet } from '../services/api';
 import toast from 'react-hot-toast';
+import styles from './Partidas.module.css';
 
 export default function Partidas() {
   const [partidas, setPartidas] = useState([]);
@@ -28,32 +29,31 @@ export default function Partidas() {
     <>
       <Header showBackButton={true} />
       
-      <div className="duo-container config-container">
+      <div className={`duo-container ${styles.container}`}>
         <h2>Histórico de <span className="cor-duo">Partidas</span></h2>
         
         {loading ? (
-          <div className="spacing-top">
+          <div className={styles.spacingTop}>
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="skeleton-card"></div>
             ))}
           </div>
         ) : (
-          <div className="spacing-top">
+          <div className={styles.spacingTop}>
             {partidas.length === 0 ? (
-              <p className="text-center" style={{ color: '#aaa' }}>Nenhuma partida registrada ainda.</p>
+              <p className={styles.textCenter} style={{ color: '#aaa' }}>Nenhuma partida registrada ainda.</p>
             ) : (
               partidas.map(p => (
                 <div 
                   key={p.id} 
-                  className="partida-card" 
+                  className={styles.partidaCard} 
                   onClick={() => navigate(`/scout/${p.id}`)}
                 >
-                  <div>
-                    <strong style={{ fontSize: '18px', color: 'var(--text-main)' }}>vs {p.adversario}</strong>
-                    <br/>
-                    <small className="form-label">📅 {new Date(p.data_jogo).toLocaleDateString('pt-BR')}</small>
+                  <div className={styles.partidaCardContent}>
+                    <strong className={styles.partidaCardTitle}>vs {p.adversario}</strong>
+                    <small className={styles.partidaCardDate}>📅 {new Date(p.data_jogo).toLocaleDateString('pt-BR')}</small>
                   </div>
-                  <span style={{ fontSize: '24px', color: 'var(--text-main)' }}>▶</span>
+                  <span className={styles.partidaCardArrow}>▶</span>
                 </div>
               ))
             )}

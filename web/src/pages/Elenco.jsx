@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { apiGet } from "../services/api";
 import toast from "react-hot-toast";
+import styles from "./Elenco.module.css";
 
 ChartJS.register(
   CategoryScale,
@@ -39,7 +40,6 @@ export default function Elenco() {
   const [editFoto, setEditFoto] = useState(null);
   const [loadingEdit, setLoadingEdit] = useState(false);
 
-  // Dados reais do atleta
   const [statsPorPartida, setStatsPorPartida] = useState([]);
   const [totais, setTotais] = useState({
     gols: 0,
@@ -49,7 +49,6 @@ export default function Elenco() {
   });
   const [loadingStats, setLoadingStats] = useState(false);
 
-  // Carrega elenco usando apiGet (com token)
   useEffect(() => {
     const carregarElenco = async () => {
       try {
@@ -63,7 +62,6 @@ export default function Elenco() {
     carregarElenco();
   }, []);
 
-  // Função para processar eventos e gerar evolução por partida
   const processarEventos = (eventos) => {
     const partidasMap = new Map();
     let totaisAcumulados = {
@@ -140,7 +138,6 @@ export default function Elenco() {
     setTotais({ gols: 0, passesC: 0, passesE: 0, interceptacoes: 0 });
   };
 
-  // --- Funções de cadastro e edição (com FormData e token manual) ---
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
     return {
@@ -167,7 +164,6 @@ export default function Elenco() {
       setNumero("");
       setFoto(null);
       document.getElementById("foto-atleta").value = "";
-      // Recarrega elenco com apiGet
       const data = await apiGet("/atletas");
       setAtletas(data);
     } catch (error) {
@@ -207,7 +203,6 @@ export default function Elenco() {
     }
   };
 
-  // Preparar dados do gráfico de linha
   const labels = statsPorPartida.map((_, idx) => `Jogo ${idx + 1}`);
   const golsPorJogo = statsPorPartida.map((s) => s.gols);
   const passesCPorJogo = statsPorPartida.map((s) => s.passesC);
@@ -273,21 +268,21 @@ export default function Elenco() {
     <>
       <Header showBackButton={true} />
 
-      <div className="elenco-layout">
+      <div className={styles.elencoLayout}>
         <div>
           <h2>
             Nosso <span className="cor-duo">Elenco</span>
           </h2>
-          <div className="grid-jogadores spacing-top">
+          <div className={`${styles.gridJogadores} ${styles.spacingTop}`}>
             {atletas.map((atleta) => (
               <div
                 key={atleta.id}
-                className="card-atleta"
+                className={styles.cardAtleta}
                 onClick={() => abrirPerfil(atleta)}
               >
                 {atleta.foto ? (
                   <div
-                    className="foto-grande"
+                    className={styles.fotoGrande}
                     style={{
                       backgroundImage: `url(${atleta.foto})`,
                       backgroundSize: "cover",
@@ -296,7 +291,7 @@ export default function Elenco() {
                     }}
                   ></div>
                 ) : (
-                  <div className="foto-grande">{atleta.nome.charAt(0)}</div>
+                  <div className={styles.fotoGrande}>{atleta.nome.charAt(0)}</div>
                 )}
                 <h4>{atleta.nome}</h4>
                 <small>Camisa {atleta.numero_camisa}</small>
@@ -309,10 +304,10 @@ export default function Elenco() {
           <h3>
             Cadastrar <span className="cor-duo">Atleta</span>
           </h3>
-          <form onSubmit={handleSubmit} className="spacing-top">
+          <form onSubmit={handleSubmit} className={styles.spacingTop}>
             <input
               type="text"
-              className="form-input"
+              className={styles.formInput}
               placeholder="Nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
@@ -320,17 +315,16 @@ export default function Elenco() {
             />
             <input
               type="number"
-              className="form-input"
+              className={styles.formInput}
               placeholder="Camisa"
               value={numero}
               onChange={(e) => setNumero(e.target.value)}
               required
-              style={{ margin: "10px 0" }}
             />
             <input
               type="file"
               id="foto-atleta"
-              className="form-input"
+              className={styles.formInput}
               accept="image/*"
               onChange={(e) => setFoto(e.target.files[0])}
             />
@@ -353,26 +347,13 @@ export default function Elenco() {
           onClick={fecharModal}
         >
           <div
-            className="duo-modal modal-perfil modal-centralizado"
-            style={{
-              width: "90%",
-              maxWidth: "500px",
-              backgroundColor: "var(--bg-secondary)",
-              zIndex: 1000,
-            }}
+            className={`duo-modal modal-perfil modal-centralizado ${styles.modalElenco}`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="perfil-header"
-              style={{
-                justifyContent: "center",
-                borderBottom: "none",
-                paddingBottom: "0",
-              }}
-            >
+            <div className={styles.perfilHeader}>
               {atletaSelecionado.foto ? (
                 <div
-                  className="foto-grande"
+                  className={styles.fotoGrande}
                   style={{
                     width: "60px",
                     height: "60px",
@@ -384,7 +365,7 @@ export default function Elenco() {
                 ></div>
               ) : (
                 <div
-                  className="foto-grande"
+                  className={styles.fotoGrande}
                   style={{ width: "60px", height: "60px" }}
                 >
                   {atletaSelecionado.nome.charAt(0)}
@@ -426,43 +407,28 @@ export default function Elenco() {
                   </>
                 ) : (
                   <>
-                    <div
-                      className="perfil-kpis"
-                      style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
-                    >
-                      <div className="kpi-mini">
+                    <div className={styles.perfilKpis}>
+                      <div className={styles.kpiMini}>
                         <h5>Total Gols</h5>
-                        <div
-                          className="val"
-                          style={{ color: "var(--duo-yellow)" }}
-                        >
+                        <div className={styles.val} style={{ color: "var(--duo-yellow)" }}>
                           {totais.gols}
                         </div>
                       </div>
-                      <div className="kpi-mini">
+                      <div className={styles.kpiMini}>
                         <h5>Total Passes Certos</h5>
-                        <div
-                          className="val"
-                          style={{ color: "var(--duo-blue)" }}
-                        >
+                        <div className={styles.val} style={{ color: "var(--duo-blue)" }}>
                           {totais.passesC}
                         </div>
                       </div>
-                      <div className="kpi-mini">
+                      <div className={styles.kpiMini}>
                         <h5>Total Passes Errados</h5>
-                        <div
-                          className="val"
-                          style={{ color: "var(--duo-red)" }}
-                        >
+                        <div className={styles.val} style={{ color: "var(--duo-red)" }}>
                           {totais.passesE}
                         </div>
                       </div>
-                      <div className="kpi-mini">
+                      <div className={styles.kpiMini}>
                         <h5>Total Interceptações</h5>
-                        <div
-                          className="val"
-                          style={{ color: "var(--duo-orange)" }}
-                        >
+                        <div className={styles.val} style={{ color: "var(--duo-orange)" }}>
                           {totais.interceptacoes}
                         </div>
                       </div>
@@ -491,7 +457,7 @@ export default function Elenco() {
                   </>
                 )}
 
-                <div className="modal-botoes-coluna">
+                <div className={styles.modalBotoesColuna}>
                   <button
                     className="btn-acao btn-duo-azul"
                     onClick={() => setModoEdicao(true)}
@@ -509,49 +475,42 @@ export default function Elenco() {
                   ✏️ Editar Dados
                 </h4>
                 <form onSubmit={handleEditSubmit}>
-                  <div className="form-grupo">
-                    <label className="form-label">Nome do Atleta</label>
+                  <div className={styles.formGrupo}>
+                    <label className={styles.formLabel}>Nome do Atleta</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className={styles.formInput}
                       value={editNome}
                       onChange={(e) => setEditNome(e.target.value)}
                       required
                     />
                   </div>
-                  <div className="form-grupo">
-                    <label className="form-label">Número da Camisa</label>
+                  <div className={styles.formGrupo}>
+                    <label className={styles.formLabel}>Número da Camisa</label>
                     <input
                       type="number"
-                      className="form-input"
+                      className={styles.formInput}
                       value={editNumero}
                       onChange={(e) => setEditNumero(e.target.value)}
                       required
                     />
                   </div>
-                  <div className="form-grupo">
-                    <label className="form-label">
+                  <div className={styles.formGrupo}>
+                    <label className={styles.formLabel}>
                       Substituir Foto (Opcional)
                     </label>
                     <input
                       type="file"
-                      className="form-input"
+                      className={styles.formInput}
                       accept="image/*"
                       onChange={(e) => setEditFoto(e.target.files[0])}
                     />
                   </div>
-                  <div
-                    className="modal-botoes-coluna"
-                    style={{ marginTop: "20px" }}
-                  >
+                  <div className={styles.modalBotoesColuna}>
                     <button
                       type="submit"
-                      className="btn-acao btn-duo-green"
+                      className={`btn-acao ${styles.btnDuoGreen}`}
                       disabled={loadingEdit}
-                      style={{
-                        backgroundColor: "var(--duo-green-primary)",
-                        color: "white",
-                      }}
                     >
                       {loadingEdit ? "Salvando..." : "Salvar Modificações"}
                     </button>

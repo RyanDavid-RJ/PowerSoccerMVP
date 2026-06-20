@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import styles from './BottomNav.module.css';
 
 export default function BottomNav() {
   const location = useLocation();
@@ -16,26 +17,22 @@ export default function BottomNav() {
     }
   };
 
-  // Se estiver na tela de login, esconde a barra inferior
   if (location.pathname === '/login') {
     return null;
   }
 
   const pathname = location.pathname;
 
-  // Mapeamento de rotas para ícones e nomes
   const rotaInfo = {
     '/nova-partida': { icon: '⚽', nome: 'Partida' },
     '/dashboard': { icon: '📊', nome: 'Dashboard' },
     '/elenco': { icon: '👥', nome: 'Elenco' },
     '/partidas': { icon: '📝', nome: 'Partidas' },
-    '/scout': { icon: '🏟️', nome: 'Scout' }, // pega qualquer rota que comece com /scout
+    '/scout': { icon: '🏟️', nome: 'Scout' },
   };
 
-  // Determina se está na home
   const isHome = pathname === '/';
 
-  // Determina a rota ativa (para exibir no centro)
   let rotaAtiva = null;
   for (const [rota, info] of Object.entries(rotaInfo)) {
     if (pathname === rota || (rota === '/scout' && pathname.startsWith('/scout'))) {
@@ -44,12 +41,11 @@ export default function BottomNav() {
     }
   }
 
-  // Se estiver na Home, mostra apenas 2 botões
   if (isHome) {
     return (
-      <div className="bottom-nav">
+      <div className={styles.bottomNav}>
         <button
-          className="nav-item ativo"
+          className={`${styles.navItem} ${styles.navItemAtivo}`}
           onClick={() => navegar('/')}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,7 +55,7 @@ export default function BottomNav() {
         </button>
 
         <button
-          className="nav-item"
+          className={styles.navItem}
           onClick={abrirConfiguracoes}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -72,11 +68,10 @@ export default function BottomNav() {
     );
   }
 
-  // Se não estiver na Home, mostra 3 botões: Início, Página Ativa, Ajustes
   return (
-    <div className="bottom-nav">
+    <div className={styles.bottomNav}>
       <button
-        className="nav-item"
+        className={styles.navItem}
         onClick={() => navegar('/')}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -87,7 +82,7 @@ export default function BottomNav() {
 
       {rotaAtiva && (
         <button
-          className="nav-item ativo"
+          className={`${styles.navItem} ${styles.navItemAtivo}`}
           onClick={() => navegar(rotaAtiva.rota)}
         >
           <span style={{ fontSize: '24px' }}>{rotaAtiva.icon}</span>
@@ -96,7 +91,7 @@ export default function BottomNav() {
       )}
 
       <button
-        className="nav-item"
+        className={styles.navItem}
         onClick={abrirConfiguracoes}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
