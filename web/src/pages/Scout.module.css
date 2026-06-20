@@ -48,7 +48,7 @@
   position: relative;
 }
 
-/* Modal de ações no campo (popup) */
+/* Modal de ações no campo (popup) – desktop */
 .actionModal {
   position: absolute;
   left: var(--x);
@@ -56,7 +56,7 @@
   background-color: var(--bg-secondary);
   padding: 10px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   transform: translate(-50%, -110%);
   z-index: 20;
   display: flex;
@@ -221,7 +221,11 @@
   margin-top: 5px;
 }
 
-/* Mobile */
+/* ==================================================================
+   MOBILE – REDESENHO RADICAL (BOTTOM SHEET & TOUCH FIRST)
+   ================================================================== */
+
+/* Top bar e controles */
 :global(.modo-mobile) .scoutTopBar {
   flex-direction: column;
   gap: 10px;
@@ -231,14 +235,100 @@
 :global(.modo-mobile) .controlsRow {
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
+  gap: 12px;
 }
 
 :global(.modo-mobile) .viewToggleGroup,
 :global(.modo-mobile) .periodGroup {
-  justify-content: center;
+  justify-content: stretch;
+  gap: 8px;
 }
 
+:global(.modo-mobile) .viewToggle,
+:global(.modo-mobile) .periodBadge {
+  flex: 1;
+  text-align: center;
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+/* Campo no mobile */
+:global(.modo-mobile) .campoField {
+  width: 100%;
+  max-width: 100vw;
+  margin: 0;
+  border: 2px solid white;
+  border-radius: 8px;
+}
+
+/* --------------------------------------------------
+   ACTION MODAL (pop-up de ações) → BOTTOM SHEET
+   -------------------------------------------------- */
 :global(.modo-mobile) .actionModal {
-  transform: translate(-50%, -130%);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  top: auto;
+  right: 0;
+  width: 100%;
+  transform: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 20px 20px 40px 20px;
+  border-radius: 24px 24px 0 0;
+  background: var(--bg-secondary);
+  z-index: 10000;
+  animation: slideUpSheet 0.3s forwards;
+  box-sizing: border-box;
+}
+
+/* Puxador iOS */
+:global(.modo-mobile) .actionModal::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 6px;
+  background: var(--border-ui);
+  border-radius: 10px;
+}
+
+/* Botões dentro do actionModal no mobile */
+:global(.modo-mobile) .actionBtn {
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
+/* Botão de fechar ocupa largura total */
+:global(.modo-mobile) .actionModal button:last-child {
+  grid-column: span 2;
+  margin-top: 10px;
+}
+
+/* --------------------------------------------------
+   LINHA DO TEMPO – Botões e Range maiores
+   -------------------------------------------------- */
+:global(.modo-mobile) .timelineBtn {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
+:global(.modo-mobile) .timelineRange {
+  height: 12px !important;
+}
+
+:global(.modo-mobile) .timelineRange::-webkit-slider-thumb {
+  width: 28px;
+  height: 28px;
+}
+
+:global(.modo-mobile) .timelineRange::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
 }
