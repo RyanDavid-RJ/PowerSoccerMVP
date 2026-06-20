@@ -256,7 +256,7 @@ export default function Dashboard() {
 
   const chartOptionsPorJogador = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { labels: { color: "#eaeaea", font: { size: 11 } } },
       tooltip: {
@@ -335,7 +335,7 @@ export default function Dashboard() {
 
   const chartOptionsComparativo = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { labels: { color: "#eaeaea", font: { size: 11 } } },
       tooltip: {
@@ -560,7 +560,9 @@ export default function Dashboard() {
               Nenhum evento registrado para este filtro.
             </p>
           ) : (
-            <Bar data={chartDataPorJogador} options={chartOptionsPorJogador} />
+            <div className={styles.graficoWrapper}>
+              <Bar data={chartDataPorJogador} options={chartOptionsPorJogador} />
+            </div>
           )}
         </div>
 
@@ -599,10 +601,12 @@ export default function Dashboard() {
             </div>
           </div>
           {atletaA && atletaB ? (
-            <Bar
-              data={chartDataComparativo}
-              options={chartOptionsComparativo}
-            />
+            <div className={styles.graficoWrapper}>
+              <Bar
+                data={chartDataComparativo}
+                options={chartOptionsComparativo}
+              />
+            </div>
           ) : (
             <p style={{ textAlign: "center", color: "#aaa" }}>
               Selecione dois jogadores para comparar.

@@ -2,6 +2,10 @@
 .dashboardContainer { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
 .sectionTitle { margin-bottom: 15px; }
 .chartContainer { margin-top: 20px; }
+
+/* Wrapper para gráficos com altura fixa */
+.graficoWrapper { position: relative; width: 100%; height: 350px; }
+
 .btnFiltroPeriodo { padding: 6px 12px; border-radius: 20px; background: var(--input-bg); color: white; cursor: pointer; border: none; font-weight: 600; transition: background 0.2s; }
 .btnFiltroPeriodoAtivo { background: var(--duo-green-primary); }
 .btnFiltroTipo { padding: 4px 12px; border-radius: 20px; background: var(--input-bg); border: none; color: white; cursor: pointer; font-size: 12px; transition: background 0.2s; }
@@ -39,8 +43,10 @@
 .kpiIntercep { border-bottom-color: var(--duo-orange); }
 .kpiIntercep .valor { color: var(--duo-orange); }
 
+/* Responsivo */
 :global(.modo-mobile) .comparacaoSelectGroup { flex-direction: column; gap: 12px; }
 :global(.modo-mobile) .formInput { width: 100%; }
 :global(.modo-mobile) .kpiGrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 :global(.modo-mobile) .kpiCard { padding: 12px; }
 :global(.modo-mobile) .kpiCard .valor { font-size: 28px; }
+:global(.modo-mobile) .graficoWrapper { height: 300px; }

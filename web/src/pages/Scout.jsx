@@ -577,45 +577,47 @@ export default function Scout() {
         </button>
       </div>
 
-      <div className="layout-principal">
+      <div className={styles.scoutLayout}>
         {/* TITULARES (em quadra) */}
-        <div className="titulares duo-container">
+        <div className={styles.sidebar}>
           <h3 style={{ color: "var(--duo-blue)", marginBottom: "15px" }}>
             ⚽ Em Quadra
           </h3>
-          {jogadoresEmQuadra.map((atleta) => (
-            <div
-              key={atleta.id}
-              className={`jogador ${jogadorAtivo?.id === atleta.id ? "ativo" : ""}`}
-              onClick={() => handleCliqueTitular(atleta)}
-            >
-              {atleta.foto ? (
-                <div
-                  className="foto"
-                  style={{
-                    backgroundImage: `url(${atleta.foto})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    color: "transparent",
-                  }}
-                />
-              ) : (
-                <div className="foto">{atleta.nome.charAt(0)}</div>
-              )}
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "14px", fontWeight: "bold" }}>
-                  {atleta.nome.split(" ")[0]}
-                </div>
-                <div style={{ fontSize: "12px", color: "#aaa" }}>
-                  Camisa {atleta.numero_camisa}
+          <div className={styles.scrollJogadores}>
+            {jogadoresEmQuadra.map((atleta) => (
+              <div
+                key={atleta.id}
+                className={`jogador ${jogadorAtivo?.id === atleta.id ? "ativo" : ""}`}
+                onClick={() => handleCliqueTitular(atleta)}
+              >
+                {atleta.foto ? (
+                  <div
+                    className="foto"
+                    style={{
+                      backgroundImage: `url(${atleta.foto})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      color: "transparent",
+                    }}
+                  />
+                ) : (
+                  <div className="foto">{atleta.nome.charAt(0)}</div>
+                )}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "14px", fontWeight: "bold" }}>
+                    {atleta.nome.split(" ")[0]}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "#aaa" }}>
+                    Camisa {atleta.numero_camisa}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* PRANCHETA + LINHA DO TEMPO + RESERVAS */}
-        <div className="area-campo">
+        <div className={styles.centerArea}>
           {/* TOGGLE DE VISUALIZAÇÃO + INDICADORES DE PERÍODO */}
           <div className={styles.controlsRow}>
             <div className={styles.viewToggleGroup}>
@@ -650,7 +652,7 @@ export default function Scout() {
 
           {/* CAMPO SVG */}
           <div
-            className={`campo-container duo-container ${styles.campoField}`}
+            className={`${styles.campoField}`}
             onClick={handleCampoClick}
           >
             <svg
@@ -800,7 +802,7 @@ export default function Scout() {
 
           {/* LINHA DO TEMPO */}
           <div
-            className={`linha-tempo-container duo-card ${styles.timelineContainer}`}
+            className={`${styles.timelineContainer}`}
           >
             <label className={styles.timelineLabel}>
               ⏱️ Tempo de Jogo:
@@ -834,7 +836,7 @@ export default function Scout() {
           </div>
 
           {/* RESERVAS */}
-          <div className={`reservas duo-container ${styles.reservasContainer}`}>
+          <div className={styles.reservasContainer}>
             <h4 className={styles.reservasTitle}>
               🔄 Reservas (Clique para Substituir)
             </h4>
@@ -859,7 +861,7 @@ export default function Scout() {
         </div>
 
         {/* HISTÓRICO DE LANCES */}
-        <div className="historico duo-container">
+        <div className={styles.sidebar}>
           <h3 className={styles.historicoTitle}>📝 Últimos Lances</h3>
           <div className="duo-list" style={{ paddingRight: "5px" }}>
             {eventosFiltrados.length === 0 ? (
