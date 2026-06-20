@@ -1455,23 +1455,23 @@ body.login-page {
   align-items: center;
 }
 
+/* 🔥 CORREÇÃO: esconde a engrenagem no mobile */
 .modo-mobile .duo-header .btn-header-icon {
-  padding: 4px;
+  display: none !important;
 }
 
-/* ----- HOME GRID (2x2) ----- */
+/* ----- HOME GRID (2x2) com altura fixa e centralização ----- */
 .modo-mobile .home-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
-  margin: 0 auto;
-  height: calc(100vh - 160px);
-  min-height: auto;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(130px, 150px));
+  gap: 15px;
+  padding: 20px 15px;
+  align-content: center;
+  height: calc(100vh - 140px);
+  overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .modo-mobile .card-home {
@@ -1670,6 +1670,12 @@ body.login-page {
 }
 
 /* ----- NOVA PARTIDA (inputs e slots) ----- */
+/* Força todos os grupos de formulário a terem largura total e box-sizing correto */
+.modo-mobile .form-grupo {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .modo-mobile .config-container .form-grupo {
   display: flex;
   flex-direction: column;
@@ -1677,37 +1683,51 @@ body.login-page {
 }
 
 .modo-mobile .config-container .form-input {
-  width: 100%;
-  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
+/* Slots: grid de 4 colunas com tamanhos reduzidos */
 .modo-mobile .slots-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 10px;
   width: 100%;
   justify-items: center;
+  margin-bottom: 20px;
 }
 
 .modo-mobile .slot {
   width: 100%;
-  max-width: 70px;
-  height: 90px;
-  padding: 4px;
+  max-width: 65px;
+  height: 80px;
+  padding: 5px;
+  border-radius: 10px;
 }
 
 .modo-mobile .slot-foto {
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
-  margin-bottom: 2px;
+  width: 34px;
+  height: 34px;
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 
 .modo-mobile .slot-nome {
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.1;
 }
 
-/* ----- GAVETA DE JOGADORES (scroll corrigido) ----- */
+/* ----- GAVETA DE JOGADORES: z-index e scroll corrigidos ----- */
+.gaveta-overlay {
+  z-index: 9998 !important;
+}
+
+.gaveta {
+  z-index: 9999 !important;
+  padding-bottom: 40px !important;
+}
+
 .modo-mobile .gaveta {
   padding-bottom: 100px; /* espaço para a bottom nav */
   max-height: 75vh;
