@@ -91,6 +91,7 @@ export default function Scout() {
         const enriquecer = (lista) => {
           if (!lista) return [];
           return lista.map((item) => {
+            if (!item) return null; // 🔥 TRAVA DE SEGURANÇA ADICIONADA AQUI
             const completo = dataAtletas.find((a) => a.id === item.id);
             return completo ? { ...item, ...completo } : item;
           });
@@ -529,6 +530,7 @@ export default function Scout() {
       const enriquecer = (lista) => {
         if (!lista) return [];
         return lista.map((item) => {
+          if (!item) return null; // 🔥 TRAVA DE SEGURANÇA ADICIONADA AQUI
           const completo = dataAtletas.find((a) => a.id === item.id);
           return completo ? { ...item, ...completo } : item;
         });
