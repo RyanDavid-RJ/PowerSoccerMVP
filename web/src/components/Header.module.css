@@ -99,3 +99,7 @@
 :global(.modo-mobile) .duoHeader .btnHeaderIcon {
   display: none !important; /* esconde a engrenagem no mobile */
 }
+
+:global(.modo-mobile) .headerLink {
+  display: none !important;
+}
