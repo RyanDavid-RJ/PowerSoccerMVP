@@ -14,7 +14,6 @@ const authController = {
                 return res.status(400).json({ erro: 'Token do Google não fornecido' });
             }
 
-            // Verifica o token com o Google
             const ticket = await googleClient.verifyIdToken({
                 idToken: token,
                 audience: process.env.GOOGLE_CLIENT_ID,
@@ -26,12 +25,10 @@ const authController = {
                 return res.status(400).json({ erro: 'Email não obtido do Google' });
             }
 
-            // Busca usuário pelo email
             const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
             let usuario;
 
             if (rows.length === 0) {
-                // Cria novo usuário com senha fixa 'google-auth' (criptografada)
                 const senhaHash = await bcrypt.hash('google-auth', 10);
                 const [result] = await db.query(
                     'INSERT INTO usuarios (nome, email, senha, google_id) VALUES (?, ?, ?, ?)',
@@ -40,13 +37,11 @@ const authController = {
                 usuario = { id: result.insertId, nome: name || email.split('@')[0], email };
             } else {
                 usuario = rows[0];
-                // Se o usuário existe mas não tem google_id, atualize (opcional)
                 if (!usuario.google_id) {
                     await db.query('UPDATE usuarios SET google_id = ? WHERE id = ?', [googleId, usuario.id]);
                 }
             }
 
-            // Gera nosso próprio JWT
             const nossoToken = jwt.sign(
                 { id: usuario.id, email: usuario.email },
                 JWT_SECRET,

@@ -4,7 +4,7 @@ const { uploadToCloudinary } = require('../config/cloudinary');
 const atletaController = {
     listarAtletas: async (req, res) => {
         try {
-            const [resultados] = await db.query('SELECT * FROM atletas ORDER BY id ASC');
+            const [resultados] = await db.query('SELECT * FROM atletas WHERE usuario_id = ? ORDER BY id ASC', [req.user.id]);
             res.json(resultados);
         } catch (erro) {
             console.error('Erro ao listar atletas:', erro);
@@ -17,14 +17,13 @@ const atletaController = {
             const { nome, numero_camisa } = req.body;
             let fotoUrl = null;
 
-            // Se houver arquivo, faz upload para o Cloudinary
             if (req.file) {
                 const uploadResult = await uploadToCloudinary(req.file.buffer, 'power_soccer_v2_elenco');
                 fotoUrl = uploadResult.secure_url;
             }
 
-            const sql = 'INSERT INTO atletas (nome, numero_camisa, equipe_id, foto) VALUES (?, ?, 1, ?)';
-            const [resultados] = await db.query(sql, [nome, numero_camisa, fotoUrl]);
+            const sql = 'INSERT INTO atletas (nome, numero_camisa, equipe_id, foto, usuario_id) VALUES (?, ?, 1, ?, ?)';
+            const [resultados] = await db.query(sql, [nome, numero_camisa, fotoUrl, req.user.id]);
             
             res.status(201).json({ 
                 mensagem: 'Atleta cadastrado com sucesso!', 
@@ -43,7 +42,6 @@ const atletaController = {
             const { nome, numero_camisa } = req.body;
             let fotoUrl = null;
 
-            // Se veio uma nova foto, faz upload
             if (req.file) {
                 const uploadResult = await uploadToCloudinary(req.file.buffer, 'power_soccer_v2_elenco');
                 fotoUrl = uploadResult.secure_url;
@@ -51,11 +49,11 @@ const atletaController = {
 
             let sql, params;
             if (fotoUrl) {
-                sql = 'UPDATE atletas SET nome = ?, numero_camisa = ?, foto = ? WHERE id = ?';
-                params = [nome, numero_camisa, fotoUrl, id];
+                sql = 'UPDATE atletas SET nome = ?, numero_camisa = ?, foto = ? WHERE id = ? AND usuario_id = ?';
+                params = [nome, numero_camisa, fotoUrl, id, req.user.id];
             } else {
-                sql = 'UPDATE atletas SET nome = ?, numero_camisa = ? WHERE id = ?';
-                params = [nome, numero_camisa, id];
+                sql = 'UPDATE atletas SET nome = ?, numero_camisa = ? WHERE id = ? AND usuario_id = ?';
+                params = [nome, numero_camisa, id, req.user.id];
             }
 
             await db.query(sql, params);
@@ -69,7 +67,7 @@ const atletaController = {
     deletarAtleta: async (req, res) => {
         try {
             const { id } = req.params;
-            await db.query('DELETE FROM atletas WHERE id = ?', [id]);
+            await db.query('DELETE FROM atletas WHERE id = ? AND usuario_id = ?', [id, req.user.id]);
             res.json({ mensagem: 'Atleta removido com sucesso!' });
         } catch (erro) {
             console.error('Erro ao deletar atleta:', erro);
@@ -78,7 +76,6 @@ const atletaController = {
     },
 
     listarEstatisticas: async (req, res) => {
-        // Esta rota é mockada – você pode substituir por dados reais depois
         try {
             res.json({ gols: 12, passes: 45, interceptacoes: 8 });
         } catch (erro) {

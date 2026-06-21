@@ -7,11 +7,12 @@ const eventoController = {
             const sql = `
                 SELECT e.*, a.nome as nome_atleta, a.foto as foto_atleta
                 FROM eventos_scout e 
+                INNER JOIN partidas p ON e.partida_id = p.id AND p.usuario_id = ?
                 LEFT JOIN atletas a ON e.atleta_id = a.id 
                 WHERE e.partida_id = ? 
                 ORDER BY e.id ASC
             `;
-            const [resultados] = await db.query(sql, [id]);
+            const [resultados] = await db.query(sql, [req.user.id, id]);
             res.json(resultados);
         } catch (erro) {
             console.error('Erro ao buscar eventos da partida:', erro);
@@ -22,7 +23,7 @@ const eventoController = {
     criarEvento: async (req, res) => {
         try {
             const { partida_id, atleta_id, minuto_video, tipo_acao, coord_x, coord_y, jogador_entrou_id, periodo } = req.body;
-            const usuario_id = req.user.id; // do token JWT
+            const usuario_id = req.user.id;
 
             const sql = `
                 INSERT INTO eventos_scout 
@@ -53,9 +54,14 @@ const eventoController = {
         try {
             const { id } = req.params;
             const { tipo_acao, minuto_video } = req.body;
-            // não precisa de usuario_id para edição (apenas verificar permissão depois)
-            const sql = 'UPDATE eventos_scout SET tipo_acao = ?, minuto_video = ? WHERE id = ?';
-            await db.query(sql, [tipo_acao, minuto_video, id]);
+
+            const sql = `
+                UPDATE eventos_scout e
+                INNER JOIN partidas p ON e.partida_id = p.id AND p.usuario_id = ?
+                SET e.tipo_acao = ?, e.minuto_video = ?
+                WHERE e.id = ?
+            `;
+            await db.query(sql, [req.user.id, tipo_acao, minuto_video, id]);
             res.json({ sucesso: true });
         } catch (erro) {
             console.error('Erro ao editar evento:', erro);
@@ -66,7 +72,13 @@ const eventoController = {
     deletarEvento: async (req, res) => {
         try {
             const { id } = req.params;
-            await db.query('DELETE FROM eventos_scout WHERE id = ?', [id]);
+
+            const sql = `
+                DELETE e FROM eventos_scout e
+                INNER JOIN partidas p ON e.partida_id = p.id AND p.usuario_id = ?
+                WHERE e.id = ?
+            `;
+            await db.query(sql, [req.user.id, id]);
             res.json({ sucesso: true });
         } catch (erro) {
             console.error('Erro ao deletar evento:', erro);
@@ -85,10 +97,10 @@ const eventoController = {
                 SUM(CASE WHEN e.tipo_acao = "Interceptação" THEN 1 ELSE 0 END) as interceptacoes
                 FROM atletas a 
                 LEFT JOIN eventos_scout e ON a.id = e.atleta_id 
-                WHERE a.id = ? 
+                WHERE a.id = ? AND a.usuario_id = ?
                 GROUP BY a.id
             `;
-            const [resultados] = await db.query(sql, [id]);
+            const [resultados] = await db.query(sql, [id, req.user.id]);
             res.json(resultados[0] || {});
         } catch (erro) {
             res.status(500).json({ erro: 'Erro ao gerar raio-x do atleta' });
@@ -98,7 +110,13 @@ const eventoController = {
     listarPorAtleta: async (req, res) => {
         try {
             const { id } = req.params;
-            const [resultados] = await db.query('SELECT * FROM eventos_scout WHERE atleta_id = ? ORDER BY id ASC', [id]);
+            const sql = `
+                SELECT e.* FROM eventos_scout e
+                INNER JOIN atletas a ON e.atleta_id = a.id
+                WHERE a.id = ? AND a.usuario_id = ?
+                ORDER BY e.id ASC
+            `;
+            const [resultados] = await db.query(sql, [id, req.user.id]);
             res.json(resultados);
         } catch (erro) {
             res.status(500).json({ erro: 'Erro interno' });
