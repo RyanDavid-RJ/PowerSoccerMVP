@@ -34,7 +34,50 @@ const authController = {
                     'INSERT INTO usuarios (nome, email, senha, google_id) VALUES (?, ?, ?, ?)',
                     [name || email.split('@')[0], email, senhaHash, googleId]
                 );
-                usuario = { id: result.insertId, nome: name || email.split('@')[0], email };
+                const usuarioId = result.insertId;
+                usuario = { id: usuarioId, nome: name || email.split('@')[0], email };
+
+                // Starter Pack: atletas e partidas
+                const atletas = [
+                    { nome: 'Félix', numero_camisa: 1 },
+                    { nome: 'Brito', numero_camisa: 2 },
+                    { nome: 'Piazza', numero_camisa: 3 },
+                    { nome: 'Carlos Alberto Torres', numero_camisa: 4 },
+                    { nome: 'Clodoaldo', numero_camisa: 5 },
+                    { nome: 'Jairzinho', numero_camisa: 7 },
+                    { nome: 'Gérson', numero_camisa: 8 },
+                    { nome: 'Tostão', numero_camisa: 9 },
+                    { nome: 'Pelé', numero_camisa: 10 },
+                    { nome: 'Rivellino', numero_camisa: 11 },
+                    { nome: 'Everaldo', numero_camisa: 16 },
+                ];
+
+                const partidas = [
+                    { adversario: 'Inglaterra', data_jogo: '2025-03-23' },
+                    { adversario: 'Itália', data_jogo: '2025-03-16' },
+                    { adversario: 'Flamengo', data_jogo: '2026-06-08' },
+                ];
+
+                const escalacaoVazia = JSON.stringify({
+                    titulares: [null, null, null, null],
+                    reservas: [null, null, null, null],
+                });
+
+                const insertsAtletas = atletas.map(a =>
+                    db.query(
+                        'INSERT INTO atletas (nome, numero_camisa, equipe_id, usuario_id) VALUES (?, ?, 1, ?)',
+                        [a.nome, a.numero_camisa, usuarioId]
+                    )
+                );
+
+                const insertsPartidas = partidas.map(p =>
+                    db.query(
+                        'INSERT INTO partidas (data_jogo, adversario, escalacao, usuario_id) VALUES (?, ?, ?, ?)',
+                        [p.data_jogo, p.adversario, escalacaoVazia, usuarioId]
+                    )
+                );
+
+                await Promise.all([...insertsAtletas, ...insertsPartidas]);
             } else {
                 usuario = rows[0];
                 if (!usuario.google_id) {
