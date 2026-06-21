@@ -18,7 +18,7 @@ export default function Scout() {
   const [segundoAtual, setSegundoAtual] = useState(0);
   const [modoVisualizacao, setModoVisualizacao] = useState("time");
 
-  const [modalAcao, setModalAcao] = useState({ visivel: false, x: 0, y: 0 });
+  const [modalAcao, setModalAcao] = useState({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
   const [modalSub, setModalSub] = useState({
     visivel: false,
     idSaindo: null,
@@ -91,7 +91,7 @@ export default function Scout() {
         const enriquecer = (lista) => {
           if (!lista) return [];
           return lista.map((item) => {
-            if (!item) return null; // 🔥 TRAVA DE SEGURANÇA ADICIONADA AQUI
+            if (!item) return null;
             const completo = dataAtletas.find((a) => a.id === item.id);
             return completo ? { ...item, ...completo } : item;
           });
@@ -214,13 +214,15 @@ export default function Scout() {
     let x = ((e.clientX - rect.left) / rect.width) * 100;
     let y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    // Trava de segurança para o modal de ação não ser cortado no PC!
+    // modalX e modalY servem apenas para o menu visual não ser cortado na tela
+    let modalX = x;
+    let modalY = y;
     if (window.innerWidth > 768) {
-        x = Math.max(15, Math.min(x, 85));
-        y = Math.max(25, Math.min(y, 90));
+        modalX = Math.max(15, Math.min(x, 85));
+        modalY = Math.max(25, Math.min(y, 90));
     }
 
-    setModalAcao({ visivel: true, x, y });
+    setModalAcao({ visivel: true, x, y, modalX, modalY });
   };
 
   const registrarAcao = async (tipoAcao) => {
@@ -238,15 +240,15 @@ export default function Scout() {
       atleta_id: jogadorAtivo.id,
       minuto_video: segundosParaTempo(segundoAtual),
       tipo_acao: tipoAcao,
-      coord_x: modalAcao.x.toFixed(2),
-      coord_y: modalAcao.y.toFixed(2),
+      coord_x: modalAcao.x.toFixed(2), // Registra o clique real
+      coord_y: modalAcao.y.toFixed(2), // Registra o clique real
       periodo: periodo,
     };
 
     try {
       await apiPost("/eventos", payload);
       await carregarDadosDaAPI();
-      setModalAcao({ visivel: false, x: 0, y: 0 });
+      setModalAcao({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
       toast.success(`${tipoAcao} registrado com sucesso!`);
     } catch (e) {
       console.error(e);
@@ -508,7 +510,6 @@ export default function Scout() {
     setSegundoAtual(novoSegundo);
   };
 
-  // Função de recarga (exposta)
   const carregarDadosDaAPI = async () => {
     try {
       const [dataPartida, dataEventos, dataAtletas] = await Promise.all([
@@ -530,7 +531,7 @@ export default function Scout() {
       const enriquecer = (lista) => {
         if (!lista) return [];
         return lista.map((item) => {
-          if (!item) return null; // 🔥 TRAVA DE SEGURANÇA ADICIONADA AQUI
+          if (!item) return null;
           const completo = dataAtletas.find((a) => a.id === item.id);
           return completo ? { ...item, ...completo } : item;
         });
@@ -757,7 +758,7 @@ export default function Scout() {
             {modalAcao.visivel && (
               <div
                 className={styles.actionModal}
-                style={{ "--x": `${modalAcao.x}%`, "--y": `${modalAcao.y}%` }}
+                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -794,7 +795,7 @@ export default function Scout() {
                 <button
                   className={`btn-acao ${styles.actionBtn}`}
                   style={{ background: "#333", color: "white" }}
-                  onClick={() => setModalAcao({ visivel: false, x: 0, y: 0 })}
+                  onClick={() => setModalAcao({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 })}
                 >
                   X
                 </button>
@@ -803,9 +804,7 @@ export default function Scout() {
           </div>
 
           {/* LINHA DO TEMPO */}
-          <div
-            className={`${styles.timelineContainer}`}
-          >
+          <div className={`${styles.timelineContainer}`}>
             <label className={styles.timelineLabel}>
               ⏱️ Tempo de Jogo:
               <span className={styles.timelineTimeDisplay}>
@@ -1014,7 +1013,7 @@ export default function Scout() {
               <span style={{ color: "var(--duo-orange)", fontWeight: "bold" }}>
                 {modalDomino.qtdExtras} ações
               </span>{" "}
-              no futuro.
+              no future.
               <br />
               <br />
               Se você apagar esta troca, todas essas ações sumirão da linha do
