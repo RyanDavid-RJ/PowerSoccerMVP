@@ -18,6 +18,12 @@ export default function Scout() {
   const [segundoAtual, setSegundoAtual] = useState(0);
   const [modoVisualizacao, setModoVisualizacao] = useState("time");
 
+  const [editandoTempo, setEditandoTempo] = useState(false);
+  const [tempoDigitado, setTempoDigitado] = useState("");
+
+  const [acaoPendente, setAcaoPendente] = useState(null);
+  const [mostrandoOutros, setMostrandoOutros] = useState(false);
+
   const [modalAcao, setModalAcao] = useState({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
   const [modalSub, setModalSub] = useState({
     visivel: false,
@@ -195,6 +201,34 @@ export default function Scout() {
     return `linear-gradient(to right, ${gradientes.join(", ")})`;
   };
 
+  // ========== EDIÇÃO DE TEMPO ==========
+  const iniciarEdicaoTempo = () => {
+    setTempoDigitado(segundosParaTempo(segundoAtual));
+    setEditandoTempo(true);
+  };
+
+  const confirmarEdicaoTempo = () => {
+    if (!/^[0-9]{2}:[0-5][0-9]$/.test(tempoDigitado)) {
+      toast.error("Formato inválido! Use MM:SS (ex: 10:05).");
+      setEditandoTempo(false);
+      return;
+    }
+    const totalSeg = tempoParaSegundos(tempoDigitado);
+    if (totalSeg > 2400) {
+      toast.error("O tempo máximo permitido é 40:00.");
+      setEditandoTempo(false);
+      return;
+    }
+    setSegundoAtual(totalSeg);
+    setEditandoTempo(false);
+  };
+
+  const handleKeyDownTempo = (e) => {
+    if (e.key === "Enter") {
+      confirmarEdicaoTempo();
+    }
+  };
+
   // ========== AÇÕES NO CAMPO ==========
   const handleCampoClick = (e) => {
     if (!jogadorAtivo) {
@@ -214,7 +248,6 @@ export default function Scout() {
     let x = ((e.clientX - rect.left) / rect.width) * 100;
     let y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    // modalX e modalY servem apenas para o menu visual não ser cortado na tela
     let modalX = x;
     let modalY = y;
     if (window.innerWidth > 768) {
@@ -223,12 +256,33 @@ export default function Scout() {
     }
 
     setModalAcao({ visivel: true, x, y, modalX, modalY });
+    setAcaoPendente(null);
+    setMostrandoOutros(false);
   };
 
-  const registrarAcao = async (tipoAcao) => {
-    if (!estaEmQuadra(jogadorAtivo.id, segundoAtual)) {
+  const selecionarAcao = (tipoAcao) => {
+    setAcaoPendente(tipoAcao);
+    setMostrandoOutros(false);
+  };
+
+  const executarAcaoJogadorAtivo = async () => {
+    if (!jogadorAtivo) return;
+    await registrarAcaoComJogador(jogadorAtivo, acaoPendente);
+  };
+
+  const escolherOutroJogador = () => {
+    setMostrandoOutros(true);
+  };
+
+  const executarAcaoOutroJogador = async (atleta) => {
+    setJogadorAtivo(atleta);
+    await registrarAcaoComJogador(atleta, acaoPendente);
+  };
+
+  const registrarAcaoComJogador = async (atleta, tipoAcao) => {
+    if (!estaEmQuadra(atleta.id, segundoAtual)) {
       toast.error(
-        `ERRO: ${jogadorAtivo.nome} não está em quadra neste minuto! Ação cancelada.`,
+        `ERRO: ${atleta.nome} não está em quadra neste minuto! Ação cancelada.`,
       );
       return;
     }
@@ -237,11 +291,11 @@ export default function Scout() {
 
     const payload = {
       partida_id: parseInt(id),
-      atleta_id: jogadorAtivo.id,
+      atleta_id: atleta.id,
       minuto_video: segundosParaTempo(segundoAtual),
       tipo_acao: tipoAcao,
-      coord_x: modalAcao.x.toFixed(2), // Registra o clique real
-      coord_y: modalAcao.y.toFixed(2), // Registra o clique real
+      coord_x: modalAcao.x.toFixed(2),
+      coord_y: modalAcao.y.toFixed(2),
       periodo: periodo,
     };
 
@@ -249,11 +303,19 @@ export default function Scout() {
       await apiPost("/eventos", payload);
       await carregarDadosDaAPI();
       setModalAcao({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
+      setAcaoPendente(null);
+      setMostrandoOutros(false);
       toast.success(`${tipoAcao} registrado com sucesso!`);
     } catch (e) {
       console.error(e);
       toast.error(`Erro ao salvar ação: ${e.message}`);
     }
+  };
+
+  const cancelarAcao = () => {
+    setModalAcao({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
+    setAcaoPendente(null);
+    setMostrandoOutros(false);
   };
 
   // ========== SUBSTITUIÇÕES ==========
@@ -564,6 +626,10 @@ export default function Scout() {
           )
         : [];
 
+  const outrosJogadoresQuadra = jogadoresEmQuadra.filter(
+    (j) => j.id !== jogadorAtivo?.id
+  );
+
   return (
     <>
       <Header showBackButton={false} />
@@ -574,7 +640,7 @@ export default function Scout() {
         </h3>
         <button
           className={`btn-acao btn-duo-vermelho ${styles.scoutSairBtn}`}
-          onClick={() => navigate("/nova-partida")}
+          onClick={() => navigate("/")}
         >
           Sair da Partida
         </button>
@@ -755,7 +821,7 @@ export default function Scout() {
               );
             })}
 
-            {modalAcao.visivel && (
+            {modalAcao.visivel && !acaoPendente && (
               <div
                 className={styles.actionModal}
                 style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
@@ -763,41 +829,100 @@ export default function Scout() {
               >
                 <button
                   className={`btn-acao btn-duo-azul ${styles.actionBtn}`}
-                  onClick={() => registrarAcao("Passe Certo")}
+                  onClick={() => selecionarAcao("Passe Certo")}
                 >
                   Passe ✓
                 </button>
                 <button
                   className={`btn-acao btn-duo-vermelho ${styles.actionBtn}`}
-                  onClick={() => registrarAcao("Passe Errado")}
+                  onClick={() => selecionarAcao("Passe Errado")}
                 >
                   Passe ✗
                 </button>
                 <button
                   className={`btn-acao btn-duo-amarelo ${styles.actionBtn}`}
                   style={{ color: "black" }}
-                  onClick={() => registrarAcao("Gol")}
+                  onClick={() => selecionarAcao("Gol")}
                 >
                   GOL ⚽
                 </button>
                 <button
                   className={`btn-acao btn-duo-roxo ${styles.actionBtn}`}
-                  onClick={() => registrarAcao("Finalização")}
+                  onClick={() => selecionarAcao("Finalização")}
                 >
                   Chute
                 </button>
                 <button
                   className={`btn-acao btn-duo-laranja ${styles.actionBtn}`}
-                  onClick={() => registrarAcao("Interceptação")}
+                  onClick={() => selecionarAcao("Interceptação")}
                 >
                   Roubo
                 </button>
                 <button
                   className={`btn-acao ${styles.actionBtn}`}
                   style={{ background: "#333", color: "white" }}
-                  onClick={() => setModalAcao({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 })}
+                  onClick={cancelarAcao}
                 >
                   X
+                </button>
+              </div>
+            )}
+
+            {modalAcao.visivel && acaoPendente && !mostrandoOutros && (
+              <div
+                className={styles.actionModal}
+                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p style={{ gridColumn: "span 2", textAlign: "center", color: "white", margin: "0 0 5px" }}>
+                  {acaoPendente} por:
+                </p>
+                <button
+                  className={`btn-acao btn-duo-primary ${styles.actionBtn}`}
+                  onClick={executarAcaoJogadorAtivo}
+                >
+                  {jogadorAtivo?.nome.split(" ")[0]}
+                </button>
+                <button
+                  className={`btn-acao btn-duo-laranja ${styles.actionBtn}`}
+                  onClick={escolherOutroJogador}
+                >
+                  Outro
+                </button>
+                <button
+                  className={`btn-acao ${styles.actionBtn}`}
+                  style={{ background: "#333", color: "white" }}
+                  onClick={cancelarAcao}
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
+
+            {modalAcao.visivel && acaoPendente && mostrandoOutros && (
+              <div
+                className={styles.actionModal}
+                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p style={{ gridColumn: "span 2", textAlign: "center", color: "white", margin: "0 0 5px" }}>
+                  {acaoPendente} para:
+                </p>
+                {outrosJogadoresQuadra.map((atleta) => (
+                  <button
+                    key={atleta.id}
+                    className={`btn-acao btn-duo-roxo ${styles.actionBtn}`}
+                    onClick={() => executarAcaoOutroJogador(atleta)}
+                  >
+                    {atleta.nome.split(" ")[0]}
+                  </button>
+                ))}
+                <button
+                  className={`btn-acao ${styles.actionBtn}`}
+                  style={{ background: "#333", color: "white", gridColumn: "span 2" }}
+                  onClick={cancelarAcao}
+                >
+                  Cancelar
                 </button>
               </div>
             )}
@@ -807,9 +932,38 @@ export default function Scout() {
           <div className={`${styles.timelineContainer}`}>
             <label className={styles.timelineLabel}>
               ⏱️ Tempo de Jogo:
-              <span className={styles.timelineTimeDisplay}>
-                {segundosParaTempo(segundoAtual)}
-              </span>
+              {editandoTempo ? (
+                <input
+                  type="text"
+                  className={styles.timelineInput}
+                  value={tempoDigitado}
+                  onChange={(e) => setTempoDigitado(e.target.value)}
+                  onBlur={confirmarEdicaoTempo}
+                  onKeyDown={handleKeyDownTempo}
+                  autoFocus
+                  style={{
+                    background: "var(--bg-primary)",
+                    border: "2px solid var(--duo-green-primary)",
+                    borderRadius: "8px",
+                    color: "var(--text-main)",
+                    fontWeight: 900,
+                    fontSize: "1.2em",
+                    padding: "4px 12px",
+                    width: "80px",
+                    textAlign: "center",
+                    outline: "none",
+                  }}
+                />
+              ) : (
+                <span
+                  className={styles.timelineTimeDisplay}
+                  onClick={iniciarEdicaoTempo}
+                  style={{ cursor: "pointer" }}
+                  title="Clique para editar o tempo"
+                >
+                  {segundosParaTempo(segundoAtual)}
+                </span>
+              )}
             </label>
             <div className={styles.timelineControls}>
               <button
