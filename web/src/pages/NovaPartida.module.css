@@ -31,8 +31,8 @@
 }
 
 .formInput {
-  width: 100%;
-  padding: 10px 12px;
+  width: 90%;
+  padding: 8px 14px;
   border-radius: 12px;
   border: 1px solid var(--border-ui);
   background: var(--input-bg);
