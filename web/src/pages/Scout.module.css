@@ -377,6 +377,11 @@
   background-color: var(--input-bg);
 }
 
+:global(.modo-mobile) .centerArea {
+  width: 100%;
+}
+
+
 :global(.modo-mobile) .sidebar .jogador .foto {
   width: 36px;
   height: 36px;
@@ -479,4 +484,8 @@
   min-width: 80px;
   padding: 6px 10px;
   font-size: 12px;
+}
+
+:global(.modo-mobile) .scoutSairBtn {
+  display: none !important;
 }
