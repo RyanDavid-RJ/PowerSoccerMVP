@@ -649,7 +649,7 @@ export default function Scout() {
       <div className={styles.scoutLayout}>
         {/* TITULARES (em quadra) */}
         <div className={styles.sidebar}>
-          <h3 style={{ color: "var(--duo-blue)", marginBottom: "15px" }}>
+          <h3 style={{ color: "var(--duo-blue)", marginBottom: "15px", marginTop: "0px" }}>
             ⚽ Em Quadra
           </h3>
           <div className={styles.scrollJogadores}>
