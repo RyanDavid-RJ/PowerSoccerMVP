@@ -45,8 +45,8 @@ export default function Login() {
     return (
       <div className={styles.splashContainer}>
         <div className={styles.splashContent}>
-          <img src="/assets/img/logo-novo.png" alt="PowerSoccer Logo" className={styles.splashLogo} />
-          <img src="/assets/img/powerSoccer.png" alt="PowerSoccer" className={styles.splashNameLogo} />
+          <img src="/assets/img/logo-novo.png" className={styles.splashLogo} alt="PowerSoccer Logo" />
+          <img src="/assets/img/powerSoccer.png" className={styles.splashNameLogo} alt="PowerSoccer" />
           <p className={styles.splashSubtitle}>Iniciando o motor de análise...</p>
           
           <div className={styles.jozyContainer}>
@@ -65,8 +65,8 @@ export default function Login() {
   return (
     <div className={styles.loginPage}>
       <div className={styles.loginCard}>
-        <img src="/assets/img/logo-novo.png" alt="Logo" className={styles.loginLogoMain} />
-        <img src="/assets/img/powerSoccer.png" alt="PowerSoccer" className={styles.loginNameLogo} />
+        <img src="/assets/img/logo-novo.png" className={styles.loginLogoMain} alt="Logo" />
+        <img src="/assets/img/powerSoccer.png" className={styles.loginNameLogo} alt="PowerSoccer" />
         <p className={styles.subtitle}>
           O primeiro Dashboard de Performance Esportiva projetado exclusivamente para o futebol em cadeira de rodas motorizada.
         </p>

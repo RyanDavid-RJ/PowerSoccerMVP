@@ -214,3 +214,11 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Modo claro: visibilidade dos logos */
+:global(body.light-mode) .splashLogo,
+:global(body.light-mode) .splashNameLogo,
+:global(body.light-mode) .loginLogoMain,
+:global(body.light-mode) .loginNameLogo {
+  filter: brightness(0.95) drop-shadow(0 0 3px rgba(0,0,0,0.3));
+}
