@@ -99,10 +99,13 @@
   gap: 15px;
   padding: 20px 15px;
   align-content: center;
-  height: calc(100vh - 140px);
+  height: calc(80vh - 90px);  /* ajuste fino: header ~60px + folga */
+  max-height: calc(90vh - 100px);
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
+  margin: 65px auto;
+  min-height: 0; /* reset do min-height do desktop */
 }
 
 :global(.modo-mobile) .cardHome {
