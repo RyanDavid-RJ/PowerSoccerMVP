@@ -181,3 +181,109 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Wrapper geral para controlar a ordem no mobile */
+.homeWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Seção informativa */
+.infoSection {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-duo);
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.infoTitle {
+  font-family: var(--font-titles);
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: var(--text-main);
+}
+
+.infoText {
+  color: #aaa;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.infoSteps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.stepNumber {
+  background-color: var(--duo-green-primary);
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step p {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* ==========================================
+   ORDENAÇÃO MOBILE vs DESKTOP
+   ========================================== */
+/* Desktop: grid em cima, seção informativa embaixo */
+.homeGrid {
+  order: 1;
+}
+
+.infoSection {
+  order: 2;
+}
+
+/* Mobile: reset da ordem para que a seção apareça acima (conforme HTML) */
+:global(.modo-mobile) .homeWrapper {
+  padding: 0 10px;
+}
+
+:global(.modo-mobile) .homeGrid {
+  order: 0;
+  height: auto;
+  max-height: none;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+:global(.modo-mobile) .infoSection {
+  order: 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 20px 15px;
+}
+
+:global(.modo-mobile) .infoTitle {
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+:global(.modo-mobile) .infoSteps {
+  grid-template-columns: 1fr;
+}
