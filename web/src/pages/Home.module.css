@@ -1,83 +1,99 @@
-/* ==================================================================
-   HOME - ESTILOS ESPECÍFICOS DA PÁGINA
-   ================================================================== */
+/* Home.module.css */
 
 .homeGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 25px;
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 20px;
-  min-height: 500px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
 }
 
+/* O CARD BASE */
 .cardHome {
-  text-align: center;
-  padding: 35px 25px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
-  border-radius: 24px;
-  background: var(--bg-secondary);
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  min-width: 280px;
-  min-height: 320px;
+  text-align: center;
+  padding: 40px 30px;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  background: rgba(61, 61, 61, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
+  min-height: 280px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden; /* Fundamental para o glow não vazar */
 }
 
-.cardHome::before {
-  content: '';
+/* O EFEITO DE BRILHO MAGNÉTICO (GLOW) */
+.cardGlow {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--duo-green-primary), var(--duo-blue));
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* A lanterna segue as coordenadas X e Y do mouse */
+  background: radial-gradient(
+    circle 250px at var(--x, 50%) var(--y, 50%),
+    rgba(255, 255, 255, 0.12),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
 
 .cardHome:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: var(--duo-green-primary);
-  box-shadow:
-    0 8px 30px rgba(88, 204, 2, 0.3),
-    0 0 20px rgba(88, 204, 2, 0.2),
-    0 0 40px rgba(88, 204, 2, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-.cardHome:hover::before {
-  transform: scaleX(1);
+.cardHome:hover .cardGlow {
+  opacity: 1; /* Acende a lanterna no hover */
+}
+
+/* O CONTEÚDO ACIMA DO BRILHO */
+.cardContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cardIcon {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  height: 70px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.cardIcon span {
-  display: inline-block;
-  transition: all 0.3s ease;
-  font-size: 40px;
+.cardHome:hover .cardIcon {
+  transform: scale(1.1) rotate(5deg);
 }
 
-.cardHome:hover .cardIcon span {
-  transform: scale(1.1);
-  filter: drop-shadow(0 4px 8px rgba(88, 204, 2, 0.4));
-}
+/* CORES DOS ÍCONES */
+.iconGreen { background-color: var(--duo-green-primary); color: #fff; }
+.iconBlue { background-color: var(--duo-blue); color: #fff; }
+.iconGrena { background-color: var(--duo-grena); color: #fff; }
+.iconOrange { background-color: var(--duo-orange); color: #fff; }
 
 .cardTitle {
   font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
   color: var(--text-main);
   font-family: var(--font-titles);
 }
@@ -87,6 +103,33 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
+}
+
+/* ==========================================
+   AJUSTES MODO CLARO (LIGHT MODE)
+   ========================================== */
+:global(body.light-mode) .cardHome {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+:global(body.light-mode) .cardGlow {
+  background: radial-gradient(
+    circle 250px at var(--x, 50%) var(--y, 50%),
+    rgba(88, 204, 2, 0.15), /* Brilho verde no modo claro */
+    transparent 80%
+  );
+}
+
+:global(body.light-mode) .cardHome:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--duo-green-primary);
+  box-shadow: 0 15px 30px rgba(88, 204, 2, 0.2);
+}
+
+:global(body.light-mode) .cardDesc {
+  color: #666;
 }
 
 /* ==================================================================
@@ -100,11 +143,11 @@
   padding: 20px 15px;
   align-content: center;
   height: calc(80vh - 90px);  /* ajuste fino: header ~60px + folga */
-  max-height: calc(90vh - 100px);
+  max-height: calc(80vh - 90px);
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  margin: 65px auto;
+  margin: 80 auto;
   min-height: 0; /* reset do min-height do desktop */
 }
 

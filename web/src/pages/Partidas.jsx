@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { apiGet } from '../services/api';
 import toast from 'react-hot-toast';
+import { CalendarDays, ChevronRight } from 'lucide-react';
 import styles from './Partidas.module.css';
 
 export default function Partidas() {
@@ -51,9 +52,11 @@ export default function Partidas() {
                 >
                   <div className={styles.partidaCardContent}>
                     <strong className={styles.partidaCardTitle}>vs {p.adversario}</strong>
-                    <small className={styles.partidaCardDate}>📅 {new Date(p.data_jogo).toLocaleDateString('pt-BR')}</small>
+                    <small className={styles.partidaCardDate} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <CalendarDays size={14} /> {new Date(p.data_jogo).toLocaleDateString('pt-BR')}
+                    </small>
                   </div>
-                  <span className={styles.partidaCardArrow}>▶</span>
+                  <span className={styles.partidaCardArrow}><ChevronRight size={24} /></span>
                 </div>
               ))
             )}

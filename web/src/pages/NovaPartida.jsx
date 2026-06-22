@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { apiGet, apiPost } from '../services/api';
 import toast from 'react-hot-toast';
+import { Users, Repeat, Hash, Play, Plus } from 'lucide-react';
 import styles from './NovaPartida.module.css';
 
 export default function NovaPartida() {
@@ -118,7 +119,9 @@ export default function NovaPartida() {
           </div>
 
           {/* Titulares */}
-          <h4 className={`${styles.sectionTitle} ${styles.sectionTitleTitulares}`}>👥 Titulares (Escolha 4)</h4>
+          <h4 className={`${styles.sectionTitle} ${styles.sectionTitleTitulares}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Users size={20} /> Titulares (Escolha 4)
+          </h4>
           <div className={styles.slotsGrid}>
             {titulares.map((atleta, index) => (
               <div key={`t-${index}`} className={`${styles.slot} ${atleta ? styles.slotPreenchido : ''}`} onClick={() => abrirGaveta('titular', index)}>
@@ -128,14 +131,16 @@ export default function NovaPartida() {
                      <span className={styles.slotNome}>{atleta.nome.split(' ')[0]}</span>
                    </>
                 ) : (
-                   <><div className={`${styles.slotFoto} ${styles.slotFotoVazio}`}>+</div><span className={styles.slotNome}>Adicionar</span></>
+                   <><div className={`${styles.slotFoto} ${styles.slotFotoVazio}`}><Plus size={20}/></div><span className={styles.slotNome}>Adicionar</span></>
                 )}
               </div>
             ))}
           </div>
 
           {/* Reservas */}
-          <h4 className={`${styles.sectionTitle} ${styles.sectionTitleReservas}`}>🔄 Reservas (Obrigatório)</h4>
+          <h4 className={`${styles.sectionTitle} ${styles.sectionTitleReservas}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Repeat size={20} /> Reservas (Obrigatório)
+          </h4>
           <div className={styles.slotsGrid}>
             {reservas.map((atleta, index) => (
               <div key={`r-${index}`} className={`${styles.slot} ${atleta ? styles.slotPreenchido : ''}`} onClick={() => abrirGaveta('reserva', index)}>
@@ -145,14 +150,14 @@ export default function NovaPartida() {
                      <span className={styles.slotNome}>{atleta.nome.split(' ')[0]}</span>
                    </>
                 ) : (
-                   <><div className={`${styles.slotFoto} ${styles.slotFotoVazio}`}>+</div><span className={styles.slotNome}>Adicionar</span></>
+                   <><div className={`${styles.slotFoto} ${styles.slotFotoVazio}`}><Plus size={20}/></div><span className={styles.slotNome}>Adicionar</span></>
                 )}
               </div>
             ))}
           </div>
 
-          <button type="submit" className={`btn-acao btn-duo-primary ${styles.submitButton}`} disabled={loading}>
-            {loading ? 'Carregando...' : 'Começar Coleta 🎯'}
+          <button type="submit" className={`btn-acao btn-duo-primary ${styles.submitButton}`} disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+            {loading ? 'Carregando...' : <>Começar Coleta <Play size={20} fill="currentColor" /></>}
           </button>
         </form>
       </div>
@@ -182,7 +187,9 @@ export default function NovaPartida() {
         <>
           <div className={`gaveta-overlay ${styles.gavetaOverlay}`} style={{ zIndex: 1001 }}></div>
           <div className={`duo-modal modal-centralizado ${styles.modalCamisa}`}>
-            <h4 className={styles.modalCamisaTitle}>👕 Número da Camisa</h4>
+            <h4 className={styles.modalCamisaTitle} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <Hash size={20} /> Número da Camisa
+            </h4>
             <p className={styles.modalCamisaTexto}>Defina a camisa de {jogadorTemp.nome.split(' ')[0]}:</p>
             <form onSubmit={confirmarCamisa}>
               <input type="number" className={styles.modalCamisaInput} value={camisaTemp} onChange={(e) => setCamisaTemp(e.target.value)} required autoFocus />

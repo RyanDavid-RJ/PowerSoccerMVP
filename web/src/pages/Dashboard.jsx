@@ -13,6 +13,7 @@ import {
 import { apiGet } from "../services/api";
 import toast from "react-hot-toast";
 import styles from "./Dashboard.module.css";
+import { Download, FileText, Brain, BarChart2, Swords, Flame, Play, Square, Timer } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -500,14 +501,16 @@ export default function Dashboard() {
             <button
               onClick={handleExportCSV}
               className={`${styles.btnExport} ${styles.btnExportCsv}`}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              📥 Exportar Dados Brutos (CSV)
+              <Download size={18} /> Exportar Dados Brutos (CSV)
             </button>
             <button
               onClick={handleExportPDF}
               className={`${styles.btnExport} ${styles.btnExportPdf}`}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              📄 Exportar Relatório PDF
+              <FileText size={18} /> Exportar Relatório PDF
             </button>
           </div>
         </div>
@@ -546,16 +549,18 @@ export default function Dashboard() {
               margin: "0 0 10px 0",
               display: "flex",
               alignItems: "center",
-              gap: "10px",
+              gap: "8px",
             }}
           >
-            <span>🧠 Síntese Tática (IA)</span>
+            <Brain size={20} /> Síntese Tática (IA)
           </h3>
           <p className={styles.sinteseText}>{gerarAnaliseIA()}</p>
         </div>
 
         <div className={`duo-container ${styles.chartContainer}`}>
-          <h3 className={styles.sectionTitle}>📊 Comparativo por Jogador</h3>
+          <h3 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <BarChart2 size={20} /> Comparativo por Jogador
+          </h3>
           {jogadoresStats.length === 0 ? (
             <p style={{ textAlign: "center", color: "#aaa" }}>
               Nenhum evento registrado para este filtro.
@@ -568,8 +573,8 @@ export default function Dashboard() {
         </div>
 
         <div className={`duo-container ${styles.chartContainer}`}>
-          <h3 className={styles.sectionTitle}>
-            ⚔️ Confronto Direto (Atleta vs Atleta)
+          <h3 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Swords size={20} /> Confronto Direto (Atleta vs Atleta)
           </h3>
           <div className={styles.comparacaoSelectGroup}>
             <div className={styles.comparacaoSelectItem}>
@@ -617,7 +622,9 @@ export default function Dashboard() {
 
         <div className={`duo-container ${styles.heatmapWrapper}`}>
           <div className={styles.heatmapToolbar}>
-            <h3 style={{ margin: 0 }}>🔥 Mapa de Calor (Ocorrências)</h3>
+            <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Flame size={20} /> Mapa de Calor (Ocorrências)
+            </h3>
             <div className={styles.heatmapFilters}>
               <select
                 className={`${styles.formInput} ${styles.heatmapSelectJogador}`}
@@ -657,14 +664,15 @@ export default function Dashboard() {
               <button
                 onClick={handleReplay}
                 className={`${styles.btnReplay} ${isReplaying ? styles.btnReplayStop : styles.btnReplayPlay}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                {isReplaying ? "⏹️ Parar Replay" : "▶️ Replay"}
+                {isReplaying ? <><Square size={16} /> Parar Replay</> : <><Play size={16} /> Replay</>}
               </button>
             </div>
           </div>
           {isReplaying && eventosParaHeatmap.length > 0 && (
-            <p className={styles.heatmapReplayInfo}>
-              ⏱️ Exibindo lance {replayIndex + 1} de {eventosParaHeatmap.length}
+            <p className={styles.heatmapReplayInfo} style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'center' }}>
+              <Timer size={14} /> Exibindo lance {replayIndex + 1} de {eventosParaHeatmap.length}
             </p>
           )}
           {loadingEventos ? (

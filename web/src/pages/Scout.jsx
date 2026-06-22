@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { apiGet, apiPost, apiPut, apiDelete } from "../services/api";
 import toast from "react-hot-toast";
 import styles from "./Scout.module.css";
+import { Users, Map, User, Timer, RefreshCw, ClipboardList, Trash2, Settings, AlertTriangle } from 'lucide-react';
 
 export default function Scout() {
   const { id } = useParams();
@@ -660,9 +661,12 @@ export default function Scout() {
               color: "var(--duo-blue)",
               marginBottom: "15px",
               marginTop: "0px",
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}
           >
-            ⚽ Em Quadra
+            <Users size={18} /> Em Quadra
           </h3>
           <div className={styles.scrollJogadores}>
             {jogadoresEmQuadra.map((atleta) => (
@@ -705,15 +709,17 @@ export default function Scout() {
               <button
                 className={`btn-acao ${modoVisualizacao === "time" ? "btn-duo-primary" : "btn-config"} ${styles.viewToggle}`}
                 onClick={() => setModoVisualizacao("time")}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                🏟️ Visão Time
+                <Map size={16} /> Visão Time
               </button>
               <button
                 className={`btn-acao ${modoVisualizacao === "jogador" ? "btn-duo-primary" : "btn-config"} ${styles.viewToggle}`}
                 onClick={() => setModoVisualizacao("jogador")}
                 disabled={!jogadorAtivo}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                👤 Visão Jogador
+                <User size={16} /> Visão Jogador
               </button>
             </div>
 
@@ -966,8 +972,8 @@ export default function Scout() {
 
           {/* LINHA DO TEMPO */}
           <div className={`${styles.timelineContainer}`}>
-            <label className={styles.timelineLabel}>
-              ⏱️ Tempo de Jogo:
+            <label className={styles.timelineLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Timer size={18} /> Tempo de Jogo:
               {editandoTempo ? (
                 <input
                   type="text"
@@ -1028,8 +1034,8 @@ export default function Scout() {
 
           {/* RESERVAS */}
           <div className={styles.reservasContainer}>
-            <h4 className={styles.reservasTitle}>
-              🔄 Reservas (Clique para Substituir)
+            <h4 className={styles.reservasTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <RefreshCw size={18} /> Reservas (Clique para Substituir)
             </h4>
             <div className="lista-reservas">
               {jogadoresNoBanco.map((atleta) => (
@@ -1053,7 +1059,9 @@ export default function Scout() {
 
         {/* HISTÓRICO DE LANCES */}
         <div className={`${styles.sidebar} ${styles.sidebarHistorico}`}>
-          <h3 className={styles.historicoTitle}>📝 Últimos Lances</h3>
+          <h3 className={styles.historicoTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ClipboardList size={18} /> Últimos Lances
+          </h3>
           <div className="duo-list" style={{ paddingRight: "5px" }}>
             {eventosFiltrados.length === 0 ? (
               <p
@@ -1115,8 +1123,8 @@ export default function Scout() {
                         alignItems: "flex-end",
                       }}
                     >
-                      <span className={styles.historicoItemTempo}>
-                        ⏱ {ev.minuto_video}
+                      <span className={styles.historicoItemTempo} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Timer size={12} /> {ev.minuto_video}
                       </span>
                       {ev.tipo_acao === "Substituição" ? (
                         <button
@@ -1124,7 +1132,7 @@ export default function Scout() {
                           style={{ marginTop: "5px" }}
                           onClick={(e) => deletarLance(e, ev)}
                         >
-                          🗑️
+                          <Trash2 size={16} color="var(--duo-red)" />
                         </button>
                       ) : (
                         <button
@@ -1132,7 +1140,7 @@ export default function Scout() {
                           style={{ marginTop: "5px" }}
                           onClick={(e) => abrirModalEdicao(e, ev)}
                         >
-                          ⚙️
+                          <Settings size={16} color="#aaa" />
                         </button>
                       )}
                     </div>
@@ -1150,7 +1158,9 @@ export default function Scout() {
           <div
             className={`duo-modal modal-centralizado ${styles.modalContent}`}
           >
-            <h4 className={styles.modalTitle}>🔄 Substituição</h4>
+            <h4 className={styles.modalTitle} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <RefreshCw size={18} /> Substituição
+            </h4>
             <p className={styles.modalText}>
               Substituir aos <strong>{segundosParaTempo(segundoAtual)}</strong>?
               <br />
@@ -1193,7 +1203,9 @@ export default function Scout() {
           <div
             className={`duo-modal modal-centralizado ${styles.modalContent} ${styles.modalDominó}`}
           >
-            <h4 className={styles.modalDominóTitle}>⚠️ Atenção Crítica</h4>
+            <h4 className={styles.modalDominóTitle} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <AlertTriangle size={20} /> Atenção Crítica
+            </h4>
             <p className={styles.modalDominóText}>
               Cancelar esta substituição causará um{" "}
               <strong>Efeito Dominó!</strong>
@@ -1239,7 +1251,9 @@ export default function Scout() {
           <div
             className={`duo-modal modal-centralizado ${styles.modalContent}`}
           >
-            <h4 className={styles.modalTitle}>⚙️ Opções do Lance</h4>
+            <h4 className={styles.modalTitle} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <Settings size={20} /> Opções do Lance
+            </h4>
             <div className={styles.edicaoFormGroup}>
               <label className={styles.edicaoLabel}>Alterar Ação:</label>
               <select

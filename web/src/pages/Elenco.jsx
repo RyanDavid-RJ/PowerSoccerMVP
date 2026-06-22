@@ -14,6 +14,7 @@ import {
 import { apiGet } from "../services/api";
 import toast from "react-hot-toast";
 import styles from "./Elenco.module.css";
+import { Activity, Pencil } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -392,8 +393,8 @@ export default function Elenco() {
 
             {!modoEdicao ? (
               <>
-                <h4 style={{ textAlign: "center", marginBottom: "15px" }}>
-                  📊 Raio-X (Carreira)
+                <h4 style={{ textAlign: "center", marginBottom: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <Activity size={20} /> Raio-X (Carreira)
                 </h4>
                 {loadingStats ? (
                   <>
@@ -461,8 +462,9 @@ export default function Elenco() {
                   <button
                     className="btn-acao btn-duo-azul"
                     onClick={() => setModoEdicao(true)}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
-                    ✏️ Editar Dados do Atleta
+                    <Pencil size={18} /> Editar Dados do Atleta
                   </button>
                   <button className="btn-cancelar" onClick={fecharModal}>
                     Fechar Perfil
@@ -471,8 +473,8 @@ export default function Elenco() {
               </>
             ) : (
               <>
-                <h4 style={{ textAlign: "center", marginBottom: "15px" }}>
-                  ✏️ Editar Dados
+                <h4 style={{ textAlign: "center", marginBottom: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <Pencil size={20} /> Editar Dados
                 </h4>
                 <form onSubmit={handleEditSubmit}>
                   <div className={styles.formGrupo}>

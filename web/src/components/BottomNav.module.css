@@ -1,5 +1,3 @@
-/* BottomNav.module.css */
-
 .bottomNav {
   position: fixed;
   bottom: 0;
@@ -9,11 +7,11 @@
   border-top: 2px solid var(--border-ui);
   display: none;
   justify-content: space-around;
-  padding: 10px 5px 25px 5px;
+  padding: 10px 5px calc(10px + env(safe-area-inset-bottom)) 5px;
   z-index: 9000;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
 }
 
-/* Exibe a barra apenas quando o body tem a classe .modo-mobile */
 :global(.modo-mobile) .bottomNav {
   display: flex;
 }
@@ -25,18 +23,21 @@
   justify-content: center;
   background: none;
   border: none;
-  color: #aaa;
-  font-size: 20px;
+  color: #888;
   cursor: pointer;
-  padding: 4px 12px;
-  transition: color 0.2s;
-  gap: 2px;
-  min-width: 60px;
+  padding: 6px 8px;
+  transition: all 0.2s ease;
+  gap: 4px;
+  min-width: 55px;
+}
+
+.navItem svg {
+  transition: transform 0.2s ease;
 }
 
 .navItem span {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   color: inherit;
 }
 
@@ -44,11 +45,6 @@
   color: var(--duo-green-primary);
 }
 
-.navItem:active {
-  transform: scale(0.95);
-}
-
-.navItem svg {
-  width: 28px;
-  height: 28px;
+.navItem:active svg {
+  transform: scale(0.9);
 }
