@@ -287,3 +287,7 @@
 :global(.modo-mobile) .infoSteps {
   grid-template-columns: 1fr;
 }
+
+:global(.modo-mobile) .infoText {
+  display: none !important;
+}
