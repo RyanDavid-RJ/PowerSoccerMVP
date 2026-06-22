@@ -268,7 +268,7 @@
 .modalDominóText {
   text-align: center;
   margin: 15px 0;
-  color: #fff;
+  color: var(--text-main);  /* antes era #fff */
   font-size: 14px;
   line-height: 1.6;
 }

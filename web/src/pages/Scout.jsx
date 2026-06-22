@@ -1230,7 +1230,7 @@ export default function Scout() {
               </button>
               <button
                 className="btn-cancelar"
-                style={{ color: "#fff" }}
+                 style={{ color: "var(--text-main)" }}
                 onClick={() =>
                   setModalDomino({
                     visivel: false,
