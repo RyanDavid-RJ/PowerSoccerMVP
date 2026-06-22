@@ -54,8 +54,8 @@ export default function Header({ showBackButton }) {
     <>
       <header className={styles.duoHeader}>
         <div className={styles.logo}>
-          <img src="/assets/img/logo-novo.png" style={{ maxHeight: '45px', width: 'auto' }} alt="PowerSoccer Logo" />
-          <span style={{ fontSize: '1.2rem', marginLeft: '10px' }}>Power<span className="cor-duo">Soccer</span></span>
+          <img src="/assets/img/logo-novo.png" style={{ maxHeight: '30px', width: 'auto' }} alt="PowerSoccer Logo" />
+          <img src="/assets/img/powerSoccer.png" style={{ maxHeight: '40px', width: 'auto', marginLeft: '-10px' }} alt="PowerSoccer" />
         </div>
         
         <div className={styles.headerActions}>

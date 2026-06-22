@@ -187,3 +187,30 @@
 :global(.modo-mobile) .subtitle {
   font-size: 0.95rem;
 }
+
+.splashNameLogo {
+  width: 280px;
+  margin: 10px 0 15px;
+}
+
+.loginNameLogo {
+  width: 220px;
+  margin: 10px 0;
+}
+
+.loadingSpinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.spin {
+  animation: spin 1.5s linear infinite;
+  color: var(--duo-green-primary);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
