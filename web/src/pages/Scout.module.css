@@ -355,6 +355,12 @@
   box-shadow: var(--shadow-duo);
 }
 
+/* Sidebar do histórico no mobile: altura limitada e scroll vertical */
+:global(.modo-mobile) .sidebarHistorico {
+  max-height: 450px;          /* ~8 lances */
+  overflow-y: auto;           /* scroll quando passar de 8 */
+}
+
 /* Container de rolagem horizontal para os jogadores */
 :global(.modo-mobile) .scrollJogadores {
   display: flex;
@@ -380,7 +386,6 @@
 :global(.modo-mobile) .centerArea {
   width: 100%;
 }
-
 
 :global(.modo-mobile) .sidebar .jogador .foto {
   width: 36px;

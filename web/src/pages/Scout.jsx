@@ -24,7 +24,13 @@ export default function Scout() {
   const [acaoPendente, setAcaoPendente] = useState(null);
   const [mostrandoOutros, setMostrandoOutros] = useState(false);
 
-  const [modalAcao, setModalAcao] = useState({ visivel: false, x: 0, y: 0, modalX: 0, modalY: 0 });
+  const [modalAcao, setModalAcao] = useState({
+    visivel: false,
+    x: 0,
+    y: 0,
+    modalX: 0,
+    modalY: 0,
+  });
   const [modalSub, setModalSub] = useState({
     visivel: false,
     idSaindo: null,
@@ -247,12 +253,12 @@ export default function Scout() {
     const rect = e.currentTarget.getBoundingClientRect();
     let x = ((e.clientX - rect.left) / rect.width) * 100;
     let y = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     let modalX = x;
     let modalY = y;
     if (window.innerWidth > 768) {
-        modalX = Math.max(15, Math.min(x, 85));
-        modalY = Math.max(25, Math.min(y, 90));
+      modalX = Math.max(15, Math.min(x, 85));
+      modalY = Math.max(25, Math.min(y, 90));
     }
 
     setModalAcao({ visivel: true, x, y, modalX, modalY });
@@ -627,7 +633,7 @@ export default function Scout() {
         : [];
 
   const outrosJogadoresQuadra = jogadoresEmQuadra.filter(
-    (j) => j.id !== jogadorAtivo?.id
+    (j) => j.id !== jogadorAtivo?.id,
   );
 
   return (
@@ -649,7 +655,13 @@ export default function Scout() {
       <div className={styles.scoutLayout}>
         {/* TITULARES (em quadra) */}
         <div className={styles.sidebar}>
-          <h3 style={{ color: "var(--duo-blue)", marginBottom: "15px", marginTop: "0px" }}>
+          <h3
+            style={{
+              color: "var(--duo-blue)",
+              marginBottom: "15px",
+              marginTop: "0px",
+            }}
+          >
             ⚽ Em Quadra
           </h3>
           <div className={styles.scrollJogadores}>
@@ -720,10 +732,7 @@ export default function Scout() {
           </div>
 
           {/* CAMPO SVG */}
-          <div
-            className={`${styles.campoField}`}
-            onClick={handleCampoClick}
-          >
+          <div className={`${styles.campoField}`} onClick={handleCampoClick}>
             <svg
               width="100%"
               height="100%"
@@ -824,7 +833,10 @@ export default function Scout() {
             {modalAcao.visivel && !acaoPendente && (
               <div
                 className={styles.actionModal}
-                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
+                style={{
+                  "--x": `${modalAcao.modalX}%`,
+                  "--y": `${modalAcao.modalY}%`,
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -871,10 +883,20 @@ export default function Scout() {
             {modalAcao.visivel && acaoPendente && !mostrandoOutros && (
               <div
                 className={styles.actionModal}
-                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
+                style={{
+                  "--x": `${modalAcao.modalX}%`,
+                  "--y": `${modalAcao.modalY}%`,
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <p style={{ gridColumn: "span 2", textAlign: "center", color: "white", margin: "0 0 5px" }}>
+                <p
+                  style={{
+                    gridColumn: "span 2",
+                    textAlign: "center",
+                    color: "white",
+                    margin: "0 0 5px",
+                  }}
+                >
                   {acaoPendente} por:
                 </p>
                 <button
@@ -902,10 +924,20 @@ export default function Scout() {
             {modalAcao.visivel && acaoPendente && mostrandoOutros && (
               <div
                 className={styles.actionModal}
-                style={{ "--x": `${modalAcao.modalX}%`, "--y": `${modalAcao.modalY}%` }}
+                style={{
+                  "--x": `${modalAcao.modalX}%`,
+                  "--y": `${modalAcao.modalY}%`,
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <p style={{ gridColumn: "span 2", textAlign: "center", color: "white", margin: "0 0 5px" }}>
+                <p
+                  style={{
+                    gridColumn: "span 2",
+                    textAlign: "center",
+                    color: "white",
+                    margin: "0 0 5px",
+                  }}
+                >
                   {acaoPendente} para:
                 </p>
                 {outrosJogadoresQuadra.map((atleta) => (
@@ -919,7 +951,11 @@ export default function Scout() {
                 ))}
                 <button
                   className={`btn-acao ${styles.actionBtn}`}
-                  style={{ background: "#333", color: "white", gridColumn: "span 2" }}
+                  style={{
+                    background: "#333",
+                    color: "white",
+                    gridColumn: "span 2",
+                  }}
                   onClick={cancelarAcao}
                 >
                   Cancelar
@@ -1016,7 +1052,7 @@ export default function Scout() {
         </div>
 
         {/* HISTÓRICO DE LANCES */}
-        <div className={styles.sidebar}>
+        <div className={`${styles.sidebar} ${styles.sidebarHistorico}`}>
           <h3 className={styles.historicoTitle}>📝 Últimos Lances</h3>
           <div className="duo-list" style={{ paddingRight: "5px" }}>
             {eventosFiltrados.length === 0 ? (
