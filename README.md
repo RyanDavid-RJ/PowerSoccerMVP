@@ -1,8 +1,8 @@
- #PowerScout - Sistema de Análise para Power Soccer
+ # PowerScout - Sistema de Análise para Power Soccer
  
- Objetivo do Projeto Desenvolver uma aplicação Web Full Stack para captação, gerenciamento e visualização de dados táticos (scout) em partidas de Power Soccer. O sistema visa substituir as pranchetas físicas por uma interface digital interativa, permitindo que a comissão técnica registre ações em tempo real (ou via vídeo), analise o desempenho individual de atletas e gere mapas de calor e estatísticas globais para embasar decisões táticas.
+- Objetivo do Projeto: Desenvolver uma aplicação Web Full Stack para captação, gerenciamento e visualização de dados táticos (scout) em partidas de Power Soccer. O sistema visa substituir as pranchetas físicas por uma interface digital interativa, permitindo que a comissão técnica registre ações em tempo real (ou via vídeo), analise o desempenho individual de atletas e gere mapas de calor e estatísticas globais para embasar decisões táticas.
 
-🏗️ Arquitetura e Tecnologias O MVP (Produto Mínimo Viável) foi estruturado utilizando tecnologias de mercado padrão, sem frameworks pesados no frontend, para garantir performance e facilidade de manutenção:
+ ## Arquitetura e Tecnologias O MVP (Produto Mínimo Viável) foi estruturado utilizando tecnologias de mercado padrão, sem frameworks pesados no frontend, para garantir performance e facilidade de manutenção:
 
 Backend: API RESTful construída com Node.js e Express.
 
@@ -12,7 +12,7 @@ Frontend: HTML5, CSS3 moderno (Variáveis, Flexbox, Grid) e Vanilla JavaScript.
 
 Visualização de Dados: Integração com Chart.js para dashboards estatísticos.
 
-🚀 Entregas e Funcionalidades Concluídas (O que fizemos hoje)
+## Entregas e Funcionalidades Concluídas
 
 Integração Full-Stack (O Coração do Sistema)
 Estabelecemos a comunicação bidirecional perfeita entre o Frontend (Interface), o Backend (Rotas da API) e o Banco de Dados (MySQL).
